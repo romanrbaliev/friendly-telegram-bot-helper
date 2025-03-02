@@ -53,6 +53,11 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     }
   };
   
+  const handleMouseLeave = () => {
+    handleMouseUp();
+    setShowTooltip(false);
+  };
+  
   useEffect(() => {
     return () => {
       if (pressTimer.current) {
@@ -76,9 +81,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
         onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
         disabled={disabled}
       >
         {children}

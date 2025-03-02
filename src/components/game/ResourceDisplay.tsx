@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DollarSign } from 'lucide-react';
+import { DollarSign, GraduationCap } from 'lucide-react';
 
 interface ResourceDisplayProps {
   dollars: number;
@@ -8,6 +8,8 @@ interface ResourceDisplayProps {
   showUsdt: boolean;
   stakedUsdt: number;
   showStaking: boolean;
+  knowledge: number;
+  showKnowledge: boolean;
 }
 
 const ResourceDisplay: React.FC<ResourceDisplayProps> = ({ 
@@ -15,7 +17,9 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
   usdt, 
   showUsdt, 
   stakedUsdt, 
-  showStaking 
+  showStaking,
+  knowledge,
+  showKnowledge 
 }) => {
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
@@ -48,6 +52,16 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <span className="text-gray-200">Стейкинг:</span>
             </div>
             <span className="font-mono text-white">{stakedUsdt.toFixed(2)}</span>
+          </div>
+        )}
+
+        {showKnowledge && (
+          <div className="flex items-center justify-between animate-fade-up">
+            <div className="flex items-center gap-2">
+              <GraduationCap size={18} className="text-blue-400" />
+              <span className="text-gray-200">Знания:</span>
+            </div>
+            <span className="font-mono text-white">{knowledge}%</span>
           </div>
         )}
       </div>

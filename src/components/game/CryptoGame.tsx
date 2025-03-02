@@ -3,29 +3,33 @@ import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
 import ActionButton from './ActionButton';
+import Trading from './Trading';
+import Education from './Education';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 
 const CryptoGame: React.FC = () => {
-  // Состояние игры
-  const [showWelcomePopup, setShowWelcomePopup] = useState(true);
+  // Основные ресурсы
   const [dollars, setDollars] = useState(0);
   const [usdt, setUsdt] = useState(0);
   const [stakedUsdt, setStakedUsdt] = useState(0);
-  const [clicks, setClicks] = useState(0);
+  const [knowledge, setKnowledge] = useState(0);
   
   // Флаги открытия функций
+  const [showWelcomePopup, setShowWelcomePopup] = useState(true);
   const [showResources, setShowResources] = useState(false);
   const [showBuyCrypto, setShowBuyCrypto] = useState(false);
   const [showStaking, setShowStaking] = useState(false);
+  const [showTrading, setShowTrading] = useState(false);
+  const [showEducation, setShowEducation] = useState(false);
+  const [clicks, setClicks] = useState(0);
   
-  // Интервал для стейкинга
+  // Стейкинг
   useEffect(() => {
     let stakingInterval: NodeJS.Timeout | null = null;
     
     if (stakedUsdt > 0) {
       stakingInterval = setInterval(() => {
-        // Начисляем 0.1% от стейкинга каждые 10 секунд (примерно 10% годовых)
         const reward = stakedUsdt * 0.001;
         setUsdt(prev => prev + reward);
       }, 10000);
@@ -36,12 +40,29 @@ const CryptoGame: React.FC = () => {
     };
   }, [stakedUsdt]);
   
-  // Обработчики действий
+  // Проверка достижения целей и открытия новых возможностей
+  useEffect(() => {
+    if (dollars >= 100 && !showTrading) {
+      setShowTrading(true);
+      toast({
+        title: "Новая возможность!",
+        description: "Теперь вы можете торговать на бирже.",
+      });
+    }
+
+    if (dollars >= 200 && !showEducation) {
+      setShowEducation(true);
+      toast({
+        title: "Новая возможность!",
+        description: "Теперь вы можете получать криптообразование.",
+      });
+    }
+  }, [dollars]);
+  
   const handleSaveDollar = () => {
     setDollars(prev => prev + 1);
     setClicks(prev => prev + 1);
     
-    // Открываем показ ресурсов после первого клика
     if (!showResources) {
       setShowResources(true);
       toast({
@@ -50,7 +71,6 @@ const CryptoGame: React.FC = () => {
       });
     }
     
-    // Открываем покупку криптовалюты после 5 кликов
     if (clicks === 4) {
       setShowBuyCrypto(true);
       toast({
@@ -63,7 +83,7 @@ const CryptoGame: React.FC = () => {
   const handleBuyCrypto = () => {
     if (dollars >= 10) {
       const purchaseAmount = dollars;
-      const fee = purchaseAmount * 0.05; // 5% комиссия
+      const fee = purchaseAmount * 0.05;
       const finalAmount = purchaseAmount - fee;
       
       setDollars(0);
@@ -74,7 +94,6 @@ const CryptoGame: React.FC = () => {
         description: `Вы купили ${finalAmount.toFixed(2)} USDT. Комиссия составила ${fee.toFixed(2)}$.`,
       });
       
-      // Открываем стейкинг если у пользователя было более 50$ при покупке
       if (purchaseAmount >= 50 && !showStaking) {
         setShowStaking(true);
         toast({
@@ -97,6 +116,21 @@ const CryptoGame: React.FC = () => {
     }
   };
   
+  const handleTrade = (fromUSD: boolean, amount: number) => {
+    if (fromUSD) {
+      setDollars(prev => prev - amount);
+      setUsdt(prev => prev + amount * 0.95); // 5% комиссия
+    } else {
+      setUsdt(prev => prev - amount);
+      setDollars(prev => prev + amount * 0.95); // 5% комиссия
+    }
+  };
+
+  const handleLearn = (cost: number) => {
+    setDollars(prev => prev - cost);
+    setKnowledge(prev => Math.min(prev + 10, 100));
+  };
+
   return (
     <div className="min-h-screen bg-[#1A1F2C] text-white p-4 flex flex-col">
       <WelcomePopup 
@@ -116,6 +150,8 @@ const CryptoGame: React.FC = () => {
           showUsdt={usdt > 0 || showBuyCrypto}
           stakedUsdt={stakedUsdt}
           showStaking={showStaking || stakedUsdt > 0}
+          knowledge={knowledge}
+          showKnowledge={showEducation}
         />
       )}
       
@@ -149,6 +185,22 @@ const CryptoGame: React.FC = () => {
           >
             Стейкинг USDT
           </ActionButton>
+        )}
+
+        {showTrading && (
+          <Trading 
+            dollars={dollars}
+            usdt={usdt}
+            onTrade={handleTrade}
+          />
+        )}
+
+        {showEducation && (
+          <Education
+            dollars={dollars}
+            onLearn={handleLearn}
+            knowledge={knowledge}
+          />
         )}
       </div>
       

@@ -10,6 +10,8 @@ interface ResourceDisplayProps {
   showStaking: boolean;
   knowledge: number;
   showKnowledge: boolean;
+  btc: number;
+  showBtc: boolean;
 }
 
 const ResourceDisplay: React.FC<ResourceDisplayProps> = ({ 
@@ -19,7 +21,9 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
   stakedUsdt, 
   showStaking,
   knowledge,
-  showKnowledge 
+  showKnowledge,
+  btc,
+  showBtc
 }) => {
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
@@ -42,6 +46,16 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <span className="text-gray-200">USDT:</span>
             </div>
             <span className="font-mono text-white">{usdt.toFixed(2)}</span>
+          </div>
+        )}
+        
+        {showBtc && (
+          <div className="flex items-center justify-between animate-fade-up">
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 rounded-full bg-[#F7931A] flex items-center justify-center text-[10px] font-bold text-white">₿</div>
+              <span className="text-gray-200">Bitcoin:</span>
+            </div>
+            <span className="font-mono text-white">{btc.toFixed(8)}</span>
           </div>
         )}
         

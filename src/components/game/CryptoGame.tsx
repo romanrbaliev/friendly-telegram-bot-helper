@@ -7,11 +7,14 @@ import Trading from './Trading';
 import Education from './Education';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DollarSign, GraduationCap, ArrowUpDown } from 'lucide-react';
 
 const CryptoGame: React.FC = () => {
   // Основные ресурсы
   const [dollars, setDollars] = useState(0);
   const [usdt, setUsdt] = useState(0);
+  const [btc, setBtc] = useState(0);
   const [stakedUsdt, setStakedUsdt] = useState(0);
   const [knowledge, setKnowledge] = useState(0);
   
@@ -23,6 +26,7 @@ const CryptoGame: React.FC = () => {
   const [showTrading, setShowTrading] = useState(false);
   const [showEducation, setShowEducation] = useState(false);
   const [clicks, setClicks] = useState(0);
+  const [activeTab, setActiveTab] = useState('main');
   
   // Стейкинг
   useEffect(() => {
@@ -40,7 +44,7 @@ const CryptoGame: React.FC = () => {
     };
   }, [stakedUsdt]);
   
-  // Проверка достижения целей и открытия новых возможностей
+  // Проверка достижения целей и открытие новых возможностей
   useEffect(() => {
     if (dollars >= 100 && !showTrading) {
       setShowTrading(true);
@@ -116,13 +120,15 @@ const CryptoGame: React.FC = () => {
     }
   };
   
-  const handleTrade = (fromUSD: boolean, amount: number) => {
-    if (fromUSD) {
-      setDollars(prev => prev - amount);
-      setUsdt(prev => prev + amount * 0.95); // 5% комиссия
-    } else {
+  const handleTrade = (fromUSDT: boolean, amount: number) => {
+    if (fromUSDT) {
       setUsdt(prev => prev - amount);
-      setDollars(prev => prev + amount * 0.95); // 5% комиссия
+      // Пример конвертации: 1 USDT = 0.00002 BTC
+      setBtc(prev => prev + amount * 0.00002);
+    } else {
+      setBtc(prev => prev - amount);
+      // Пример конвертации обратно: 1 BTC = 50000 USDT (с 5% комиссией)
+      setUsdt(prev => prev + amount * 50000 * 0.95);
     }
   };
 
@@ -152,57 +158,122 @@ const CryptoGame: React.FC = () => {
           showStaking={showStaking || stakedUsdt > 0}
           knowledge={knowledge}
           showKnowledge={showEducation}
+          btc={btc}
+          showBtc={btc > 0 || showTrading}
         />
       )}
       
-      <div className="flex-1 flex flex-col gap-4">
-        <ActionButton 
-          onClick={handleSaveDollar}
-          tooltip="Отложите $1 на инвестиции"
-        >
-          Отложить $1 на инвестиции
-        </ActionButton>
-        
-        {showBuyCrypto && (
+      {(showTrading || showEducation) && (
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="w-full grid grid-cols-3 animate-fade-in">
+            <TabsTrigger value="main" className="flex items-center gap-1">
+              <DollarSign size={16} />
+              Основное
+            </TabsTrigger>
+            {showTrading && (
+              <TabsTrigger value="trading" className="flex items-center gap-1">
+                <ArrowUpDown size={16} />
+                Трейдинг
+              </TabsTrigger>
+            )}
+            {showEducation && (
+              <TabsTrigger value="education" className="flex items-center gap-1">
+                <GraduationCap size={16} />
+                Образование
+              </TabsTrigger>
+            )}
+          </TabsList>
+          
+          <TabsContent value="main" className="space-y-4 mt-4">
+            <ActionButton 
+              onClick={handleSaveDollar}
+              tooltip="Отложите $1 на инвестиции"
+            >
+              Отложить $1 на инвестиции
+            </ActionButton>
+            
+            {showBuyCrypto && (
+              <ActionButton 
+                onClick={handleBuyCrypto}
+                disabled={dollars < 10}
+                tooltip={dollars < 10 ? `Нужно еще ${10 - dollars}$` : "Обменять все доллары на USDT"}
+                longPressTooltip="Вы покупаете криптовалюту для инвестиций. При покупке списывается комиссия 5% от суммы."
+                longPressTime={2000}
+              >
+                Купить криптовалюту (USDT)
+              </ActionButton>
+            )}
+            
+            {showStaking && (
+              <ActionButton 
+                onClick={handleStaking}
+                disabled={usdt < 10}
+                tooltip={usdt < 10 ? `Нужно еще ${10 - usdt} USDT` : "Разместить 10 USDT в стейкинге"}
+                longPressTooltip="Стейкинг позволяет получать пассивный доход в размере ~10% годовых."
+                longPressTime={2000}
+              >
+                Стейкинг USDT
+              </ActionButton>
+            )}
+          </TabsContent>
+          
+          {showTrading && (
+            <TabsContent value="trading" className="mt-4">
+              <Trading 
+                dollars={dollars}
+                usdt={usdt}
+                btc={btc}
+                onTrade={handleTrade}
+              />
+            </TabsContent>
+          )}
+          
+          {showEducation && (
+            <TabsContent value="education" className="mt-4">
+              <Education
+                dollars={dollars}
+                onLearn={handleLearn}
+                knowledge={knowledge}
+              />
+            </TabsContent>
+          )}
+        </Tabs>
+      )}
+      
+      {!(showTrading || showEducation) && (
+        <div className="flex-1 flex flex-col gap-4">
           <ActionButton 
-            onClick={handleBuyCrypto}
-            disabled={dollars < 10}
-            tooltip={dollars < 10 ? `Нужно еще ${10 - dollars}$` : "Обменять все доллары на USDT"}
-            longPressTooltip="Вы покупаете криптовалюту для инвестиций. При покупке списывается комиссия 5% от суммы."
-            longPressTime={2000}
+            onClick={handleSaveDollar}
+            tooltip="Отложите $1 на инвестиции"
           >
-            Купить криптовалюту (USDT)
+            Отложить $1 на инвестиции
           </ActionButton>
-        )}
-        
-        {showStaking && (
-          <ActionButton 
-            onClick={handleStaking}
-            disabled={usdt < 10}
-            tooltip={usdt < 10 ? `Нужно еще ${10 - usdt} USDT` : "Разместить 10 USDT в стейкинге"}
-            longPressTooltip="Стейкинг позволяет получать пассивный доход в размере ~10% годовых."
-            longPressTime={2000}
-          >
-            Стейкинг USDT
-          </ActionButton>
-        )}
-
-        {showTrading && (
-          <Trading 
-            dollars={dollars}
-            usdt={usdt}
-            onTrade={handleTrade}
-          />
-        )}
-
-        {showEducation && (
-          <Education
-            dollars={dollars}
-            onLearn={handleLearn}
-            knowledge={knowledge}
-          />
-        )}
-      </div>
+          
+          {showBuyCrypto && (
+            <ActionButton 
+              onClick={handleBuyCrypto}
+              disabled={dollars < 10}
+              tooltip={dollars < 10 ? `Нужно еще ${10 - dollars}$` : "Обменять все доллары на USDT"}
+              longPressTooltip="Вы покупаете криптовалюту для инвестиций. При покупке списывается комиссия 5% от суммы."
+              longPressTime={2000}
+            >
+              Купить криптовалюту (USDT)
+            </ActionButton>
+          )}
+          
+          {showStaking && (
+            <ActionButton 
+              onClick={handleStaking}
+              disabled={usdt < 10}
+              tooltip={usdt < 10 ? `Нужно еще ${10 - usdt} USDT` : "Разместить 10 USDT в стейкинге"}
+              longPressTooltip="Стейкинг позволяет получать пассивный доход в размере ~10% годовых."
+              longPressTime={2000}
+            >
+              Стейкинг USDT
+            </ActionButton>
+          )}
+        </div>
+      )}
       
       <footer className="mt-6 text-center text-xs text-gray-500">
         <p>Щелкайте, чтобы открывать новые возможности</p>

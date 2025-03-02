@@ -2,23 +2,61 @@
 import React from 'react';
 import { toast } from '@/components/ui/use-toast';
 import ActionButton from './ActionButton';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, BookOpen, Lightbulb, LineChart } from 'lucide-react';
 
 interface EducationProps {
   dollars: number;
-  onLearn: (cost: number) => void;
+  onLearn: (cost: number, knowledgeGain: number) => void;
   knowledge: number;
 }
 
-const Education: React.FC<EducationProps> = ({ dollars, onLearn, knowledge }) => {
-  const courseCost = 50;
+interface Course {
+  id: string;
+  name: string;
+  description: string;
+  cost: number;
+  knowledgeGain: number;
+  requiredKnowledge: number;
+  icon: React.ReactNode;
+}
 
-  const handleTakeCourse = () => {
-    if (dollars >= courseCost) {
-      onLearn(courseCost);
+const Education: React.FC<EducationProps> = ({ dollars, onLearn, knowledge }) => {
+  const courses: Course[] = [
+    {
+      id: "basic",
+      name: "Основы криптовалют",
+      description: "Базовые знания о блокчейне и криптовалютах",
+      cost: 50,
+      knowledgeGain: 10,
+      requiredKnowledge: 0,
+      icon: <BookOpen size={16} />
+    },
+    {
+      id: "trading",
+      name: "Трейдинг для начинающих",
+      description: "Основные стратегии и инструменты трейдинга",
+      cost: 120,
+      knowledgeGain: 15,
+      requiredKnowledge: 10,
+      icon: <LineChart size={16} />
+    },
+    {
+      id: "advanced",
+      name: "Продвинутые инвестиции",
+      description: "Диверсификация портфеля и управление рисками",
+      cost: 300,
+      knowledgeGain: 25,
+      requiredKnowledge: 30,
+      icon: <Lightbulb size={16} />
+    }
+  ];
+
+  const handleTakeCourse = (course: Course) => {
+    if (dollars >= course.cost && knowledge >= course.requiredKnowledge) {
+      onLearn(course.cost, course.knowledgeGain);
       toast({
         title: "Курс пройден!",
-        description: "Вы получили новые знания о криптовалютах"
+        description: `Вы получили новые знания: ${course.name}`
       });
     }
   };
@@ -41,14 +79,41 @@ const Education: React.FC<EducationProps> = ({ dollars, onLearn, knowledge }) =>
           />
         </div>
       </div>
-      <ActionButton
-        onClick={handleTakeCourse}
-        disabled={dollars < courseCost}
-        tooltip={dollars < courseCost ? `Нужно $${courseCost}` : "Пройти курс по криптовалютам"}
-        longPressTooltip="Обучение снижает комиссии и открывает новые возможности"
-      >
-        Пройти курс (${courseCost})
-      </ActionButton>
+      <div className="space-y-3">
+        {courses.map(course => (
+          <div key={course.id} className="border border-gray-700 rounded-md p-3">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-sm font-medium text-white flex items-center gap-1">
+                {course.icon}
+                {course.name}
+              </h3>
+              <span className="text-xs font-mono text-amber-400">${course.cost}</span>
+            </div>
+            <p className="text-xs text-gray-400 mb-2">{course.description}</p>
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-blue-400">+{course.knowledgeGain}% знаний</span>
+              <ActionButton
+                onClick={() => handleTakeCourse(course)}
+                disabled={dollars < course.cost || knowledge < course.requiredKnowledge}
+                tooltip={
+                  dollars < course.cost 
+                    ? `Нужно $${course.cost}` 
+                    : knowledge < course.requiredKnowledge 
+                      ? `Требуется ${course.requiredKnowledge}% знаний` 
+                      : "Пройти курс"
+                }
+              >
+                Пройти курс
+              </ActionButton>
+            </div>
+            {knowledge < course.requiredKnowledge && (
+              <div className="mt-2 text-xs text-yellow-500">
+                Требуется знаний: {course.requiredKnowledge}%
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

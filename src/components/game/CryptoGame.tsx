@@ -5,10 +5,11 @@ import ResourceDisplay from './ResourceDisplay';
 import ActionButton from './ActionButton';
 import Trading from './Trading';
 import Education from './Education';
+import Mining from './Mining';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, GraduationCap, ArrowUpDown } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpDown, HardDrive } from 'lucide-react';
 
 const CryptoGame: React.FC = () => {
   // Основные ресурсы
@@ -17,6 +18,7 @@ const CryptoGame: React.FC = () => {
   const [btc, setBtc] = useState(0);
   const [stakedUsdt, setStakedUsdt] = useState(0);
   const [knowledge, setKnowledge] = useState(0);
+  const [miningPower, setMiningPower] = useState(0);
   
   // Флаги открытия функций
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
@@ -25,6 +27,7 @@ const CryptoGame: React.FC = () => {
   const [showStaking, setShowStaking] = useState(false);
   const [showTrading, setShowTrading] = useState(false);
   const [showEducation, setShowEducation] = useState(false);
+  const [showMining, setShowMining] = useState(false);
   const [clicks, setClicks] = useState(0);
   const [activeTab, setActiveTab] = useState('main');
   
@@ -44,13 +47,29 @@ const CryptoGame: React.FC = () => {
     };
   }, [stakedUsdt]);
   
+  // Майнинг
+  useEffect(() => {
+    let miningInterval: NodeJS.Timeout | null = null;
+    
+    if (miningPower > 0) {
+      miningInterval = setInterval(() => {
+        const mined = miningPower * 0.00001;
+        setBtc(prev => prev + mined);
+      }, 10000);
+    }
+    
+    return () => {
+      if (miningInterval) clearInterval(miningInterval);
+    };
+  }, [miningPower]);
+  
   // Проверка достижения целей и открытие новых возможностей
   useEffect(() => {
     if (dollars >= 100 && !showTrading) {
       setShowTrading(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете торговать на бирже.",
+        description: "Теперь вы можете торговать на бирже."
       });
     }
 
@@ -58,7 +77,15 @@ const CryptoGame: React.FC = () => {
       setShowEducation(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете получать криптообразование.",
+        description: "Теперь вы можете получать криптообразование."
+      });
+    }
+    
+    if (dollars >= 500 && !showMining) {
+      setShowMining(true);
+      toast({
+        title: "Новая возможность!",
+        description: "Теперь вы можете заниматься майнингом криптовалют."
       });
     }
   }, [dollars]);
@@ -71,7 +98,7 @@ const CryptoGame: React.FC = () => {
       setShowResources(true);
       toast({
         title: "Новый раздел открыт!",
-        description: "Теперь вы можете отслеживать свои ресурсы.",
+        description: "Теперь вы можете отслеживать свои ресурсы."
       });
     }
     
@@ -79,7 +106,7 @@ const CryptoGame: React.FC = () => {
       setShowBuyCrypto(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете покупать криптовалюту.",
+        description: "Теперь вы можете покупать криптовалюту."
       });
     }
   };
@@ -95,14 +122,14 @@ const CryptoGame: React.FC = () => {
       
       toast({
         title: "Покупка криптовалюты",
-        description: `Вы купили ${finalAmount.toFixed(2)} USDT. Комиссия составила ${fee.toFixed(2)}$.`,
+        description: `Вы купили ${finalAmount.toFixed(2)} USDT. Комиссия составила ${fee.toFixed(2)}$.`
       });
       
       if (purchaseAmount >= 50 && !showStaking) {
         setShowStaking(true);
         toast({
           title: "Новая возможность!",
-          description: "Теперь вы можете использовать стейкинг криптовалюты для пассивного дохода.",
+          description: "Теперь вы можете использовать стейкинг криптовалюты для пассивного дохода."
         });
       }
     }
@@ -115,7 +142,7 @@ const CryptoGame: React.FC = () => {
       
       toast({
         title: "Стейкинг активирован",
-        description: "Вы разместили 10 USDT в стейкинге. Теперь вы будете получать пассивный доход.",
+        description: "Вы разместили 10 USDT в стейкинге. Теперь вы будете получать пассивный доход."
       });
     }
   };
@@ -128,13 +155,20 @@ const CryptoGame: React.FC = () => {
     } else {
       setBtc(prev => prev - amount);
       // Пример конвертации обратно: 1 BTC = 50000 USDT (с 5% комиссией)
-      setUsdt(prev => prev + amount * 50000 * 0.95);
+      const fee = 5 - (knowledge / 20); // Комиссия снижается с ростом знаний
+      const commissionRate = Math.max(fee, 0.5) / 100;
+      setUsdt(prev => prev + amount * 50000 * (1 - commissionRate));
     }
   };
 
-  const handleLearn = (cost: number) => {
+  const handleLearn = (cost: number, knowledgeGain: number) => {
     setDollars(prev => prev - cost);
-    setKnowledge(prev => Math.min(prev + 10, 100));
+    setKnowledge(prev => Math.min(prev + knowledgeGain, 100));
+  };
+  
+  const handlePurchaseRig = (cost: number) => {
+    setDollars(prev => prev - cost);
+    setMiningPower(prev => prev + 1);
   };
 
   return (
@@ -163,9 +197,12 @@ const CryptoGame: React.FC = () => {
         />
       )}
       
-      {(showTrading || showEducation) && (
+      {(showTrading || showEducation || showMining) && (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-3 animate-fade-in">
+          <TabsList className="w-full grid-cols-4 animate-fade-in" style={{ 
+            display: 'grid', 
+            gridTemplateColumns: `repeat(${1 + (showTrading ? 1 : 0) + (showEducation ? 1 : 0) + (showMining ? 1 : 0)}, minmax(0, 1fr))` 
+          }}>
             <TabsTrigger value="main" className="flex items-center gap-1">
               <DollarSign size={16} />
               Основное
@@ -180,6 +217,12 @@ const CryptoGame: React.FC = () => {
               <TabsTrigger value="education" className="flex items-center gap-1">
                 <GraduationCap size={16} />
                 Образование
+              </TabsTrigger>
+            )}
+            {showMining && (
+              <TabsTrigger value="mining" className="flex items-center gap-1">
+                <HardDrive size={16} />
+                Майнинг
               </TabsTrigger>
             )}
           </TabsList>
@@ -224,6 +267,7 @@ const CryptoGame: React.FC = () => {
                 usdt={usdt}
                 btc={btc}
                 onTrade={handleTrade}
+                knowledge={knowledge}
               />
             </TabsContent>
           )}
@@ -237,10 +281,21 @@ const CryptoGame: React.FC = () => {
               />
             </TabsContent>
           )}
+          
+          {showMining && (
+            <TabsContent value="mining" className="mt-4">
+              <Mining
+                dollars={dollars}
+                btc={btc}
+                onPurchaseRig={handlePurchaseRig}
+                knowledge={knowledge}
+              />
+            </TabsContent>
+          )}
         </Tabs>
       )}
       
-      {!(showTrading || showEducation) && (
+      {!(showTrading || showEducation || showMining) && (
         <div className="flex-1 flex flex-col gap-4">
           <ActionButton 
             onClick={handleSaveDollar}

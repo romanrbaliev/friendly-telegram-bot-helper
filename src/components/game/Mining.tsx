@@ -1,0 +1,66 @@
+
+import React, { useState } from 'react';
+import { toast } from '@/components/ui/use-toast';
+import ActionButton from './ActionButton';
+import { HardDrive } from 'lucide-react';
+
+interface MiningProps {
+  dollars: number;
+  btc: number;
+  onPurchaseRig: (cost: number) => void;
+  knowledge: number;
+}
+
+const Mining: React.FC<MiningProps> = ({ dollars, btc, onPurchaseRig, knowledge }) => {
+  const [hasBasicRig, setHasBasicRig] = useState(false);
+  const basicRigCost = 500;
+  const discountPercentage = Math.min(knowledge / 2, 25); // Max 25% discount based on knowledge
+  const actualCost = Math.floor(basicRigCost * (1 - discountPercentage / 100));
+  
+  const handlePurchaseRig = () => {
+    if (dollars >= actualCost) {
+      onPurchaseRig(actualCost);
+      setHasBasicRig(true);
+      toast({
+        title: "Оборудование приобретено!",
+        description: "Вы купили базовое оборудование для майнинга"
+      });
+    }
+  };
+
+  return (
+    <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
+      <h2 className="text-lg font-semibold mb-3 text-white border-b border-white/10 pb-2 flex items-center gap-2">
+        <HardDrive size={20} />
+        Майнинг
+      </h2>
+      <div className="space-y-4">
+        {!hasBasicRig ? (
+          <ActionButton
+            onClick={handlePurchaseRig}
+            disabled={dollars < actualCost}
+            tooltip={dollars < actualCost ? `Нужно $${actualCost}` : "Купить оборудование для майнинга"}
+            longPressTooltip="Майнинг позволяет пассивно добывать криптовалюту"
+          >
+            Купить базовое оборудование (${actualCost})
+            {discountPercentage > 0 && (
+              <span className="text-xs text-green-400 ml-1">-{discountPercentage}%</span>
+            )}
+          </ActionButton>
+        ) : (
+          <div className="bg-gray-800 p-3 rounded-md">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-white">Статус майнинга:</span>
+              <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Активен</span>
+            </div>
+            <div className="text-xs text-gray-400">
+              Ваше оборудование добывает BTC. Скорость майнинга: 0.00001 BTC/час
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Mining;

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { DollarSign, GraduationCap } from 'lucide-react';
 
 interface ResourceDisplayProps {
@@ -25,6 +25,36 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
   btc,
   showBtc
 }) => {
+  // State for real-time resource display
+  const [displayUsdt, setDisplayUsdt] = useState(usdt);
+  const [displayBtc, setDisplayBtc] = useState(btc);
+  
+  // Real-time updates for resources
+  useEffect(() => {
+    // Update base values when prop changes
+    setDisplayUsdt(usdt);
+    setDisplayBtc(btc);
+    
+    // Only set up interval if we have staked USDT or mining power
+    if (stakedUsdt > 0 || btc > 0) {
+      const interval = setInterval(() => {
+        // Calculate incremental values based on 10% APY on staked USDT
+        // This assumes a 10% yearly return, calculated for 100ms
+        if (stakedUsdt > 0) {
+          const usdtIncrement = stakedUsdt * 0.1 / (365 * 24 * 36000); // 10% yearly return per 100ms
+          setDisplayUsdt(prev => prev + usdtIncrement);
+        }
+        
+        // If we have btc, update that too (assuming mining updates)
+        if (btc > 0) {
+          setDisplayBtc(prev => prev);
+        }
+      }, 100);
+      
+      return () => clearInterval(interval);
+    }
+  }, [usdt, btc, stakedUsdt]);
+
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
       <h2 className="text-lg font-semibold mb-3 text-white border-b border-white/10 pb-2">
@@ -45,7 +75,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <div className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center text-[10px] font-bold text-white">₮</div>
               <span className="text-gray-200">USDT:</span>
             </div>
-            <span className="font-mono text-white">{usdt.toFixed(2)}</span>
+            <span className="font-mono text-white">{displayUsdt.toFixed(2)}</span>
           </div>
         )}
         
@@ -55,7 +85,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <div className="w-5 h-5 rounded-full bg-[#F7931A] flex items-center justify-center text-[10px] font-bold text-white">₿</div>
               <span className="text-gray-200">Bitcoin:</span>
             </div>
-            <span className="font-mono text-white">{btc.toFixed(8)}</span>
+            <span className="font-mono text-white">{displayBtc.toFixed(8)}</span>
           </div>
         )}
         

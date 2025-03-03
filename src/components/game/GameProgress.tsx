@@ -52,14 +52,14 @@ const GameProgress: React.FC<GameProgressProps> = ({
     return dollars + usdt + btcValue;
   };
   
-  const getProgressBadge = (): { label: string, color: string } => {
+  const getProgressBadge = (): { label: string, variant: string } => {
     const progress = calculateTotalProgress();
     
-    if (progress < 20) return { label: "Новичок", color: "bg-gray-500" };
-    if (progress < 40) return { label: "Любитель", color: "bg-green-600" };
-    if (progress < 60) return { label: "Энтузиаст", color: "bg-blue-600" };
-    if (progress < 80) return { label: "Профессионал", color: "bg-purple-600" };
-    return { label: "Эксперт", color: "bg-amber-500" };
+    if (progress < 20) return { label: "Новичок", variant: "gray" };
+    if (progress < 40) return { label: "Любитель", variant: "success" };
+    if (progress < 60) return { label: "Энтузиаст", variant: "info" };
+    if (progress < 80) return { label: "Профессионал", variant: "purple" };
+    return { label: "Эксперт", variant: "warning" };
   };
   
   const progressBadge = getProgressBadge();
@@ -75,7 +75,7 @@ const GameProgress: React.FC<GameProgressProps> = ({
       <div className="space-y-4">
         <div className="flex items-center justify-between mb-1">
           <span className="text-sm text-gray-300">Общий прогресс:</span>
-          <Badge className={`${progressBadge.color} hover:${progressBadge.color}`}>
+          <Badge variant={progressBadge.variant as any}>
             {progressBadge.label}
           </Badge>
         </div>

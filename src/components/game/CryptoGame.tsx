@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
-import ActionButton from './ActionButton';
-import Trading from './Trading';
-import Education from './Education';
-import Mining from './Mining';
-import Career from './Career';
-import MarketEvents from './MarketEvents';
 import GameProgress from './GameProgress';
+import GameTabs from './GameTabs';
+import MainActions from './MainActions';
 import { toast } from '@/components/ui/use-toast';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, Trophy } from 'lucide-react';
+import { useGameEffects } from '@/hooks/useGameEffects';
 
 const CryptoGame: React.FC = () => {
   // Основные ресурсы
@@ -37,98 +32,36 @@ const CryptoGame: React.FC = () => {
   const [clicks, setClicks] = useState(0);
   const [activeTab, setActiveTab] = useState('main');
   
-  // Стейкинг
-  useEffect(() => {
-    let stakingInterval: NodeJS.Timeout | null = null;
-    
-    if (stakedUsdt > 0) {
-      stakingInterval = setInterval(() => {
-        const reward = stakedUsdt * 0.001;
-        setUsdt(prev => prev + reward);
-      }, 10000);
-    }
-    
-    return () => {
-      if (stakingInterval) clearInterval(stakingInterval);
-    };
-  }, [stakedUsdt]);
+  // Используем хук игровых эффектов
+  const { handleInitialClicks, checkPurchaseMilestones } = useGameEffects({
+    dollars,
+    usdt,
+    stakedUsdt,
+    miningPower,
+    setUsdt,
+    setBtc,
+    showResources,
+    showTrading, 
+    showEducation,
+    showMining,
+    showCareer,
+    showMarketEvents,
+    setShowTrading,
+    setShowEducation,
+    setShowMining,
+    setShowMarketEvents,
+    setShowResources,
+    setShowBuyCrypto,
+    setShowStaking,
+    clicks,
+    marketMultiplier
+  });
   
-  // Майнинг
-  useEffect(() => {
-    let miningInterval: NodeJS.Timeout | null = null;
-    
-    if (miningPower > 0) {
-      miningInterval = setInterval(() => {
-        const mined = miningPower * 0.00001;
-        setBtc(prev => prev + mined);
-      }, 10000);
-    }
-    
-    return () => {
-      if (miningInterval) clearInterval(miningInterval);
-    };
-  }, [miningPower]);
-  
-  // Проверка достижения целей и открытие новых возможностей
-  useEffect(() => {
-    if (dollars >= 100 && !showTrading) {
-      setShowTrading(true);
-      toast({
-        title: "Новая возможность!",
-        description: "Теперь вы можете торговать на бирже.",
-        duration: 3000
-      });
-    }
-
-    if (dollars >= 200 && !showEducation) {
-      setShowEducation(true);
-      toast({
-        title: "Новая возможность!",
-        description: "Теперь вы можете получать криптообразование.",
-        duration: 3000
-      });
-    }
-    
-    if (dollars >= 500 && !showMining) {
-      setShowMining(true);
-      toast({
-        title: "Новая возможность!",
-        description: "Теперь вы можете заниматься майнингом криптовалют.",
-        duration: 3000
-      });
-    }
-
-    if (dollars >= 1000 && !showMarketEvents) {
-      setShowMarketEvents(true);
-      toast({
-        title: "Новая возможность!",
-        description: "Теперь вы можете отслеживать рыночные события и реагировать на них.",
-        duration: 3000
-      });
-    }
-  }, [dollars]);
-  
+  // Обработчики действий
   const handleSaveDollar = () => {
     setDollars(prev => prev + 1);
     setClicks(prev => prev + 1);
-    
-    if (!showResources) {
-      setShowResources(true);
-      toast({
-        title: "Новый раздел открыт!",
-        description: "Теперь вы можете отслеживать свои ресурсы.",
-        duration: 3000
-      });
-    }
-    
-    if (clicks === 4) {
-      setShowBuyCrypto(true);
-      toast({
-        title: "Новая возможность!",
-        description: "Теперь вы можете покупать криптовалюту.",
-        duration: 3000
-      });
-    }
+    handleInitialClicks();
   };
   
   const handleBuyCrypto = () => {
@@ -146,14 +79,7 @@ const CryptoGame: React.FC = () => {
         duration: 3000
       });
       
-      if (purchaseAmount >= 50 && !showStaking) {
-        setShowStaking(true);
-        toast({
-          title: "Новая возможность!",
-          description: "Теперь вы можете использовать стейкинг криптовалюты для пассивного дохода.",
-          duration: 3000
-        });
-      }
+      checkPurchaseMilestones(purchaseAmount);
     }
   };
   
@@ -204,6 +130,9 @@ const CryptoGame: React.FC = () => {
     setDollars(prev => prev - cost);
   };
 
+  // Проверяем, нужно ли показывать табы
+  const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents;
+
   return (
     <div className="min-h-screen bg-[#1A1F2C] text-white p-4 flex flex-col">
       <WelcomePopup 
@@ -233,176 +162,43 @@ const CryptoGame: React.FC = () => {
             />
           )}
           
-          {(showTrading || showEducation || showMining || showCareer || showMarketEvents) && (
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-              <TabsList className="w-full animate-fade-in" style={{ 
-                display: 'grid', 
-                gridTemplateColumns: `repeat(${1 + 
-                  (showTrading ? 1 : 0) + 
-                  (showEducation ? 1 : 0) + 
-                  (showMining ? 1 : 0) + 
-                  (showCareer ? 1 : 0) + 
-                  (showMarketEvents ? 1 : 0)}, minmax(0, 1fr))` 
-              }}>
-                <TabsTrigger value="main" className="flex items-center gap-1">
-                  <DollarSign size={16} />
-                  Основное
-                </TabsTrigger>
-                {showTrading && (
-                  <TabsTrigger value="trading" className="flex items-center gap-1">
-                    <ArrowUpDown size={16} />
-                    Трейдинг
-                  </TabsTrigger>
-                )}
-                {showEducation && (
-                  <TabsTrigger value="education" className="flex items-center gap-1">
-                    <GraduationCap size={16} />
-                    Образование
-                  </TabsTrigger>
-                )}
-                {showMining && (
-                  <TabsTrigger value="mining" className="flex items-center gap-1">
-                    <HardDrive size={16} />
-                    Майнинг
-                  </TabsTrigger>
-                )}
-                {showCareer && (
-                  <TabsTrigger value="career" className="flex items-center gap-1">
-                    <Briefcase size={16} />
-                    Карьера
-                  </TabsTrigger>
-                )}
-                {showMarketEvents && (
-                  <TabsTrigger value="market" className="flex items-center gap-1">
-                    <BarChart4 size={16} />
-                    Рынок
-                  </TabsTrigger>
-                )}
-              </TabsList>
-              
-              <TabsContent value="main" className="space-y-4 mt-4">
-                <ActionButton 
-                  onClick={handleSaveDollar}
-                  tooltip="Отложите $1 на инвестиции"
-                >
-                  Отложить $1 на инвестиции
-                </ActionButton>
-                
-                {showBuyCrypto && (
-                  <ActionButton 
-                    onClick={handleBuyCrypto}
-                    disabled={dollars < 10}
-                    tooltip={dollars < 10 ? `Нужно еще ${10 - dollars}$` : "Обменять все доллары на USDT"}
-                    longPressTooltip="Вы покупаете криптовалюту для инвестиций. При покупке списывается комиссия 5% от суммы."
-                    longPressTime={2000}
-                  >
-                    Купить криптовалюту (USDT)
-                  </ActionButton>
-                )}
-                
-                {showStaking && (
-                  <ActionButton 
-                    onClick={handleStaking}
-                    disabled={usdt < 10}
-                    tooltip={usdt < 10 ? `Нужно еще ${10 - usdt} USDT` : "Разместить 10 USDT в стейкинге"}
-                    longPressTooltip="Стейкинг позволяет получать пассивный доход в размере ~10% годовых."
-                    longPressTime={2000}
-                  >
-                    Стейкинг USDT
-                  </ActionButton>
-                )}
-              </TabsContent>
-              
-              {showTrading && (
-                <TabsContent value="trading" className="mt-4">
-                  <Trading 
-                    dollars={dollars}
-                    usdt={usdt}
-                    btc={btc}
-                    onTrade={handleTrade}
-                    knowledge={knowledge}
-                  />
-                </TabsContent>
-              )}
-              
-              {showEducation && (
-                <TabsContent value="education" className="mt-4">
-                  <Education
-                    dollars={dollars}
-                    onLearn={handleLearn}
-                    knowledge={knowledge}
-                  />
-                </TabsContent>
-              )}
-              
-              {showMining && (
-                <TabsContent value="mining" className="mt-4">
-                  <Mining
-                    dollars={dollars}
-                    btc={btc}
-                    onPurchaseRig={handlePurchaseRig}
-                    knowledge={knowledge}
-                    marketMultiplier={marketMultiplier}
-                  />
-                </TabsContent>
-              )}
-              
-              {showCareer && (
-                <TabsContent value="career" className="mt-4">
-                  <Career
-                    dollars={dollars}
-                    onSelectRole={handleSelectRole}
-                    selectedRole={role}
-                    knowledge={knowledge}
-                  />
-                </TabsContent>
-              )}
-              
-              {showMarketEvents && (
-                <TabsContent value="market" className="mt-4">
-                  <MarketEvents
-                    knowledge={knowledge}
-                    onPrepareForEvent={handlePrepareForEvent}
-                    onMarketChange={handleMarketChange}
-                  />
-                </TabsContent>
-              )}
-            </Tabs>
-          )}
-          
-          {!(showTrading || showEducation || showMining || showCareer || showMarketEvents) && (
-            <div className="flex-1 flex flex-col gap-4">
-              <ActionButton 
-                onClick={handleSaveDollar}
-                tooltip="Отложите $1 на инвестиции"
-              >
-                Отложить $1 на инвестиции
-              </ActionButton>
-              
-              {showBuyCrypto && (
-                <ActionButton 
-                  onClick={handleBuyCrypto}
-                  disabled={dollars < 10}
-                  tooltip={dollars < 10 ? `Нужно еще ${10 - dollars}$` : "Обменять все доллары на USDT"}
-                  longPressTooltip="Вы покупаете криптовалюту для инвестиций. При покупке списывается комиссия 5% от суммы."
-                  longPressTime={2000}
-                >
-                  Купить криптовалюту (USDT)
-                </ActionButton>
-              )}
-              
-              {showStaking && (
-                <ActionButton 
-                  onClick={handleStaking}
-                  disabled={usdt < 10}
-                  tooltip={usdt < 10 ? `Нужно еще ${10 - usdt} USDT` : "Разместить 10 USDT в стейкинге"}
-                  longPressTooltip="Стейкинг позволяет получать пассивный доход в размере ~10% годовых."
-                  longPressTime={2000}
-                >
-                  Стейкинг USDT
-                </ActionButton>
-              )}
-            </div>
+          {showTabs ? (
+            <GameTabs 
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              showTrading={showTrading}
+              showEducation={showEducation}
+              showMining={showMining}
+              showCareer={showCareer}
+              showMarketEvents={showMarketEvents}
+              dollars={dollars}
+              usdt={usdt}
+              btc={btc}
+              knowledge={knowledge}
+              marketMultiplier={marketMultiplier}
+              handleSaveDollar={handleSaveDollar}
+              handleBuyCrypto={handleBuyCrypto}
+              handleStaking={handleStaking}
+              handleTrade={handleTrade}
+              handleLearn={handleLearn}
+              handlePurchaseRig={handlePurchaseRig}
+              handleSelectRole={handleSelectRole}
+              handleMarketChange={handleMarketChange}
+              handlePrepareForEvent={handlePrepareForEvent}
+              showBuyCrypto={showBuyCrypto}
+              showStaking={showStaking}
+              role={role}
+            />
+          ) : (
+            <MainActions 
+              dollars={dollars}
+              usdt={usdt}
+              handleSaveDollar={handleSaveDollar}
+              handleBuyCrypto={handleBuyCrypto}
+              handleStaking={handleStaking}
+              showBuyCrypto={showBuyCrypto}
+              showStaking={showStaking}
+            />
           )}
         </div>
         

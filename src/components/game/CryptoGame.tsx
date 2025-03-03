@@ -21,6 +21,7 @@ const CryptoGame: React.FC = () => {
   const [knowledge, setKnowledge] = useState(0);
   const [miningPower, setMiningPower] = useState(0);
   const [role, setRole] = useState<string | null>(null);
+  const [marketMultiplier, setMarketMultiplier] = useState(1);
   
   // Флаги открытия функций
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
@@ -338,6 +339,7 @@ const CryptoGame: React.FC = () => {
                 btc={btc}
                 onPurchaseRig={handlePurchaseRig}
                 knowledge={knowledge}
+                marketMultiplier={marketMultiplier}
               />
             </TabsContent>
           )}

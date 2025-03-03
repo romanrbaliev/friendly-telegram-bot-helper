@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import ActionButton from './ActionButton';
-import { HardDrive, Cpu, Thermometer, Server } from 'lucide-react';
+import { HardDrive, Cpu, Thermometer, Server, Zap } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 
 interface MiningProps {
@@ -10,6 +10,7 @@ interface MiningProps {
   btc: number;
   onPurchaseRig: (cost: number) => void;
   knowledge: number;
+  marketMultiplier?: number; // Новый параметр для влияния рынка
 }
 
 interface MiningRig {
@@ -22,13 +23,21 @@ interface MiningRig {
   icon: React.ReactNode;
 }
 
-const Mining: React.FC<MiningProps> = ({ dollars, btc, onPurchaseRig, knowledge }) => {
+const Mining: React.FC<MiningProps> = ({ 
+  dollars, 
+  btc, 
+  onPurchaseRig, 
+  knowledge,
+  marketMultiplier = 1 // По умолчанию нет влияния 
+}) => {
   const [hasBasicRig, setHasBasicRig] = useState(false);
   const [displayBtc, setDisplayBtc] = useState(btc);
   const [rigType, setRigType] = useState<string | null>(null);
   const [hashrate, setHashrate] = useState(0);
   const [efficiency, setEfficiency] = useState(100); // в процентах
   const [miningProgress, setMiningProgress] = useState(0);
+  const [electricityCost, setElectricityCost] = useState(0);
+  const [lastElectricityPayment, setLastElectricityPayment] = useState(Date.now());
   
   const rigs: MiningRig[] = [
     {
@@ -71,12 +80,53 @@ const Mining: React.FC<MiningProps> = ({ dollars, btc, onPurchaseRig, knowledge 
     setDisplayBtc(btc);
   }, [btc]);
   
+  // Обработка электроэнергии - каждую минуту списывается плата
+  useEffect(() => {
+    if (hashrate > 0) {
+      const currentRig = rigs.find(rig => rig.id === rigType);
+      if (currentRig) {
+        // Расчет стоимости электроэнергии (0.01 за 100 единиц потребления в час)
+        const hourlyRate = currentRig.energyConsumption * 0.0001;
+        
+        // Проверка каждые 10 секунд
+        const interval = setInterval(() => {
+          const now = Date.now();
+          // Если прошло более 60 секунд с последней оплаты
+          if (now - lastElectricityPayment >= 60000) {
+            // Оплата за минуту
+            const cost = hourlyRate / 60;
+            setElectricityCost(prev => prev + cost);
+            setLastElectricityPayment(now);
+            
+            // Если накопилось больше 5$, показываем уведомление
+            if (electricityCost >= 5) {
+              toast({
+                title: "Счет за электроэнергию",
+                description: `Списано $${electricityCost.toFixed(2)} за питание майнингового оборудования`,
+                duration: 3000
+              });
+              
+              onPurchaseRig(electricityCost); // Списываем стоимость
+              setElectricityCost(0);
+            }
+          }
+        }, 10000);
+        
+        return () => clearInterval(interval);
+      }
+    }
+  }, [hashrate, rigType, lastElectricityPayment, electricityCost]);
+  
   // Real-time mining simulation with progress bar
   useEffect(() => {
     if (hashrate > 0) {
       const interval = setInterval(() => {
-        // Increment at a rate based on hashrate (0.00001 BTC per 10 units of hashrate per hour)
-        const btcIncrement = (hashrate / 10) * 0.00001 / (36000) * (efficiency / 100); // per 100ms
+        // Базовая скорость добычи
+        // Учитываем хешрейт, эффективность, рыночный множитель
+        const baseRate = (hashrate / 10) * 0.00001;
+        const marketAdjustedRate = baseRate * (marketMultiplier || 1);
+        const btcIncrement = marketAdjustedRate / (36000) * (efficiency / 100); // per 100ms
+        
         setDisplayBtc(prev => prev + btcIncrement);
         
         // Update progress bar for visual feedback
@@ -88,7 +138,7 @@ const Mining: React.FC<MiningProps> = ({ dollars, btc, onPurchaseRig, knowledge 
       
       return () => clearInterval(interval);
     }
-  }, [hashrate, efficiency]);
+  }, [hashrate, efficiency, marketMultiplier]);
   
   const handlePurchaseRig = (rig: MiningRig) => {
     const actualCost = calculateDiscount(rig.cost);
@@ -126,8 +176,10 @@ const Mining: React.FC<MiningProps> = ({ dollars, btc, onPurchaseRig, knowledge 
   };
 
   const getMiningSpeed = () => {
-    // Calculate BTC per hour based on hashrate and efficiency
-    return ((hashrate / 10) * 0.00001 * (efficiency / 100)).toFixed(8);
+    // Рассчитываем скорость с учетом рыночного множителя
+    const baseRate = (hashrate / 10) * 0.00001 * (efficiency / 100);
+    const marketAdjustedRate = baseRate * (marketMultiplier || 1);
+    return marketAdjustedRate.toFixed(8);
   };
 
   return (
@@ -201,6 +253,14 @@ const Mining: React.FC<MiningProps> = ({ dollars, btc, onPurchaseRig, knowledge 
               <div className="flex justify-between items-center mb-2">
                 <span className="text-xs text-white">Эффективность:</span>
                 <span className="text-xs font-mono text-blue-400">{efficiency}%</span>
+              </div>
+              
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs text-white flex items-center gap-1">
+                  <Zap size={12} className="text-yellow-400" />
+                  Счет за электричество:
+                </span>
+                <span className="text-xs font-mono text-yellow-400">${electricityCost.toFixed(2)}</span>
               </div>
               
               {efficiency < 100 && (

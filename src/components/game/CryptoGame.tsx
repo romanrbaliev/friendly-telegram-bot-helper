@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -7,10 +6,11 @@ import Trading from './Trading';
 import Education from './Education';
 import Mining from './Mining';
 import Career from './Career';
+import MarketEvents from './MarketEvents';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
 
 const CryptoGame: React.FC = () => {
   // Основные ресурсы
@@ -31,6 +31,7 @@ const CryptoGame: React.FC = () => {
   const [showEducation, setShowEducation] = useState(false);
   const [showMining, setShowMining] = useState(false);
   const [showCareer, setShowCareer] = useState(false);
+  const [showMarketEvents, setShowMarketEvents] = useState(false);
   const [clicks, setClicks] = useState(0);
   const [activeTab, setActiveTab] = useState('main');
   
@@ -95,11 +96,11 @@ const CryptoGame: React.FC = () => {
       });
     }
 
-    if (dollars >= 1000 && !showCareer) {
-      setShowCareer(true);
+    if (dollars >= 1000 && !showMarketEvents) {
+      setShowMarketEvents(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете выбрать карьерный путь!",
+        description: "Теперь вы можете отслеживать рыночные события и реагировать на них.",
         duration: 3000
       });
     }
@@ -170,12 +171,10 @@ const CryptoGame: React.FC = () => {
   const handleTrade = (fromUSDT: boolean, amount: number) => {
     if (fromUSDT) {
       setUsdt(prev => prev - amount);
-      // Пример конвертации: 1 USDT = 0.00002 BTC
       setBtc(prev => prev + amount * 0.00002);
     } else {
       setBtc(prev => prev - amount);
-      // Пример конвертации обратно: 1 BTC = 50000 USDT (с 5% комиссией)
-      const fee = 5 - (knowledge / 20); // Комиссия снижается с ростом знаний
+      const fee = 5 - (knowledge / 20);
       const commissionRate = Math.max(fee, 0.5) / 100;
       setUsdt(prev => prev + amount * 50000 * (1 - commissionRate));
     }
@@ -193,6 +192,14 @@ const CryptoGame: React.FC = () => {
 
   const handleSelectRole = (selectedRole: string) => {
     setRole(selectedRole);
+  };
+
+  const handleMarketChange = (multiplier: number) => {
+    setMarketMultiplier(multiplier);
+  };
+  
+  const handlePrepareForEvent = (cost: number) => {
+    setDollars(prev => prev - cost);
   };
 
   return (
@@ -222,11 +229,16 @@ const CryptoGame: React.FC = () => {
         />
       )}
       
-      {(showTrading || showEducation || showMining || showCareer) && (
+      {(showTrading || showEducation || showMining || showCareer || showMarketEvents) && (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
           <TabsList className="w-full animate-fade-in" style={{ 
             display: 'grid', 
-            gridTemplateColumns: `repeat(${1 + (showTrading ? 1 : 0) + (showEducation ? 1 : 0) + (showMining ? 1 : 0) + (showCareer ? 1 : 0)}, minmax(0, 1fr))` 
+            gridTemplateColumns: `repeat(${1 + 
+              (showTrading ? 1 : 0) + 
+              (showEducation ? 1 : 0) + 
+              (showMining ? 1 : 0) + 
+              (showCareer ? 1 : 0) + 
+              (showMarketEvents ? 1 : 0)}, minmax(0, 1fr))` 
           }}>
             <TabsTrigger value="main" className="flex items-center gap-1">
               <DollarSign size={16} />
@@ -254,6 +266,12 @@ const CryptoGame: React.FC = () => {
               <TabsTrigger value="career" className="flex items-center gap-1">
                 <Briefcase size={16} />
                 Карьера
+              </TabsTrigger>
+            )}
+            {showMarketEvents && (
+              <TabsTrigger value="market" className="flex items-center gap-1">
+                <BarChart4 size={16} />
+                Рынок
               </TabsTrigger>
             )}
           </TabsList>
@@ -334,10 +352,20 @@ const CryptoGame: React.FC = () => {
               />
             </TabsContent>
           )}
+          
+          {showMarketEvents && (
+            <TabsContent value="market" className="mt-4">
+              <MarketEvents
+                knowledge={knowledge}
+                onPrepareForEvent={handlePrepareForEvent}
+                onMarketChange={handleMarketChange}
+              />
+            </TabsContent>
+          )}
         </Tabs>
       )}
       
-      {!(showTrading || showEducation || showMining || showCareer) && (
+      {!(showTrading || showEducation || showMining || showCareer || showMarketEvents) && (
         <div className="flex-1 flex flex-col gap-4">
           <ActionButton 
             onClick={handleSaveDollar}

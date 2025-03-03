@@ -42,7 +42,8 @@ const Mining: React.FC<MiningProps> = ({ dollars, btc, onPurchaseRig, knowledge 
       setHasBasicRig(true);
       toast({
         title: "Оборудование приобретено!",
-        description: "Вы купили базовое оборудование для майнинга"
+        description: "Вы купили базовое оборудование для майнинга",
+        duration: 3000
       });
     }
   };

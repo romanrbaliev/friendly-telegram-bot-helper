@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { DollarSign, GraduationCap } from 'lucide-react';
+import { DollarSign, GraduationCap, Briefcase } from 'lucide-react';
 
 interface ResourceDisplayProps {
   dollars: number;
@@ -12,6 +12,7 @@ interface ResourceDisplayProps {
   showKnowledge: boolean;
   btc: number;
   showBtc: boolean;
+  role?: string | null;
 }
 
 const ResourceDisplay: React.FC<ResourceDisplayProps> = ({ 
@@ -23,7 +24,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
   knowledge,
   showKnowledge,
   btc,
-  showBtc
+  showBtc,
+  role
 }) => {
   // State for real-time resource display
   const [displayUsdt, setDisplayUsdt] = useState(usdt);
@@ -54,6 +56,22 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
       return () => clearInterval(interval);
     }
   }, [usdt, btc, stakedUsdt]);
+
+  const getRoleName = (roleId: string | null): string => {
+    if (!roleId) return "";
+    
+    const roles: {[key: string]: string} = {
+      "investor": "Инвестор",
+      "founder": "Фаундер",
+      "trader": "Трейдер",
+      "miner": "Майнер",
+      "influencer": "Инфлюенсер",
+      "analyst": "Аналитик",
+      "arbitrage": "Арбитражник"
+    };
+    
+    return roles[roleId] || "";
+  };
 
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
@@ -106,6 +124,16 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <span className="text-gray-200">Знания:</span>
             </div>
             <span className="font-mono text-white">{knowledge}%</span>
+          </div>
+        )}
+
+        {role && (
+          <div className="flex items-center justify-between animate-fade-up mt-2 pt-2 border-t border-white/10">
+            <div className="flex items-center gap-2">
+              <Briefcase size={18} className="text-purple-400" />
+              <span className="text-gray-200">Карьера:</span>
+            </div>
+            <span className="font-mono text-white">{getRoleName(role)}</span>
           </div>
         )}
       </div>

@@ -6,10 +6,11 @@ import ActionButton from './ActionButton';
 import Trading from './Trading';
 import Education from './Education';
 import Mining from './Mining';
+import Career from './Career';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, GraduationCap, ArrowUpDown, HardDrive } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase } from 'lucide-react';
 
 const CryptoGame: React.FC = () => {
   // Основные ресурсы
@@ -19,6 +20,7 @@ const CryptoGame: React.FC = () => {
   const [stakedUsdt, setStakedUsdt] = useState(0);
   const [knowledge, setKnowledge] = useState(0);
   const [miningPower, setMiningPower] = useState(0);
+  const [role, setRole] = useState<string | null>(null);
   
   // Флаги открытия функций
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
@@ -28,6 +30,7 @@ const CryptoGame: React.FC = () => {
   const [showTrading, setShowTrading] = useState(false);
   const [showEducation, setShowEducation] = useState(false);
   const [showMining, setShowMining] = useState(false);
+  const [showCareer, setShowCareer] = useState(false);
   const [clicks, setClicks] = useState(0);
   const [activeTab, setActiveTab] = useState('main');
   
@@ -69,7 +72,8 @@ const CryptoGame: React.FC = () => {
       setShowTrading(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете торговать на бирже."
+        description: "Теперь вы можете торговать на бирже.",
+        duration: 3000
       });
     }
 
@@ -77,7 +81,8 @@ const CryptoGame: React.FC = () => {
       setShowEducation(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете получать криптообразование."
+        description: "Теперь вы можете получать криптообразование.",
+        duration: 3000
       });
     }
     
@@ -85,7 +90,17 @@ const CryptoGame: React.FC = () => {
       setShowMining(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете заниматься майнингом криптовалют."
+        description: "Теперь вы можете заниматься майнингом криптовалют.",
+        duration: 3000
+      });
+    }
+
+    if (dollars >= 1000 && !showCareer) {
+      setShowCareer(true);
+      toast({
+        title: "Новая возможность!",
+        description: "Теперь вы можете выбрать карьерный путь!",
+        duration: 3000
       });
     }
   }, [dollars]);
@@ -98,7 +113,8 @@ const CryptoGame: React.FC = () => {
       setShowResources(true);
       toast({
         title: "Новый раздел открыт!",
-        description: "Теперь вы можете отслеживать свои ресурсы."
+        description: "Теперь вы можете отслеживать свои ресурсы.",
+        duration: 3000
       });
     }
     
@@ -106,7 +122,8 @@ const CryptoGame: React.FC = () => {
       setShowBuyCrypto(true);
       toast({
         title: "Новая возможность!",
-        description: "Теперь вы можете покупать криптовалюту."
+        description: "Теперь вы можете покупать криптовалюту.",
+        duration: 3000
       });
     }
   };
@@ -122,14 +139,16 @@ const CryptoGame: React.FC = () => {
       
       toast({
         title: "Покупка криптовалюты",
-        description: `Вы купили ${finalAmount.toFixed(2)} USDT. Комиссия составила ${fee.toFixed(2)}$.`
+        description: `Вы купили ${finalAmount.toFixed(2)} USDT. Комиссия составила ${fee.toFixed(2)}$.`,
+        duration: 3000
       });
       
       if (purchaseAmount >= 50 && !showStaking) {
         setShowStaking(true);
         toast({
           title: "Новая возможность!",
-          description: "Теперь вы можете использовать стейкинг криптовалюты для пассивного дохода."
+          description: "Теперь вы можете использовать стейкинг криптовалюты для пассивного дохода.",
+          duration: 3000
         });
       }
     }
@@ -142,7 +161,8 @@ const CryptoGame: React.FC = () => {
       
       toast({
         title: "Стейкинг активирован",
-        description: "Вы разместили 10 USDT в стейкинге. Теперь вы будете получать пассивный доход."
+        description: "Вы разместили 10 USDT в стейкинге. Теперь вы будете получать пассивный доход.",
+        duration: 3000
       });
     }
   };
@@ -171,6 +191,10 @@ const CryptoGame: React.FC = () => {
     setMiningPower(prev => prev + 1);
   };
 
+  const handleSelectRole = (selectedRole: string) => {
+    setRole(selectedRole);
+  };
+
   return (
     <div className="min-h-screen bg-[#1A1F2C] text-white p-4 flex flex-col">
       <WelcomePopup 
@@ -194,14 +218,15 @@ const CryptoGame: React.FC = () => {
           showKnowledge={showEducation}
           btc={btc}
           showBtc={btc > 0 || showTrading}
+          role={role}
         />
       )}
       
-      {(showTrading || showEducation || showMining) && (
+      {(showTrading || showEducation || showMining || showCareer) && (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="w-full grid-cols-4 animate-fade-in" style={{ 
+          <TabsList className="w-full animate-fade-in" style={{ 
             display: 'grid', 
-            gridTemplateColumns: `repeat(${1 + (showTrading ? 1 : 0) + (showEducation ? 1 : 0) + (showMining ? 1 : 0)}, minmax(0, 1fr))` 
+            gridTemplateColumns: `repeat(${1 + (showTrading ? 1 : 0) + (showEducation ? 1 : 0) + (showMining ? 1 : 0) + (showCareer ? 1 : 0)}, minmax(0, 1fr))` 
           }}>
             <TabsTrigger value="main" className="flex items-center gap-1">
               <DollarSign size={16} />
@@ -223,6 +248,12 @@ const CryptoGame: React.FC = () => {
               <TabsTrigger value="mining" className="flex items-center gap-1">
                 <HardDrive size={16} />
                 Майнинг
+              </TabsTrigger>
+            )}
+            {showCareer && (
+              <TabsTrigger value="career" className="flex items-center gap-1">
+                <Briefcase size={16} />
+                Карьера
               </TabsTrigger>
             )}
           </TabsList>
@@ -292,10 +323,21 @@ const CryptoGame: React.FC = () => {
               />
             </TabsContent>
           )}
+          
+          {showCareer && (
+            <TabsContent value="career" className="mt-4">
+              <Career
+                dollars={dollars}
+                onSelectRole={handleSelectRole}
+                selectedRole={role}
+                knowledge={knowledge}
+              />
+            </TabsContent>
+          )}
         </Tabs>
       )}
       
-      {!(showTrading || showEducation || showMining) && (
+      {!(showTrading || showEducation || showMining || showCareer) && (
         <div className="flex-1 flex flex-col gap-4">
           <ActionButton 
             onClick={handleSaveDollar}

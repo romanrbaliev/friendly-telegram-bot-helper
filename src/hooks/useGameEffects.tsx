@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/ui/use-toast';
 
@@ -103,7 +102,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
       });
     }
     
-    if (knowledge >= 1 && dollars >= 50 && !setShowBuyCrypto) {
+    if (knowledge >= 1 && dollars >= 50 && !showBuyCrypto) {
       setShowBuyCrypto(true);
       
       toast({
@@ -113,7 +112,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
       });
     }
     
-    if (usdt >= 0.001 && dollars >= 100 && !setShowStaking) {
+    if (usdt >= 0.001 && dollars >= 100 && !showStaking) {
       setShowStaking(true);
       
       toast({
@@ -162,7 +161,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
         duration: 5000
       });
     }
-  }, [dollars, knowledge, usdt, stakedUsdt, clicks, showResources, showEducation, showTrading, showMining, showCareer, showMarketEvents, setShowResources, setShowBuyCrypto, setShowStaking, setShowTrading, setShowEducation, setShowMining, setShowCareer, setShowMarketEvents]);
+  }, [dollars, knowledge, usdt, stakedUsdt, clicks, showResources, showEducation, showBuyCrypto, showStaking, showTrading, showMining, showCareer, showMarketEvents, setShowResources, setShowBuyCrypto, setShowStaking, setShowTrading, setShowEducation, setShowMining, setShowCareer, setShowMarketEvents]);
   
   // Механика обучения - получение знаний
   const handleLearn = useCallback((cost: number, knowledgeGain: number) => {

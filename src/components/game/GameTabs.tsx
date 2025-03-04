@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
@@ -64,7 +63,6 @@ const GameTabs: React.FC<GameTabsProps> = ({
   role,
   handleLearnBasics
 }) => {
-  // Вычисляем количество видимых табов
   const visibleTabsCount = 1 + 
     (showTrading ? 1 : 0) + 
     (showEducation ? 1 : 0) + 
@@ -137,7 +135,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
             btc={btc}
             onTrade={handleTrade}
             knowledge={knowledge}
-            isTrader={role === 'trader'}
+            role={role}
           />
         </TabsContent>
       )}

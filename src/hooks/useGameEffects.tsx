@@ -1,305 +1,247 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/ui/use-toast';
 
-interface UseGameEffectsProps {
+interface GameEffectsProps {
   dollars: number;
   usdt: number;
   stakedUsdt: number;
   miningPower: number;
-  setUsdt: (value: (prev: number) => number) => void;
-  setBtc: (value: (prev: number) => number) => void;
+  setUsdt: React.Dispatch<React.SetStateAction<number>>;
+  setBtc: React.Dispatch<React.SetStateAction<number>>;
   showResources: boolean;
-  showTrading: boolean; 
+  showTrading: boolean;
   showEducation: boolean;
   showMining: boolean;
   showCareer: boolean;
   showMarketEvents: boolean;
-  setShowTrading: (value: boolean) => void;
-  setShowEducation: (value: boolean) => void;
-  setShowMining: (value: boolean) => void;
-  setShowMarketEvents: (value: boolean) => void;
-  setShowResources: (value: boolean) => void;
-  setShowBuyCrypto: (value: boolean) => void;
-  setShowStaking: (value: boolean) => void;
+  setShowResources: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowBuyCrypto: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowStaking: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowTrading: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowEducation: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowMining: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowCareer: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowMarketEvents: React.Dispatch<React.SetStateAction<boolean>>;
   clicks: number;
   marketMultiplier: number;
   knowledge: number;
-  setKnowledge: (value: (prev: number) => number) => void;
-  setDollars: (value: (prev: number) => number) => void;
+  setKnowledge: React.Dispatch<React.SetStateAction<number>>;
+  setDollars: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export function useGameEffects({
-  dollars,
-  usdt,
-  stakedUsdt,
-  miningPower,
-  setUsdt,
-  setBtc,
-  showResources,
-  showTrading, 
-  showEducation,
-  showMining,
-  showCareer,
-  showMarketEvents,
-  setShowTrading,
-  setShowEducation,
-  setShowMining,
-  setShowMarketEvents,
-  setShowResources,
-  setShowBuyCrypto,
-  setShowStaking,
-  clicks,
-  marketMultiplier,
-  knowledge,
-  setKnowledge,
-  setDollars
-}: UseGameEffectsProps) {
+export const useGameEffects = (props: GameEffectsProps) => {
+  const { 
+    dollars, 
+    usdt, 
+    stakedUsdt, 
+    miningPower, 
+    setUsdt, 
+    setBtc, 
+    showResources, 
+    showTrading, 
+    showEducation, 
+    showMining, 
+    showCareer, 
+    showMarketEvents, 
+    setShowResources, 
+    setShowBuyCrypto, 
+    setShowStaking, 
+    setShowTrading, 
+    setShowEducation, 
+    setShowMining, 
+    setShowCareer, 
+    setShowMarketEvents, 
+    clicks, 
+    marketMultiplier, 
+    knowledge, 
+    setKnowledge, 
+    setDollars 
+  } = props;
   
-  // Временный бонус: бычий рынок
   const [bullMarketActive, setBullMarketActive] = useState(false);
-  const [lastTimestamp, setLastTimestamp] = useState(Date.now());
   
-  // Эффект стейкинга
-  useEffect(() => {
-    let stakingInterval: NodeJS.Timeout | null = null;
+  // Механика аирдропа - получение бесплатных криптовалют
+  const handleAirdrop = useCallback(() => {
+    // Базовая награда за клик
+    let baseReward = 1;
     
-    if (stakedUsdt > 0) {
-      stakingInterval = setInterval(() => {
-        const reward = stakedUsdt * 0.001 * (bullMarketActive ? 1.5 : 1);
-        setUsdt(prev => prev + reward);
-      }, 10000);
-    }
+    // Увеличение награды в зависимости от уровня знаний
+    if (knowledge >= 5) baseReward = 1.5;
+    if (knowledge >= 10) baseReward = 2;
+    if (knowledge >= 20) baseReward = 3;
+    if (knowledge >= 50) baseReward = 5;
     
-    return () => {
-      if (stakingInterval) clearInterval(stakingInterval);
-    };
-  }, [stakedUsdt, setUsdt, bullMarketActive]);
+    // Применение бонуса бычьего рынка
+    const rewardWithMarket = bullMarketActive ? baseReward * 1.5 : baseReward;
+    
+    setDollars(prev => prev + rewardWithMarket);
+    checkPurchaseMilestones();
+    
+    return rewardWithMarket;
+  }, [knowledge, bullMarketActive, setDollars]);
   
-  // Эффект майнинга
-  useEffect(() => {
-    let miningInterval: NodeJS.Timeout | null = null;
-    
-    if (miningPower > 0) {
-      miningInterval = setInterval(() => {
-        const mined = miningPower * 0.00001 * marketMultiplier * (bullMarketActive ? 1.5 : 1);
-        setBtc(prev => prev + mined);
-      }, 10000);
-    }
-    
-    return () => {
-      if (miningInterval) clearInterval(miningInterval);
-    };
-  }, [miningPower, setBtc, marketMultiplier, bullMarketActive]);
-  
-  // Эффект пассивного дохода
-  useEffect(() => {
-    const currentTime = Date.now();
-    const timeDiff = (currentTime - lastTimestamp) / 1000; // в секундах
-    setLastTimestamp(currentTime);
-    
-    // Если прошло значительное время (2+ секунды), рассчитываем пассивный доход
-    if (timeDiff > 2) {
-      // Пассивный доход от стейкинга USDT
-      if (stakedUsdt > 0) {
-        const passiveReward = (stakedUsdt * 0.001 * timeDiff / 10) * (bullMarketActive ? 1.5 : 1);
-        if (passiveReward > 0.01) {
-          setUsdt(prev => prev + passiveReward);
-        }
-      }
-      
-      // Пассивный доход от майнинга BTC
-      if (miningPower > 0) {
-        const passiveMined = (miningPower * 0.00001 * marketMultiplier * timeDiff / 10) * (bullMarketActive ? 1.5 : 1);
-        if (passiveMined > 0.00000001) {
-          setBtc(prev => prev + passiveMined);
-        }
-      }
-    }
-    
-    // Обновляем статус рынка (случайный шанс бычьего рынка)
-    const randomEvent = Math.random();
-    if (randomEvent < 0.003 && !bullMarketActive && showMarketEvents) { // 0.3% шанс каждую секунду
-      setBullMarketActive(true);
+  // Проверка и разблокировка новых функций
+  const checkPurchaseMilestones = useCallback(() => {
+    if (!showResources && clicks >= 1) {
+      setShowResources(true);
       
       toast({
-        title: "Бычий рынок!",
-        description: "Доходность всех ваших активов увеличена на 50% на 5 минут!",
+        title: "Разблокировано: Ресурсы",
+        description: "Теперь вы можете видеть свои накопления вверху экрана.",
         duration: 5000
       });
-      
-      // Через 5 минут отключаем бычий рынок
-      setTimeout(() => {
-        setBullMarketActive(false);
-        toast({
-          title: "Бычий рынок закончился",
-          description: "Доходность вернулась к нормальному уровню",
-          duration: 3000
-        });
-      }, 300000); // 5 минут
     }
     
-    // Интервал проверки обновления
-    const interval = setInterval(() => {
-      setLastTimestamp(Date.now());
-    }, 1000);
-    
-    return () => clearInterval(interval);
-  }, [lastTimestamp, stakedUsdt, miningPower, marketMultiplier, setUsdt, setBtc, showMarketEvents, bullMarketActive]);
-  
-  // Эффект проверки достижения целей
-  useEffect(() => {
-    // Начальный этап: Первые 20 минут
-    if (clicks >= 1 && !showResources) {
-      setShowResources(true);
-      toast({
-        title: "Новый раздел открыт!",
-        description: "Теперь вы можете отслеживать свои ресурсы.",
-        duration: 3000
-      });
-    }
-    
-    if (clicks >= 3 && !showEducation) {
+    if (dollars >= 10 && !showEducation) {
       setShowEducation(true);
+      
       toast({
-        title: "Новая возможность!",
-        description: "Изучите основы криптовалют (требуется $10).",
-        duration: 3000
+        title: "Разблокировано: Образование",
+        description: "Теперь вы можете изучать основы криптовалют.",
+        duration: 5000
       });
     }
     
-    if (knowledge >= 1 && !showBuyCrypto) {
+    if (knowledge >= 1 && dollars >= 50 && !setShowBuyCrypto) {
       setShowBuyCrypto(true);
+      
       toast({
-        title: "Новая возможность!",
+        title: "Разблокировано: Покупка криптовалют",
         description: "Теперь вы можете купить свою первую криптовалюту.",
-        duration: 3000
+        duration: 5000
       });
     }
     
-    if (usdt >= 0.001 && !showStaking) {
+    if (usdt >= 0.001 && dollars >= 100 && !setShowStaking) {
       setShowStaking(true);
+      
       toast({
-        title: "Новая возможность!",
-        description: "Начните зарабатывать даже когда вы не в игре с помощью стейкинга.",
-        duration: 3000
+        title: "Разблокировано: Стейкинг",
+        description: "Теперь вы можете зарабатывать пассивный доход.",
+        duration: 5000
       });
     }
     
-    if (stakedUsdt > 0 && !showMining) {
-      setShowMining(true);
+    if (stakedUsdt > 0 && !showTrading) {
+      setShowTrading(true);
+      
       toast({
-        title: "Новая возможность!",
-        description: "Теперь вы можете анализировать рынок и заняться майнингом.",
-        duration: 3000
+        title: "Разблокировано: Трейдинг",
+        description: "Теперь вы можете торговать криптовалютами.",
+        duration: 5000
+      });
+    }
+    
+    if (knowledge >= 15 && !showMining) {
+      setShowMining(true);
+      
+      toast({
+        title: "Разблокировано: Майнинг",
+        description: "Теперь вы можете добывать криптовалюту с помощью оборудования.",
+        duration: 5000
       });
     }
     
     if (dollars >= 500 && !showCareer) {
       setShowCareer(true);
+      
       toast({
-        title: "Новая возможность!",
-        description: "Пора выбрать свой путь в криптомире!",
-        duration: 3000
+        title: "Разблокировано: Карьера",
+        description: "Теперь вы можете выбрать специализацию в криптомире.",
+        duration: 5000
       });
     }
     
-    if (dollars >= 1000 && !showMarketEvents) {
+    if (knowledge >= 30 && !showMarketEvents) {
       setShowMarketEvents(true);
-      toast({
-        title: "Новая возможность!",
-        description: "Теперь вы можете отслеживать рыночные события и реагировать на них.",
-        duration: 3000
-      });
-    }
-    
-    // Проверка достижений
-    checkAchievements();
-    
-  }, [dollars, clicks, knowledge, usdt, stakedUsdt, showResources, showEducation, showBuyCrypto, showStaking, showMining, showCareer, showMarketEvents, setShowResources, setShowEducation, setShowBuyCrypto, setShowStaking, setShowMining, setShowCareer, setShowMarketEvents]);
-  
-  // Проверка достижений
-  const checkAchievements = () => {
-    // Достижение: Первые шаги
-    if (dollars >= 100) {
-      const achievementKey = 'achievement_first_steps';
-      const achieved = localStorage.getItem(achievementKey);
-      
-      if (!achieved) {
-        localStorage.setItem(achievementKey, 'true');
-        setDollars(prev => prev + 50);
-        toast({
-          title: "Достижение разблокировано!",
-          description: "Первые шаги: заработать $100. Награда: +$50!",
-          duration: 5000
-        });
-      }
-    }
-    
-    // Достижение: Криптоэнтузиаст
-    if (knowledge >= 10) {
-      const achievementKey = 'achievement_crypto_enthusiast';
-      const achieved = localStorage.getItem(achievementKey);
-      
-      if (!achieved) {
-        localStorage.setItem(achievementKey, 'true');
-        setShowTrading(true);
-        toast({
-          title: "Достижение разблокировано!",
-          description: "Криптоэнтузиаст: собрать 10 единиц знаний. Награда: Доступ к трейдингу!",
-          duration: 5000
-        });
-      }
-    }
-  };
-  
-  // Обработчик аирдропа с горячим бонусом
-  const handleAirdrop = () => {
-    // 5% шанс получить горячий аирдроп
-    const isHotAirdrop = Math.random() < 0.05;
-    
-    if (isHotAirdrop) {
-      const bonus = 2; // x2 к награде
-      const reward = 1 * bonus;
-      
-      setDollars(prev => prev + reward);
       
       toast({
-        title: "Горячий аирдроп!",
-        description: `Вы получили $${reward} (x${bonus} бонус)!`,
-        duration: 3000
+        title: "Разблокировано: События рынка",
+        description: "Теперь вы можете отслеживать и реагировать на события рынка.",
+        duration: 5000
       });
-      
-      return reward;
-    } else {
-      setDollars(prev => prev + 1);
-      return 1;
     }
-  };
+  }, [dollars, knowledge, usdt, stakedUsdt, clicks, showResources, showEducation, showTrading, showMining, showCareer, showMarketEvents, setShowResources, setShowBuyCrypto, setShowStaking, setShowTrading, setShowEducation, setShowMining, setShowCareer, setShowMarketEvents]);
   
-  // Обработчик для обучения
-  const handleLearn = (cost: number, knowledgeGain: number) => {
+  // Механика обучения - получение знаний
+  const handleLearn = useCallback((cost: number, knowledgeGain: number) => {
     if (dollars >= cost) {
       setDollars(prev => prev - cost);
       setKnowledge(prev => prev + knowledgeGain);
+      checkPurchaseMilestones();
       
       toast({
-        title: "Обучение завершено!",
-        description: `Вы получили +${knowledgeGain} к знаниям!`,
+        title: "Знания получены!",
+        description: `Вы получили +${knowledgeGain} к знаниям о криптовалютах.`,
         duration: 3000
       });
       
-      // Проверить достижения после обучения
-      setTimeout(() => checkAchievements(), 500);
-      
       return true;
     }
+    
     return false;
-  };
+  }, [dollars, setDollars, setKnowledge, checkPurchaseMilestones]);
+  
+  // Функция пассивного дохода от стейкинга
+  useEffect(() => {
+    if (stakedUsdt > 0) {
+      const interval = setInterval(() => {
+        const baseIncome = stakedUsdt * 0.01; // 1% в минуту
+        const marketBonus = bullMarketActive ? 1.5 : 1;
+        setUsdt(prev => prev + baseIncome * marketBonus);
+      }, 60000); // Каждую минуту
+      
+      return () => clearInterval(interval);
+    }
+  }, [stakedUsdt, bullMarketActive, setUsdt]);
+  
+  // Функция майнинга (если есть мощность)
+  useEffect(() => {
+    if (miningPower > 0) {
+      const interval = setInterval(() => {
+        // Базовый доход от майнинга
+        const baseMining = miningPower * 0.0001; // 0.0001 BTC в час для каждой единицы мощности
+        const marketModifier = marketMultiplier;
+        setBtc(prev => prev + baseMining * marketModifier);
+      }, 3600000 / 12); // Каждые 5 минут (1/12 часа)
+      
+      return () => clearInterval(interval);
+    }
+  }, [miningPower, marketMultiplier, setBtc]);
+  
+  // Функция рыночных событий
+  useEffect(() => {
+    const eventInterval = setInterval(() => {
+      // 5% шанс активации бычьего рынка каждые 5 минут
+      if (Math.random() < 0.05 && showMarketEvents) {
+        setBullMarketActive(true);
+        
+        toast({
+          title: "Бычий рынок!",
+          description: "Рынок идет вверх! +50% к доходности на следующие 5 минут.",
+          duration: 5000
+        });
+        
+        // Деактивация через 5 минут
+        setTimeout(() => {
+          setBullMarketActive(false);
+          
+          toast({
+            title: "Бычий рынок закончился",
+            description: "Рынок вернулся к обычным значениям.",
+            duration: 3000
+          });
+        }, 300000); // 5 минут
+      }
+    }, 300000); // Проверка каждые 5 минут
+    
+    return () => clearInterval(eventInterval);
+  }, [showMarketEvents]);
   
   return {
     handleAirdrop,
     handleLearn,
     bullMarketActive
   };
-}
+};

@@ -10,7 +10,7 @@ const Index = () => {
     // Имитация загрузки данных
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 1500);
     
     return () => clearTimeout(timer);
   }, []);
@@ -21,7 +21,7 @@ const Index = () => {
         <div className="h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gradient mb-4">Crypto Clicker</h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded">
+            <div className="w-32 h-2 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded">
               <div className="h-full w-1/2 bg-white animate-pulse rounded"></div>
             </div>
             <p className="mt-4 text-gray-400">Загрузка игры...</p>

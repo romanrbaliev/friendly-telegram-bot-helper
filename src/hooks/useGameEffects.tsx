@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/ui/use-toast';
 
@@ -14,6 +15,8 @@ interface GameEffectsProps {
   showMining: boolean;
   showCareer: boolean;
   showMarketEvents: boolean;
+  showBuyCrypto: boolean;
+  showStaking: boolean;
   setShowResources: React.Dispatch<React.SetStateAction<boolean>>;
   setShowBuyCrypto: React.Dispatch<React.SetStateAction<boolean>>;
   setShowStaking: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,6 +46,8 @@ export const useGameEffects = (props: GameEffectsProps) => {
     showMining, 
     showCareer, 
     showMarketEvents, 
+    showBuyCrypto,
+    showStaking,
     setShowResources, 
     setShowBuyCrypto, 
     setShowStaking, 

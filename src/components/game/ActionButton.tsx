@@ -23,14 +23,12 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const [pressing, setPressing] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
-  const [pressStarted, setPressStarted] = useState(false);
   
   // Обработка долгого нажатия
   const handleMouseDown = () => {
     if (disabled) return;
     
     setPressing(true);
-    setPressStarted(true);
     
     if (longPressTime > 0 && longPressTooltip) {
       pressTimer.current = setTimeout(() => {
@@ -48,14 +46,11 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       pressTimer.current = null;
     }
     
-    // Обработка клика только если кнопка была нажата и не отключена
-    if (pressStarted && !disabled) {
-      console.log("Вызываем onClick в handleMouseUp");
+    if (!disabled) {
       onClick();
     }
     
     setPressing(false);
-    setPressStarted(false);
   };
   
   const handleMouseLeave = () => {
@@ -64,7 +59,6 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       pressTimer.current = null;
     }
     setPressing(false);
-    setPressStarted(false);
     setShowTooltip(false);
   };
   
@@ -90,7 +84,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
           ${pressing ? 'translate-y-0.5 bg-primary/80' : ''} 
           ${disabled 
             ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
-            : 'bg-blue-600 hover:bg-blue-700 text-white font-semibold'
+            : 'bg-primary hover:bg-primary/90 text-primary-foreground'
           }`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}

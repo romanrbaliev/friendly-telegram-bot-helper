@@ -48,6 +48,8 @@ const CryptoGame: React.FC = () => {
     showMining,
     showCareer,
     showMarketEvents,
+    showBuyCrypto,
+    showStaking,
     setShowResources,
     setShowBuyCrypto,
     setShowStaking,

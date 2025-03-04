@@ -27,12 +27,12 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   
   // Обработка долгого нажатия
   const handleMouseDown = () => {
-    if (disabled || !longPressTooltip) return;
+    if (disabled) return;
     
     setPressing(true);
     setPressStarted(true);
     
-    if (longPressTime > 0) {
+    if (longPressTime > 0 && longPressTooltip) {
       pressTimer.current = setTimeout(() => {
         toast({
           title: "Подсказка",
@@ -48,16 +48,15 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       pressTimer.current = null;
     }
     
-    // Обработка клика только если кнопка была нажата
+    // Обработка клика только если кнопка была нажата и не отключена
     if (pressStarted && !disabled) {
+      console.log("Вызываем onClick в handleMouseUp");
       onClick();
     }
     
     setPressing(false);
     setPressStarted(false);
   };
-
-  // Удалим обработчик handleClick, так как теперь обрабатываем клик в handleMouseUp
   
   const handleMouseLeave = () => {
     if (pressTimer.current) {
@@ -80,15 +79,19 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   return (
     <div className="relative">
       {tooltip && showTooltip && !disabled && (
-        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">
           {tooltip}
         </div>
       )}
       <Button
+        type="button"
         variant="default"
-        className={`w-full py-6 text-base font-medium transition-all ${
-          pressing ? 'translate-y-0.5 bg-primary/80' : ''
-        } ${disabled ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-primary/90 text-white'}`}
+        className={`w-full py-6 text-base font-medium transition-all shadow-md 
+          ${pressing ? 'translate-y-0.5 bg-primary/80' : ''} 
+          ${disabled 
+            ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
+            : 'bg-blue-600 hover:bg-blue-700 text-white font-semibold'
+          }`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}

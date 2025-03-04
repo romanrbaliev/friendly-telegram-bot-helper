@@ -2,6 +2,7 @@
 import React from 'react';
 import ActionButton from './ActionButton';
 import { DollarSign, BookOpen, Coins, ArrowUp } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
 interface MainActionsProps {
   dollars: number;
@@ -28,10 +29,17 @@ const MainActions: React.FC<MainActionsProps> = ({
   showEducation,
   knowledge
 }) => {
-  // Добавим консоль-лог для отладки
+  // Обработчик с логами и визуальной обратной связью
   const handleDollarClick = () => {
     console.log('Заработать на аирдропах - кнопка нажата');
     handleSaveDollar();
+    
+    // Добавляем визуальную обратную связь
+    toast({
+      title: "Аирдроп получен!",
+      description: "Вы заработали $1",
+      duration: 1500
+    });
   };
   
   return (

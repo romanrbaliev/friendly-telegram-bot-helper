@@ -23,12 +23,15 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const [pressing, setPressing] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
+  const [pressStarted, setPressStarted] = useState(false);
   
   // Обработка долгого нажатия
   const handleMouseDown = () => {
     if (disabled || !longPressTooltip) return;
     
     setPressing(true);
+    setPressStarted(true);
+    
     if (longPressTime > 0) {
       pressTimer.current = setTimeout(() => {
         toast({
@@ -44,17 +47,25 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       clearTimeout(pressTimer.current);
       pressTimer.current = null;
     }
-    setPressing(false);
-  };
-
-  const handleClick = () => {
-    if (!disabled) {
+    
+    // Обработка клика только если кнопка была нажата
+    if (pressStarted && !disabled) {
       onClick();
     }
+    
+    setPressing(false);
+    setPressStarted(false);
   };
+
+  // Удалим обработчик handleClick, так как теперь обрабатываем клик в handleMouseUp
   
   const handleMouseLeave = () => {
-    handleMouseUp();
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+    setPressing(false);
+    setPressStarted(false);
     setShowTooltip(false);
   };
   
@@ -77,8 +88,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         variant="default"
         className={`w-full py-6 text-base font-medium transition-all ${
           pressing ? 'translate-y-0.5 bg-primary/80' : ''
-        } ${disabled ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-primary/90 text-black'}`}
-        onClick={handleClick}
+        } ${disabled ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-primary/90 text-white'}`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}

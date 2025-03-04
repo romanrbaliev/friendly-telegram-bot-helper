@@ -28,13 +28,19 @@ const MainActions: React.FC<MainActionsProps> = ({
   showEducation,
   knowledge
 }) => {
+  // Добавим консоль-лог для отладки
+  const handleDollarClick = () => {
+    console.log('Заработать на аирдропах - кнопка нажата');
+    handleSaveDollar();
+  };
+  
   return (
     <div className="glass-morphism p-4 rounded-lg">
       <h2 className="text-lg font-semibold mb-4 text-white">Основные действия</h2>
       
       <div className="grid grid-cols-1 gap-4">
         <ActionButton
-          onClick={handleSaveDollar}
+          onClick={handleDollarClick}
           tooltip="Получить $1"
           longPressTooltip="Удерживайте, чтобы увидеть подсказку"
           longPressTime={1000}

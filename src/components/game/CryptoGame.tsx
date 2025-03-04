@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
 import GameProgress from './GameProgress';
@@ -7,6 +7,8 @@ import GameTabs from './GameTabs';
 import MainActions from './MainActions';
 import { toast } from '@/components/ui/use-toast';
 import { useGameEffects } from '@/hooks/useGameEffects';
+
+const SAVE_KEY = 'crypto_clicker_save_data';
 
 const CryptoGame: React.FC = () => {
   // Основные ресурсы
@@ -33,7 +35,7 @@ const CryptoGame: React.FC = () => {
   const [activeTab, setActiveTab] = useState('main');
   
   // Используем хук игровых эффектов
-  const { handleInitialClicks, checkPurchaseMilestones } = useGameEffects({
+  const { handleAirdrop, handleLearn, bullMarketActive } = useGameEffects({
     dollars,
     usdt,
     stakedUsdt,
@@ -54,43 +56,133 @@ const CryptoGame: React.FC = () => {
     setShowBuyCrypto,
     setShowStaking,
     clicks,
-    marketMultiplier
+    marketMultiplier,
+    knowledge,
+    setKnowledge,
+    setDollars
   });
+  
+  // Загрузка сохранения при старте
+  useEffect(() => {
+    const savedData = localStorage.getItem(SAVE_KEY);
+    
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        
+        // Загружаем основные ресурсы
+        setDollars(parsedData.dollars || 0);
+        setUsdt(parsedData.usdt || 0);
+        setBtc(parsedData.btc || 0);
+        setStakedUsdt(parsedData.stakedUsdt || 0);
+        setKnowledge(parsedData.knowledge || 0);
+        setMiningPower(parsedData.miningPower || 0);
+        
+        // Загружаем флаги открытия функций
+        setShowResources(parsedData.showResources || false);
+        setShowBuyCrypto(parsedData.showBuyCrypto || false);
+        setShowStaking(parsedData.showStaking || false);
+        setShowTrading(parsedData.showTrading || false);
+        setShowEducation(parsedData.showEducation || false);
+        setShowMining(parsedData.showMining || false);
+        setShowCareer(parsedData.showCareer || false);
+        setShowMarketEvents(parsedData.showMarketEvents || false);
+        
+        // Загружаем статистику
+        setClicks(parsedData.clicks || 0);
+        
+        // Загружаем специализацию
+        if (parsedData.role) {
+          setRole(parsedData.role);
+        }
+        
+        // Не показываем приветствие если игрок уже играл
+        if (parsedData.dollars > 0 || parsedData.usdt > 0 || parsedData.btc > 0) {
+          setShowWelcomePopup(false);
+        }
+        
+        toast({
+          title: "Прогресс загружен!",
+          description: "Ваш предыдущий прогресс успешно восстановлен.",
+          duration: 3000
+        });
+      } catch (error) {
+        console.error("Ошибка при загрузке сохранения:", error);
+      }
+    }
+  }, []);
+  
+  // Автосохранение каждые 30 секунд
+  useEffect(() => {
+    const saveInterval = setInterval(() => {
+      const gameData = {
+        dollars,
+        usdt,
+        btc,
+        stakedUsdt,
+        knowledge,
+        miningPower,
+        showResources,
+        showBuyCrypto,
+        showStaking,
+        showTrading,
+        showEducation,
+        showMining,
+        showCareer,
+        showMarketEvents,
+        clicks,
+        role,
+        lastSaved: Date.now()
+      };
+      
+      localStorage.setItem(SAVE_KEY, JSON.stringify(gameData));
+    }, 30000);
+    
+    return () => clearInterval(saveInterval);
+  }, [dollars, usdt, btc, stakedUsdt, knowledge, miningPower, showResources, showBuyCrypto, 
+      showStaking, showTrading, showEducation, showMining, showCareer, showMarketEvents, 
+      clicks, role]);
   
   // Обработчики действий
   const handleSaveDollar = () => {
-    setDollars(prev => prev + 1);
+    const reward = handleAirdrop();
     setClicks(prev => prev + 1);
-    handleInitialClicks();
   };
   
   const handleBuyCrypto = () => {
-    if (dollars >= 10) {
-      const purchaseAmount = dollars;
-      const fee = purchaseAmount * 0.05;
-      const finalAmount = purchaseAmount - fee;
-      
-      setDollars(0);
-      setUsdt(prev => prev + finalAmount);
+    if (dollars >= 50) {
+      setDollars(prev => prev - 50);
+      setBtc(prev => prev + 0.001);
       
       toast({
         title: "Покупка криптовалюты",
-        description: `Вы купили ${finalAmount.toFixed(2)} USDT. Комиссия составила ${fee.toFixed(2)}$.`,
+        description: "Вы купили свою первую криптовалюту: 0.001 BTC!",
         duration: 3000
       });
-      
-      checkPurchaseMilestones(purchaseAmount);
     }
   };
   
   const handleStaking = () => {
-    if (usdt >= 10) {
-      setUsdt(prev => prev - 10);
+    if (dollars >= 100) {
+      setDollars(prev => prev - 100);
       setStakedUsdt(prev => prev + 10);
       
       toast({
-        title: "Стейкинг активирован",
-        description: "Вы разместили 10 USDT в стейкинге. Теперь вы будете получать пассивный доход.",
+        title: "Фоновый стейкинг активирован",
+        description: "Вы будете получать пассивный доход даже когда не играете!",
+        duration: 3000
+      });
+    }
+  };
+  
+  const handleLearnBasics = () => {
+    if (dollars >= 10) {
+      setDollars(prev => prev - 10);
+      setKnowledge(prev => prev + 1);
+      
+      toast({
+        title: "Знания получены!",
+        description: "Вы изучили основы криптовалют.",
         duration: 3000
       });
     }
@@ -99,27 +191,51 @@ const CryptoGame: React.FC = () => {
   const handleTrade = (fromUSDT: boolean, amount: number) => {
     if (fromUSDT) {
       setUsdt(prev => prev - amount);
-      setBtc(prev => prev + amount * 0.00002);
+      setBtc(prev => prev + amount * 0.00002 * (role === 'trader' ? 1.05 : 1));
     } else {
       setBtc(prev => prev - amount);
-      const fee = 5 - (knowledge / 20);
+      const fee = 5 - (knowledge / 20) - (role === 'trader' ? 1 : 0);
       const commissionRate = Math.max(fee, 0.5) / 100;
       setUsdt(prev => prev + amount * 50000 * (1 - commissionRate));
     }
   };
 
-  const handleLearn = (cost: number, knowledgeGain: number) => {
-    setDollars(prev => prev - cost);
-    setKnowledge(prev => Math.min(prev + knowledgeGain, 100));
+  const handleLearnMarket = () => {
+    return handleLearn(200, 5);
   };
   
   const handlePurchaseRig = (cost: number) => {
-    setDollars(prev => prev - cost);
-    setMiningPower(prev => prev + 1);
+    if (dollars >= cost) {
+      setDollars(prev => prev - cost);
+      setMiningPower(prev => prev + 1);
+      
+      toast({
+        title: "Оборудование куплено!",
+        description: "Вы начали майнить криптовалюту.",
+        duration: 3000
+      });
+    }
   };
 
   const handleSelectRole = (selectedRole: string) => {
-    setRole(selectedRole);
+    if (dollars >= 500) {
+      setDollars(prev => prev - 500);
+      setRole(selectedRole);
+      
+      let bonusMessage = "";
+      
+      if (selectedRole === 'investor') {
+        bonusMessage = "Бонус: +10% к доходности стейкинга";
+      } else if (selectedRole === 'trader') {
+        bonusMessage = "Бонус: +5% к успешности сделок";
+      }
+      
+      toast({
+        title: `Вы выбрали путь: ${selectedRole === 'investor' ? 'Инвестор' : 'Трейдер'}`,
+        description: bonusMessage,
+        duration: 5000
+      });
+    }
   };
 
   const handleMarketChange = (multiplier: number) => {
@@ -127,7 +243,15 @@ const CryptoGame: React.FC = () => {
   };
   
   const handlePrepareForEvent = (cost: number) => {
-    setDollars(prev => prev - cost);
+    if (dollars >= cost) {
+      setDollars(prev => prev - cost);
+      
+      toast({
+        title: "Подготовка к событию",
+        description: "Вы успешно подготовились к событию на рынке!",
+        duration: 3000
+      });
+    }
   };
 
   // Проверяем, нужно ли показывать табы
@@ -143,6 +267,12 @@ const CryptoGame: React.FC = () => {
       <header className="mb-6 text-center">
         <h1 className="text-2xl font-bold text-gradient">Crypto Clicker</h1>
         <p className="text-sm text-gray-400">Путь от нуля до миллиона</p>
+        {bullMarketActive && (
+          <div className="mt-2 px-3 py-1 bg-green-600/20 rounded-full text-green-400 text-xs inline-flex items-center">
+            <span className="animate-pulse mr-2 h-2 w-2 rounded-full bg-green-400"></span>
+            Бычий рынок активен! +50% к доходности
+          </div>
+        )}
       </header>
       
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -155,9 +285,9 @@ const CryptoGame: React.FC = () => {
               stakedUsdt={stakedUsdt}
               showStaking={showStaking || stakedUsdt > 0}
               knowledge={knowledge}
-              showKnowledge={showEducation}
+              showKnowledge={showEducation || knowledge > 0}
               btc={btc}
-              showBtc={btc > 0 || showTrading}
+              showBtc={btc > 0 || showBuyCrypto}
               role={role}
             />
           )}
@@ -180,7 +310,7 @@ const CryptoGame: React.FC = () => {
               handleBuyCrypto={handleBuyCrypto}
               handleStaking={handleStaking}
               handleTrade={handleTrade}
-              handleLearn={handleLearn}
+              handleLearn={handleLearnMarket}
               handlePurchaseRig={handlePurchaseRig}
               handleSelectRole={handleSelectRole}
               handleMarketChange={handleMarketChange}
@@ -188,6 +318,7 @@ const CryptoGame: React.FC = () => {
               showBuyCrypto={showBuyCrypto}
               showStaking={showStaking}
               role={role}
+              handleLearnBasics={handleLearnBasics}
             />
           ) : (
             <MainActions 
@@ -196,8 +327,11 @@ const CryptoGame: React.FC = () => {
               handleSaveDollar={handleSaveDollar}
               handleBuyCrypto={handleBuyCrypto}
               handleStaking={handleStaking}
+              handleLearnBasics={handleLearnBasics}
               showBuyCrypto={showBuyCrypto}
               showStaking={showStaking}
+              showEducation={showEducation}
+              knowledge={knowledge}
             />
           )}
         </div>

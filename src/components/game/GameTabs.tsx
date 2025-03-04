@@ -34,6 +34,7 @@ interface GameTabsProps {
   showBuyCrypto: boolean;
   showStaking: boolean;
   role: string | null;
+  handleLearnBasics: () => void;
 }
 
 const GameTabs: React.FC<GameTabsProps> = ({
@@ -60,7 +61,8 @@ const GameTabs: React.FC<GameTabsProps> = ({
   handlePrepareForEvent,
   showBuyCrypto,
   showStaking,
-  role
+  role,
+  handleLearnBasics
 }) => {
   // Вычисляем количество видимых табов
   const visibleTabsCount = 1 + 
@@ -119,8 +121,11 @@ const GameTabs: React.FC<GameTabsProps> = ({
           handleSaveDollar={handleSaveDollar}
           handleBuyCrypto={handleBuyCrypto}
           handleStaking={handleStaking}
+          handleLearnBasics={handleLearnBasics}
           showBuyCrypto={showBuyCrypto}
           showStaking={showStaking}
+          showEducation={showEducation}
+          knowledge={knowledge}
         />
       </TabsContent>
       
@@ -132,6 +137,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
             btc={btc}
             onTrade={handleTrade}
             knowledge={knowledge}
+            isTrader={role === 'trader'}
           />
         </TabsContent>
       )}

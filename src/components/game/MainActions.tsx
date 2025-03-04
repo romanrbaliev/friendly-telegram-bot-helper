@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ActionButton from './ActionButton';
-import { toast } from '@/components/ui/use-toast';
+import { DollarSign, BookOpen, Coins, ArrowUp } from 'lucide-react';
 
 interface MainActionsProps {
   dollars: number;
@@ -9,8 +9,11 @@ interface MainActionsProps {
   handleSaveDollar: () => void;
   handleBuyCrypto: () => void;
   handleStaking: () => void;
+  handleLearnBasics: () => void;
   showBuyCrypto: boolean;
   showStaking: boolean;
+  showEducation: boolean;
+  knowledge: number;
 }
 
 const MainActions: React.FC<MainActionsProps> = ({
@@ -19,41 +22,77 @@ const MainActions: React.FC<MainActionsProps> = ({
   handleSaveDollar,
   handleBuyCrypto,
   handleStaking,
+  handleLearnBasics,
   showBuyCrypto,
-  showStaking
+  showStaking,
+  showEducation,
+  knowledge
 }) => {
   return (
-    <div className="flex-1 flex flex-col gap-4">
-      <ActionButton 
-        onClick={handleSaveDollar}
-        tooltip="Отложите $1 на инвестиции"
-      >
-        Отложить $1 на инвестиции
-      </ActionButton>
+    <div className="glass-morphism p-4 rounded-lg">
+      <h2 className="text-lg font-semibold mb-4 text-white">Основные действия</h2>
       
-      {showBuyCrypto && (
-        <ActionButton 
-          onClick={handleBuyCrypto}
-          disabled={dollars < 10}
-          tooltip={dollars < 10 ? `Нужно еще ${10 - dollars}$` : "Обменять все доллары на USDT"}
-          longPressTooltip="Вы покупаете криптовалюту для инвестиций. При покупке списывается комиссия 5% от суммы."
-          longPressTime={2000}
+      <div className="grid grid-cols-1 gap-4">
+        <ActionButton
+          onClick={handleSaveDollar}
+          tooltip="Получить $1"
+          longPressTooltip="Удерживайте, чтобы увидеть подсказку"
+          longPressTime={1000}
         >
-          Купить криптовалюту (USDT)
+          <div className="flex items-center justify-center gap-2">
+            <DollarSign className="text-green-400" />
+            <span>Заработать на аирдропах</span>
+          </div>
         </ActionButton>
-      )}
-      
-      {showStaking && (
-        <ActionButton 
-          onClick={handleStaking}
-          disabled={usdt < 10}
-          tooltip={usdt < 10 ? `Нужно еще ${10 - usdt} USDT` : "Разместить 10 USDT в стейкинге"}
-          longPressTooltip="Стейкинг позволяет получать пассивный доход в размере ~10% годовых."
-          longPressTime={2000}
-        >
-          Стейкинг USDT
-        </ActionButton>
-      )}
+        
+        {showEducation && (
+          <ActionButton
+            onClick={handleLearnBasics}
+            disabled={dollars < 10 || knowledge >= 1}
+            tooltip={dollars < 10 ? `Требуется $10` : knowledge >= 1 ? `Уже изучено` : "Изучить основы криптовалют"}
+            longPressTooltip="Узнайте базовые принципы работы блокчейна и криптовалют"
+            longPressTime={1000}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <BookOpen className="text-blue-400" />
+              <span>Изучить основы криптовалют</span>
+              <span className="text-xs bg-blue-500/20 px-2 py-0.5 rounded text-blue-300">$10</span>
+            </div>
+          </ActionButton>
+        )}
+        
+        {showBuyCrypto && (
+          <ActionButton
+            onClick={handleBuyCrypto}
+            disabled={dollars < 50}
+            tooltip={dollars < 50 ? `Нужно $50` : "Купить первую криптовалюту"}
+            longPressTooltip="Войдите в мир криптовалют с первой инвестицией"
+            longPressTime={1000}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <Coins className="text-amber-400" />
+              <span>Купить первую криптовалюту</span>
+              <span className="text-xs bg-amber-500/20 px-2 py-0.5 rounded text-amber-300">$50</span>
+            </div>
+          </ActionButton>
+        )}
+        
+        {showStaking && (
+          <ActionButton
+            onClick={handleStaking}
+            disabled={dollars < 100}
+            tooltip={dollars < 100 ? `Требуется $100` : "Активировать фоновый стейкинг"}
+            longPressTooltip="Начните зарабатывать даже когда вы не в игре"
+            longPressTime={1000}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <ArrowUp className="text-green-400" />
+              <span>Фоновый стейкинг</span>
+              <span className="text-xs bg-green-500/20 px-2 py-0.5 rounded text-green-300">$100</span>
+            </div>
+          </ActionButton>
+        )}
+      </div>
     </div>
   );
 };

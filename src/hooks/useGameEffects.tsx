@@ -34,7 +34,7 @@ export function useGameEffects({
   setUsdt,
   setBtc,
   showResources,
-  showTrading,
+  showTrading, 
   showEducation,
   showMining,
   showCareer,
@@ -143,7 +143,7 @@ export function useGameEffects({
   };
   
   const checkPurchaseMilestones = (purchaseAmount: number) => {
-    if (purchaseAmount >= 50 && !showStaking) {
+    if (purchaseAmount >= 50 && usdt >= 50) {
       setShowStaking(true);
       toast({
         title: "Новая возможность!",

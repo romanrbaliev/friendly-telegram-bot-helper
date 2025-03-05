@@ -60,6 +60,20 @@ const Education: React.FC<EducationProps> = ({ dollars, onLearn, knowledge }) =>
       }
     } else {
       console.log("Недостаточно средств или знаний для прохождения курса");
+      
+      if (dollars < course.cost) {
+        toast({
+          title: "Недостаточно средств",
+          description: `Для прохождения курса требуется $${course.cost}`,
+          duration: 3000
+        });
+      } else if (knowledge < course.requiredKnowledge) {
+        toast({
+          title: "Недостаточно базовых знаний",
+          description: `Требуется ${course.requiredKnowledge}% знаний`,
+          duration: 3000
+        });
+      }
     }
   };
 

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
@@ -155,8 +156,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
           <Education
             dollars={dollars}
             onLearn={(cost: number, knowledgeGain: number): boolean => {
-              handleLearn(cost, knowledgeGain);
-              return true;
+              return handleLearn(cost, knowledgeGain);
             }}
             knowledge={knowledge}
           />

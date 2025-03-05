@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
-import GameProgress from './GameProgress';
 import GameTabs from './GameTabs';
 import MainActions from './MainActions';
 import { toast } from '@/components/ui/use-toast';
@@ -332,7 +331,7 @@ const CryptoGame: React.FC = () => {
       </header>
       
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <div className="md:col-span-8">
+        <div className="md:col-span-12">
           {showResources && (
             <ResourceDisplay 
               dollars={dollars} 
@@ -387,17 +386,6 @@ const CryptoGame: React.FC = () => {
               showBuyCrypto={showBuyCrypto}
               showStaking={showStaking}
               showEducation={showEducation}
-              knowledge={knowledge}
-            />
-          )}
-        </div>
-        
-        <div className="md:col-span-4">
-          {showResources && (
-            <GameProgress 
-              dollars={dollars}
-              btc={btc}
-              usdt={usdt}
               knowledge={knowledge}
             />
           )}

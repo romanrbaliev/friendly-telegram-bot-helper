@@ -18,7 +18,7 @@ const GameProgress: React.FC<GameProgressProps> = ({
   knowledge
 }) => {
   // Расчет общего прогресса в игре (от 0 до 100%)
-  const calculateTotalProgress = useMemo((): number => {
+  const totalProgress = useMemo((): number => {
     // Конвертируем BTC в доллары по курсу для оценки общего капитала
     const btcValue = btc * 50000;
     const totalCapital = dollars + usdt + btcValue;
@@ -35,9 +35,7 @@ const GameProgress: React.FC<GameProgressProps> = ({
     return Math.min(Math.floor(capitalProgress + knowledgeProgress), 100);
   }, [dollars, btc, usdt, knowledge]);
   
-  const getNextGoal = useMemo((): string => {
-    const totalProgress = calculateTotalProgress();
-    
+  const nextGoal = useMemo((): string => {
     if (totalProgress < 10) return "Накопить $100";
     if (totalProgress < 20) return "Начать торговлю криптовалютой";
     if (totalProgress < 30) return "Получить базовые знания";
@@ -45,28 +43,20 @@ const GameProgress: React.FC<GameProgressProps> = ({
     if (totalProgress < 60) return "Выбрать карьерный путь";
     if (totalProgress < 80) return "Накопить $10,000";
     return "Достичь $100,000";
-  }, [calculateTotalProgress]);
+  }, [totalProgress]);
   
-  const getTotalCapital = useMemo((): number => {
+  const totalCapital = useMemo((): number => {
     const btcValue = btc * 50000;
     return dollars + usdt + btcValue;
   }, [dollars, usdt, btc]);
   
-  const getProgressBadge = useMemo((): { label: string, variant: string } => {
-    const progress = calculateTotalProgress();
-    
-    if (progress < 20) return { label: "Новичок", variant: "gray" };
-    if (progress < 40) return { label: "Любитель", variant: "success" };
-    if (progress < 60) return { label: "Энтузиаст", variant: "info" };
-    if (progress < 80) return { label: "Профессионал", variant: "purple" };
+  const progressBadge = useMemo((): { label: string, variant: string } => {
+    if (totalProgress < 20) return { label: "Новичок", variant: "gray" };
+    if (totalProgress < 40) return { label: "Любитель", variant: "success" };
+    if (totalProgress < 60) return { label: "Энтузиаст", variant: "info" };
+    if (totalProgress < 80) return { label: "Профессионал", variant: "purple" };
     return { label: "Эксперт", variant: "warning" };
-  }, [calculateTotalProgress]);
-  
-  // Execute the memoized functions to get their values
-  const progressBadge = getProgressBadge();
-  const totalProgress = calculateTotalProgress();
-  const nextGoal = getNextGoal();
-  const totalCapital = getTotalCapital();
+  }, [totalProgress]);
   
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">

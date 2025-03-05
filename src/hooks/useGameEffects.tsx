@@ -79,15 +79,33 @@ export const useGameEffects = (props: GameEffectsProps) => {
     // Применение бонуса бычьего рынка
     const rewardWithMarket = bullMarketActive ? baseReward * 1.5 : baseReward;
     
-    setDollars(prev => prev + rewardWithMarket);
-    checkPurchaseMilestones();
+    setDollars(prev => {
+      return prev + rewardWithMarket;
+    });
+    
+    // После увеличения баланса проверяем и разблокируем функции
+    setTimeout(() => checkPurchaseMilestones(), 0);
     
     return rewardWithMarket;
   }, [knowledge, bullMarketActive, setDollars]);
   
   // Проверка и разблокировка новых функций
   const checkPurchaseMilestones = useCallback(() => {
+    console.log("Проверка прогресса:", {
+      dollars,
+      clicks,
+      knowledge,
+      usdt,
+      stakedUsdt,
+      showResources,
+      showEducation,
+      showBuyCrypto,
+      showStaking,
+      showTrading
+    });
+    
     if (!showResources && clicks >= 1) {
+      console.log("Разблокируем ресурсы");
       setShowResources(true);
       
       toast({
@@ -98,6 +116,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
     
     if (dollars >= 10 && !showEducation) {
+      console.log("Разблокируем образование");
       setShowEducation(true);
       
       toast({
@@ -108,6 +127,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
     
     if (knowledge >= 1 && dollars >= 50 && !showBuyCrypto) {
+      console.log("Разблокируем покупку криптовалют");
       setShowBuyCrypto(true);
       
       toast({
@@ -118,6 +138,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
     
     if (usdt >= 0.001 && dollars >= 100 && !showStaking) {
+      console.log("Разблокируем стейкинг");
       setShowStaking(true);
       
       toast({
@@ -128,6 +149,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
     
     if (stakedUsdt > 0 && !showTrading) {
+      console.log("Разблокируем трейдинг");
       setShowTrading(true);
       
       toast({
@@ -138,6 +160,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
     
     if (knowledge >= 15 && !showMining) {
+      console.log("Разблокируем майнинг");
       setShowMining(true);
       
       toast({
@@ -148,6 +171,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
     
     if (dollars >= 500 && !showCareer) {
+      console.log("Разблокируем карьеру");
       setShowCareer(true);
       
       toast({
@@ -158,6 +182,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
     
     if (knowledge >= 30 && !showMarketEvents) {
+      console.log("Разблокируем события рынка");
       setShowMarketEvents(true);
       
       toast({
@@ -168,12 +193,17 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }
   }, [dollars, knowledge, usdt, stakedUsdt, clicks, showResources, showEducation, showBuyCrypto, showStaking, showTrading, showMining, showCareer, showMarketEvents, setShowResources, setShowBuyCrypto, setShowStaking, setShowTrading, setShowEducation, setShowMining, setShowCareer, setShowMarketEvents]);
   
+  // Проверяем прогресс при изменении основных параметров игры
+  useEffect(() => {
+    checkPurchaseMilestones();
+  }, [dollars, knowledge, usdt, stakedUsdt, clicks, checkPurchaseMilestones]);
+  
   // Механика обучения - получение знаний
   const handleLearn = useCallback((cost: number, knowledgeGain: number) => {
+    console.log(`Попытка обучения: стоимость $${cost}, прирост знаний +${knowledgeGain}`);
     if (dollars >= cost) {
       setDollars(prev => prev - cost);
       setKnowledge(prev => prev + knowledgeGain);
-      checkPurchaseMilestones();
       
       toast({
         title: "Знания получены!",
@@ -181,10 +211,20 @@ export const useGameEffects = (props: GameEffectsProps) => {
         duration: 3000
       });
       
+      // Проверяем прогресс после обучения
+      setTimeout(() => checkPurchaseMilestones(), 0);
+      
       return true;
+    } else {
+      console.log("Недостаточно средств для обучения");
+      toast({
+        title: "Недостаточно средств",
+        description: `Для обучения нужно $${cost}`,
+        duration: 3000
+      });
+      
+      return false;
     }
-    
-    return false;
   }, [dollars, setDollars, setKnowledge, checkPurchaseMilestones]);
   
   // Функция пассивного дохода от стейкинга

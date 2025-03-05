@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
@@ -69,6 +70,17 @@ const GameTabs: React.FC<GameTabsProps> = ({
     (showMining ? 1 : 0) + 
     (showCareer ? 1 : 0) + 
     (showMarketEvents ? 1 : 0);
+    
+  // Add debug logs to understand which buttons are being shown
+  console.log("GameTabs rendering with:", {
+    showTrading,
+    showEducation,
+    showMining,
+    showCareer,
+    showMarketEvents,
+    dollars,
+    knowledge
+  });
     
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -146,15 +145,37 @@ const CryptoGame: React.FC = () => {
       showStaking, showTrading, showEducation, showMining, showCareer, showMarketEvents, 
       clicks, role]);
   
+  // Добавляем логи для отладки состояния игры
+  useEffect(() => {
+    console.log('Game state updated:', {
+      dollars,
+      usdt,
+      btc,
+      knowledge,
+      showResources,
+      showBuyCrypto,
+      showStaking,
+      showTrading,
+      showEducation,
+      showMining
+    });
+  }, [dollars, usdt, btc, knowledge, showResources, showBuyCrypto, showStaking, showTrading, showEducation, showMining]);
+  
   // Обработчики действий
   const handleSaveDollar = () => {
+    console.log("handleSaveDollar вызван");
     const reward = handleAirdrop();
     setClicks(prev => prev + 1);
+    console.log(`Получено: $${reward}, новый баланс: $${dollars + reward}`);
   };
   
   const handleBuyCrypto = () => {
+    console.log("handleBuyCrypto вызван, текущий баланс: $", dollars);
     if (dollars >= 50) {
-      setDollars(prev => prev - 50);
+      setDollars(prev => {
+        console.log(`Баланс до покупки: $${prev}`);
+        return prev - 50;
+      });
       setBtc(prev => prev + 0.001);
       
       toast({
@@ -162,30 +183,62 @@ const CryptoGame: React.FC = () => {
         description: "Вы купили свою первую криптовалюту: 0.001 BTC!",
         duration: 3000
       });
+      console.log("Криптовалюта успешно куплена");
+    } else {
+      console.log("Недостаточно средств для покупки криптовалюты");
+      toast({
+        title: "Недостаточно средств",
+        description: "Нужно $50 для покупки криптовалюты",
+        duration: 3000
+      });
     }
   };
   
   const handleStaking = () => {
+    console.log("handleStaking вызван, текущий баланс: $", dollars);
     if (dollars >= 100) {
-      setDollars(prev => prev - 100);
+      setDollars(prev => {
+        console.log(`Баланс до активации стейкинга: $${prev}`);
+        return prev - 100;
+      });
       setStakedUsdt(prev => prev + 10);
       
       toast({
-        title: "Фоновый стейкинг активирован",
+        title: "Фоновый стейкинг активир��ван",
         description: "Вы будете получать пассивный доход даже когда не играете!",
+        duration: 3000
+      });
+      console.log("Стейкинг успешно активирован");
+    } else {
+      console.log("Недостаточно средств для активации стейкинга");
+      toast({
+        title: "Недостаточно средств",
+        description: "Нужно $100 для активации стейкинга",
         duration: 3000
       });
     }
   };
   
   const handleLearnBasics = () => {
+    console.log("handleLearnBasics вызван, текущий баланс: $", dollars);
     if (dollars >= 10) {
-      setDollars(prev => prev - 10);
+      setDollars(prev => {
+        console.log(`Баланс до обучения: $${prev}`);
+        return prev - 10;
+      });
       setKnowledge(prev => prev + 1);
       
       toast({
         title: "Знания получены!",
         description: "Вы изучили основы криптовалют.",
+        duration: 3000
+      });
+      console.log("Обучение успешно завершено");
+    } else {
+      console.log("Недостаточно средств для обучения");
+      toast({
+        title: "Недостаточно средств",
+        description: "Нужно $10 для обучения",
         duration: 3000
       });
     }

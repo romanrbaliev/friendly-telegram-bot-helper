@@ -42,6 +42,22 @@ const MainActions: React.FC<MainActionsProps> = ({
     });
   };
   
+  // Обработчики для других кнопок с добавлением логов для отладки
+  const handleCryptoButtonClick = () => {
+    console.log('Купить криптовалюту - кнопка нажата');
+    handleBuyCrypto();
+  };
+  
+  const handleStakingButtonClick = () => {
+    console.log('Стейкинг - кнопка нажата');
+    handleStaking();
+  };
+  
+  const handleLearnButtonClick = () => {
+    console.log('Изучить основы - кнопка нажата');
+    handleLearnBasics();
+  };
+  
   return (
     <div className="glass-morphism p-4 rounded-lg">
       <h2 className="text-lg font-semibold mb-4 text-white">Основные действия</h2>
@@ -61,7 +77,7 @@ const MainActions: React.FC<MainActionsProps> = ({
         
         {showEducation && (
           <ActionButton
-            onClick={handleLearnBasics}
+            onClick={handleLearnButtonClick}
             disabled={dollars < 10 || knowledge >= 1}
             tooltip={dollars < 10 ? `Требуется $10` : knowledge >= 1 ? `Уже изучено` : "Изучить основы криптовалют"}
             longPressTooltip="Узнайте базовые принципы работы блокчейна и криптовалют"
@@ -77,7 +93,7 @@ const MainActions: React.FC<MainActionsProps> = ({
         
         {showBuyCrypto && (
           <ActionButton
-            onClick={handleBuyCrypto}
+            onClick={handleCryptoButtonClick}
             disabled={dollars < 50}
             tooltip={dollars < 50 ? `Нужно $50` : "Купить первую криптовалюту"}
             longPressTooltip="Войдите в мир криптовалют с первой инвестицией"
@@ -93,7 +109,7 @@ const MainActions: React.FC<MainActionsProps> = ({
         
         {showStaking && (
           <ActionButton
-            onClick={handleStaking}
+            onClick={handleStakingButtonClick}
             disabled={dollars < 100}
             tooltip={dollars < 100 ? `Требуется $100` : "Активировать фоновый стейкинг"}
             longPressTooltip="Начните зарабатывать даже когда вы не в игре"

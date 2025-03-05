@@ -47,6 +47,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     }
     
     if (!disabled && pressing) {
+      console.log("Button clicked - executing onClick handler");
       onClick();
     }
     

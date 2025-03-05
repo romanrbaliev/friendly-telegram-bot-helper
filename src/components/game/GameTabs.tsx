@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
@@ -26,7 +25,7 @@ interface GameTabsProps {
   handleBuyCrypto: () => void;
   handleStaking: () => void;
   handleTrade: (fromUSDT: boolean, amount: number) => void;
-  handleLearn: (cost: number, knowledgeGain: number) => void;
+  handleLearn: (cost: number, knowledgeGain: number) => boolean;
   handlePurchaseRig: (cost: number) => void;
   handleSelectRole: (selectedRole: string) => void;
   handleMarketChange: (multiplier: number) => void;
@@ -155,9 +154,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
         <TabsContent value="education" className="mt-4">
           <Education
             dollars={dollars}
-            onLearn={(cost: number, knowledgeGain: number): boolean => {
-              return handleLearn(cost, knowledgeGain);
-            }}
+            onLearn={handleLearn}
             knowledge={knowledge}
           />
         </TabsContent>

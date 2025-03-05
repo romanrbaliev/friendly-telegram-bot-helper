@@ -104,7 +104,7 @@ const CryptoGame: React.FC = () => {
         
         toast({
           title: "Прогресс загружен!",
-          description: "Ваш предыдущий прогресс успешно восстановлен.",
+          description: "Ваш предыдущий прогресс успешно восстановл��н.",
           duration: 3000
         });
       } catch (error) {
@@ -255,8 +255,8 @@ const CryptoGame: React.FC = () => {
     }
   };
 
-  const handleLearnMarket = () => {
-    return handleLearn(200, 5);
+  const handleLearnMarket = (cost: number, knowledgeGain: number) => {
+    return handleLearn(cost, knowledgeGain);
   };
   
   const handlePurchaseRig = (cost: number) => {

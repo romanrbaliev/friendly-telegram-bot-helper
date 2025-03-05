@@ -50,7 +50,7 @@ const MainActions: React.FC<MainActionsProps> = ({
         <ActionButton
           onClick={handleDollarClick}
           tooltip="Получить $1"
-          longPressTooltip="Удерживайте, чтобы увидеть подсказку"
+          longPressTooltip="Зарабатывайте деньги на аирдропах криптовалют"
           longPressTime={1000}
         >
           <div className="flex items-center justify-center gap-2">

@@ -46,7 +46,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       pressTimer.current = null;
     }
     
-    if (!disabled) {
+    if (!disabled && pressing) {
       onClick();
     }
     

@@ -62,8 +62,11 @@ const GameProgress: React.FC<GameProgressProps> = ({
     return { label: "Эксперт", variant: "warning" };
   }, [calculateTotalProgress]);
   
+  // Execute the memoized functions to get their values
   const progressBadge = getProgressBadge();
   const totalProgress = calculateTotalProgress();
+  const nextGoal = getNextGoal();
+  const totalCapital = getTotalCapital();
   
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
@@ -94,12 +97,12 @@ const GameProgress: React.FC<GameProgressProps> = ({
             <Target size={16} className="text-blue-400" />
             <span className="text-gray-300">Следующая цель:</span>
           </div>
-          <span className="text-white">{getNextGoal()}</span>
+          <span className="text-white">{nextGoal}</span>
         </div>
         
         <div className="flex items-center justify-between text-sm border-t border-white/10 pt-3 mt-3">
           <span className="text-gray-300">Общий капитал:</span>
-          <span className="font-mono text-white">${getTotalCapital().toFixed(2)}</span>
+          <span className="font-mono text-white">${totalCapital.toFixed(2)}</span>
         </div>
       </div>
     </div>

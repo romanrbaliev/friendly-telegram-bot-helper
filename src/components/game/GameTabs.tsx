@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
@@ -71,7 +70,6 @@ const GameTabs: React.FC<GameTabsProps> = ({
     (showCareer ? 1 : 0) + 
     (showMarketEvents ? 1 : 0);
     
-  // Add debug logs to understand which buttons are being shown
   console.log("GameTabs rendering with:", {
     showTrading,
     showEducation,
@@ -156,7 +154,10 @@ const GameTabs: React.FC<GameTabsProps> = ({
         <TabsContent value="education" className="mt-4">
           <Education
             dollars={dollars}
-            onLearn={handleLearn}
+            onLearn={(cost: number, knowledgeGain: number): boolean => {
+              handleLearn(cost, knowledgeGain);
+              return true;
+            }}
             knowledge={knowledge}
           />
         </TabsContent>

@@ -36,7 +36,7 @@ const GameProgress: React.FC<GameProgressProps> = ({
   }, [dollars, btc, usdt, knowledge]);
   
   const getNextGoal = useMemo((): string => {
-    const totalProgress = calculateTotalProgress;
+    const totalProgress = calculateTotalProgress();
     
     if (totalProgress < 10) return "Накопить $100";
     if (totalProgress < 20) return "Начать торговлю криптовалютой";
@@ -53,7 +53,7 @@ const GameProgress: React.FC<GameProgressProps> = ({
   }, [dollars, usdt, btc]);
   
   const getProgressBadge = useMemo((): { label: string, variant: string } => {
-    const progress = calculateTotalProgress;
+    const progress = calculateTotalProgress();
     
     if (progress < 20) return { label: "Новичок", variant: "gray" };
     if (progress < 40) return { label: "Любитель", variant: "success" };
@@ -62,8 +62,8 @@ const GameProgress: React.FC<GameProgressProps> = ({
     return { label: "Эксперт", variant: "warning" };
   }, [calculateTotalProgress]);
   
-  const progressBadge = getProgressBadge;
-  const totalProgress = calculateTotalProgress;
+  const progressBadge = getProgressBadge();
+  const totalProgress = calculateTotalProgress();
   
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">

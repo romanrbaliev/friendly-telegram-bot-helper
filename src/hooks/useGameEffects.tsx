@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 
 interface GameEffectsProps {
@@ -64,6 +64,16 @@ export const useGameEffects = (props: GameEffectsProps) => {
   } = props;
   
   const [bullMarketActive, setBullMarketActive] = useState(false);
+  const [unlockNotifications, setUnlockNotifications] = useState<Record<string, boolean>>({
+    resources: false,
+    education: false,
+    buyCrypto: false,
+    staking: false,
+    trading: false,
+    mining: false,
+    career: false,
+    marketEvents: false
+  });
   
   // Механика аирдропа - получение бесплатных криптовалют
   const handleAirdrop = useCallback(() => {
@@ -108,90 +118,114 @@ export const useGameEffects = (props: GameEffectsProps) => {
       console.log("Разблокируем ресурсы");
       setShowResources(true);
       
-      toast({
-        title: "Разблокировано: Ресурсы",
-        description: "Теперь вы можете видеть свои накопления вверху экрана.",
-        duration: 5000
-      });
+      if (!unlockNotifications.resources) {
+        toast({
+          title: "Разблокировано: Ресурсы",
+          description: "Теперь вы можете видеть свои накопления вверху экрана.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, resources: true}));
+      }
     }
     
     if (dollars >= 10 && !showEducation) {
       console.log("Разблокируем образование");
       setShowEducation(true);
       
-      toast({
-        title: "Разблокировано: Образование",
-        description: "Теперь вы можете изучать основы криптовалют.",
-        duration: 5000
-      });
+      if (!unlockNotifications.education) {
+        toast({
+          title: "Разблокировано: Образование",
+          description: "Теперь вы можете изучать основы криптовалют.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, education: true}));
+      }
     }
     
     if (knowledge >= 1 && dollars >= 50 && !showBuyCrypto) {
       console.log("Разблокируем покупку криптовалют");
       setShowBuyCrypto(true);
       
-      toast({
-        title: "Разблокировано: Покупка криптовалют",
-        description: "Теперь вы можете купить свою первую криптовалюту.",
-        duration: 5000
-      });
+      if (!unlockNotifications.buyCrypto) {
+        toast({
+          title: "Разблокировано: Покупка криптовалют",
+          description: "Теперь вы можете купить свою первую криптовалюту.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, buyCrypto: true}));
+      }
     }
     
     if (usdt >= 0.001 && dollars >= 100 && !showStaking) {
       console.log("Разблокируем стейкинг");
       setShowStaking(true);
       
-      toast({
-        title: "Разблокировано: Стейкинг",
-        description: "Теперь вы можете зарабатывать пассивный доход.",
-        duration: 5000
-      });
+      if (!unlockNotifications.staking) {
+        toast({
+          title: "Разблокировано: Стейкинг",
+          description: "Теперь вы можете зарабатывать пассивный доход.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, staking: true}));
+      }
     }
     
     if (stakedUsdt > 0 && !showTrading) {
       console.log("Разблокируем трейдинг");
       setShowTrading(true);
       
-      toast({
-        title: "Разблокировано: Трейдинг",
-        description: "Теперь вы можете торговать криптовалютами.",
-        duration: 5000
-      });
+      if (!unlockNotifications.trading) {
+        toast({
+          title: "Разблокировано: Трейдинг",
+          description: "Теперь вы можете торговать криптовалютами.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, trading: true}));
+      }
     }
     
     if (knowledge >= 15 && !showMining) {
       console.log("Разблокируем майнинг");
       setShowMining(true);
       
-      toast({
-        title: "Разблокировано: Майнинг",
-        description: "Теперь вы можете добывать криптовалюту с помощью оборудования.",
-        duration: 5000
-      });
+      if (!unlockNotifications.mining) {
+        toast({
+          title: "Разблокировано: Майнинг",
+          description: "Теперь вы можете добывать криптовалюту с помощью оборудования.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, mining: true}));
+      }
     }
     
     if (dollars >= 500 && !showCareer) {
       console.log("Разблокируем карьеру");
       setShowCareer(true);
       
-      toast({
-        title: "Разблокировано: Карьера",
-        description: "Теперь вы можете выбрать специализацию в криптомире.",
-        duration: 5000
-      });
+      if (!unlockNotifications.career) {
+        toast({
+          title: "Разблокировано: Карьера",
+          description: "Теперь вы можете выбрать специализацию в криптомире.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, career: true}));
+      }
     }
     
     if (knowledge >= 30 && !showMarketEvents) {
       console.log("Разблокируем события рынка");
       setShowMarketEvents(true);
       
-      toast({
-        title: "Разблокировано: События рынка",
-        description: "Теперь вы можете отслеживать и реагировать на события рынка.",
-        duration: 5000
-      });
+      if (!unlockNotifications.marketEvents) {
+        toast({
+          title: "Разблокировано: События рынка",
+          description: "Теперь вы можете отслеживать и реагировать на события рынка.",
+          duration: 5000
+        });
+        setUnlockNotifications(prev => ({...prev, marketEvents: true}));
+      }
     }
-  }, [dollars, knowledge, usdt, stakedUsdt, clicks, showResources, showEducation, showBuyCrypto, showStaking, showTrading, showMining, showCareer, showMarketEvents, setShowResources, setShowBuyCrypto, setShowStaking, setShowTrading, setShowEducation, setShowMining, setShowCareer, setShowMarketEvents]);
+  }, [dollars, knowledge, usdt, stakedUsdt, clicks, showResources, showEducation, showBuyCrypto, showStaking, showTrading, showMining, showCareer, showMarketEvents, setShowResources, setShowBuyCrypto, setShowStaking, setShowTrading, setShowEducation, setShowMining, setShowCareer, setShowMarketEvents, unlockNotifications]);
   
   // Проверяем прогресс при изменении основных параметров игры
   useEffect(() => {

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Target } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,7 @@ const GameProgress: React.FC<GameProgressProps> = ({
   knowledge
 }) => {
   // Расчет общего прогресса в игре (от 0 до 100%)
-  const calculateTotalProgress = (): number => {
+  const calculateTotalProgress = useMemo((): number => {
     // Конвертируем BTC в доллары по курсу для оценки общего капитала
     const btcValue = btc * 50000;
     const totalCapital = dollars + usdt + btcValue;
@@ -33,10 +33,10 @@ const GameProgress: React.FC<GameProgressProps> = ({
     let knowledgeProgress = (knowledge / 100) * 30;
     
     return Math.min(Math.floor(capitalProgress + knowledgeProgress), 100);
-  };
+  }, [dollars, btc, usdt, knowledge]);
   
-  const getNextGoal = (): string => {
-    const totalProgress = calculateTotalProgress();
+  const getNextGoal = useMemo((): string => {
+    const totalProgress = calculateTotalProgress;
     
     if (totalProgress < 10) return "Накопить $100";
     if (totalProgress < 20) return "Начать торговлю криптовалютой";
@@ -45,25 +45,25 @@ const GameProgress: React.FC<GameProgressProps> = ({
     if (totalProgress < 60) return "Выбрать карьерный путь";
     if (totalProgress < 80) return "Накопить $10,000";
     return "Достичь $100,000";
-  };
+  }, [calculateTotalProgress]);
   
-  const getTotalCapital = (): number => {
+  const getTotalCapital = useMemo((): number => {
     const btcValue = btc * 50000;
     return dollars + usdt + btcValue;
-  };
+  }, [dollars, usdt, btc]);
   
-  const getProgressBadge = (): { label: string, variant: string } => {
-    const progress = calculateTotalProgress();
+  const getProgressBadge = useMemo((): { label: string, variant: string } => {
+    const progress = calculateTotalProgress;
     
     if (progress < 20) return { label: "Новичок", variant: "gray" };
     if (progress < 40) return { label: "Любитель", variant: "success" };
     if (progress < 60) return { label: "Энтузиаст", variant: "info" };
     if (progress < 80) return { label: "Профессионал", variant: "purple" };
     return { label: "Эксперт", variant: "warning" };
-  };
+  }, [calculateTotalProgress]);
   
-  const progressBadge = getProgressBadge();
-  const totalProgress = calculateTotalProgress();
+  const progressBadge = getProgressBadge;
+  const totalProgress = calculateTotalProgress;
   
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">

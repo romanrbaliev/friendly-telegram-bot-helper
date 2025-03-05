@@ -6,7 +6,7 @@ import { GraduationCap, BookOpen, Lightbulb, LineChart } from 'lucide-react';
 
 interface EducationProps {
   dollars: number;
-  onLearn: (cost: number, knowledgeGain: number) => void;
+  onLearn: (cost: number, knowledgeGain: number) => boolean;
   knowledge: number;
 }
 
@@ -52,12 +52,14 @@ const Education: React.FC<EducationProps> = ({ dollars, onLearn, knowledge }) =>
   ];
 
   const handleTakeCourse = (course: Course) => {
+    console.log(`Попытка пройти курс: ${course.name}, стоимость: ${course.cost}$, знания: ${course.knowledgeGain}`);
     if (dollars >= course.cost && knowledge >= course.requiredKnowledge) {
-      onLearn(course.cost, course.knowledgeGain);
-      toast({
-        title: "Курс пройден!",
-        description: `Вы получили новые знания: ${course.name}`
-      });
+      const success = onLearn(course.cost, course.knowledgeGain);
+      if (success) {
+        console.log(`Курс "${course.name}" успешно пройден`);
+      }
+    } else {
+      console.log("Недостаточно средств или знаний для прохождения курса");
     }
   };
 

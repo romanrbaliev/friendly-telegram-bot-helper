@@ -85,7 +85,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
           ${pressing ? 'translate-y-0.5 bg-primary/80' : ''} 
           ${disabled 
             ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
-            : 'bg-primary hover:bg-primary/90 text-primary-foreground'
+            : 'bg-[#403E43] hover:bg-[#2D2C31] text-white'
           }`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}

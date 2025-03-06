@@ -77,6 +77,9 @@ const Education: React.FC<EducationProps> = ({ dollars, onLearn, knowledge }) =>
     }
   };
 
+  // Calculate a safe width percentage - capping at 100% maximum
+  const progressWidth = Math.min(knowledge, 100);
+
   return (
     <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
       <h2 className="text-lg font-semibold mb-3 text-white border-b border-white/10 pb-2 flex items-center gap-2">
@@ -88,10 +91,10 @@ const Education: React.FC<EducationProps> = ({ dollars, onLearn, knowledge }) =>
           <span>Уровень знаний:</span>
           <span>{knowledge}/100</span>
         </div>
-        <div className="w-full bg-gray-800 rounded-full h-2">
+        <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
           <div 
             className="bg-blue-500 h-2 rounded-full transition-all duration-300" 
-            style={{ width: `${knowledge}%` }}
+            style={{ width: `${progressWidth}%` }}
           />
         </div>
       </div>

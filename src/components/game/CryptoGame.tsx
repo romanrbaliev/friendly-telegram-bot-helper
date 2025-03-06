@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -260,16 +259,20 @@ const CryptoGame: React.FC = () => {
     return handleLearn(cost, knowledgeGain);
   };
   
-  const handlePurchaseRig = (cost: number) => {
+  const handlePurchaseRig = (cost: number, powerIncrease: number = 0) => {
     if (dollars >= cost) {
       setDollars(prev => prev - cost);
-      setMiningPower(prev => prev + 1);
       
-      toast({
-        title: "Оборудование куплено!",
-        description: "Вы начали майнить криптовалюту.",
-        duration: 3000
-      });
+      // Only increase mining power if powerIncrease is provided and greater than 0
+      if (powerIncrease > 0) {
+        setMiningPower(prev => prev + powerIncrease);
+        
+        toast({
+          title: "Оборудование куплено!",
+          description: `Мощность майнинга увеличена на ${powerIncrease}.`,
+          duration: 3000
+        });
+      }
     }
   };
 
@@ -375,29 +378,6 @@ const CryptoGame: React.FC = () => {
               showStaking={showStaking}
               role={role}
               handleLearnBasics={handleLearnBasics}
-            />
-          ) : (
-            <MainActions 
-              dollars={dollars}
-              usdt={usdt}
-              handleSaveDollar={handleSaveDollar}
-              handleBuyCrypto={handleBuyCrypto}
-              handleStaking={handleStaking}
-              handleLearnBasics={handleLearnBasics}
-              showBuyCrypto={showBuyCrypto}
-              showStaking={showStaking}
-              showEducation={showEducation}
-              knowledge={knowledge}
-            />
-          )}
-        </div>
-      </div>
-      
-      <footer className="mt-6 text-center text-xs text-gray-500">
-        <p>Щелкайте, чтобы открывать новые возможности</p>
-      </footer>
-    </div>
-  );
-};
+              miningPower={miningPower}
 
-export default CryptoGame;
+

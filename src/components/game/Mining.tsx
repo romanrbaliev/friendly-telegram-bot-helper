@@ -8,9 +8,10 @@ import { Progress } from "@/components/ui/progress";
 interface MiningProps {
   dollars: number;
   btc: number;
-  onPurchaseRig: (cost: number) => void;
+  miningPower: number; // Add miningPower to props
+  onPurchaseRig: (cost: number, powerIncrease: number) => void; // Modified to include power increase
   knowledge: number;
-  marketMultiplier?: number; // Новый параметр для влияния рынка
+  marketMultiplier?: number;
 }
 
 interface MiningRig {
@@ -20,15 +21,17 @@ interface MiningRig {
   hashrate: number;
   energyConsumption: number;
   description: string;
+  powerIncrease: number; // Add powerIncrease property
   icon: React.ReactNode;
 }
 
 const Mining: React.FC<MiningProps> = ({ 
   dollars, 
   btc, 
+  miningPower, // Use miningPower from props
   onPurchaseRig, 
   knowledge,
-  marketMultiplier = 1 // По умолчанию нет влияния 
+  marketMultiplier = 1
 }) => {
   const [hasBasicRig, setHasBasicRig] = useState(false);
   const [displayBtc, setDisplayBtc] = useState(btc);
@@ -46,6 +49,7 @@ const Mining: React.FC<MiningProps> = ({
       cost: 500,
       hashrate: 10,
       energyConsumption: 300,
+      powerIncrease: 1, // Add powerIncrease value
       description: "Начальная установка для майнинга на базе GPU",
       icon: <Cpu size={16} />
     },
@@ -55,6 +59,7 @@ const Mining: React.FC<MiningProps> = ({
       cost: 2000,
       hashrate: 50,
       energyConsumption: 800,
+      powerIncrease: 5, // Add powerIncrease value
       description: "Мультикарточный GPU-риг с эффективным охлаждением",
       icon: <Thermometer size={16} />
     },
@@ -64,6 +69,7 @@ const Mining: React.FC<MiningProps> = ({
       cost: 5000,
       hashrate: 200,
       energyConsumption: 1500,
+      powerIncrease: 20, // Add powerIncrease value
       description: "Профессиональное оборудование для промышленного майнинга",
       icon: <Server size={16} />
     }
@@ -75,10 +81,26 @@ const Mining: React.FC<MiningProps> = ({
     return Math.floor(baseCost * (1 - discountPercentage / 100));
   };
   
-  // Update display BTC when actual BTC changes
+  // Update display BTC and check mining state on component mount
   useEffect(() => {
     setDisplayBtc(btc);
-  }, [btc]);
+    // Update rig status based on existing mining power
+    if (miningPower > 0 && !hasBasicRig) {
+      setHasBasicRig(true);
+      
+      // Determine rig type based on mining power
+      if (miningPower >= 20) {
+        setRigType("asic");
+        setHashrate(200);
+      } else if (miningPower >= 5) {
+        setRigType("advanced");
+        setHashrate(50);
+      } else {
+        setRigType("basic");
+        setHashrate(10);
+      }
+    }
+  }, [btc, miningPower]);
   
   // Обработка электроэнергии - каждую минуту списывается плата
   useEffect(() => {
@@ -106,7 +128,7 @@ const Mining: React.FC<MiningProps> = ({
                 duration: 3000
               });
               
-              onPurchaseRig(electricityCost); // Списываем стоимость
+              onPurchaseRig(electricityCost, 0); // Списываем стоимость без увеличения мощности
               setElectricityCost(0);
             }
           }
@@ -144,7 +166,8 @@ const Mining: React.FC<MiningProps> = ({
     const actualCost = calculateDiscount(rig.cost);
     
     if (dollars >= actualCost) {
-      onPurchaseRig(actualCost);
+      // Pass both cost and power increase
+      onPurchaseRig(actualCost, rig.powerIncrease);
       
       if (!hasBasicRig) {
         setHasBasicRig(true);
@@ -163,7 +186,7 @@ const Mining: React.FC<MiningProps> = ({
 
   const optimizeEfficiency = () => {
     if (efficiency < 100 && dollars >= 100) {
-      onPurchaseRig(100);
+      onPurchaseRig(100, 0); // No power increase for optimization
       const newEfficiency = Math.min(efficiency + 10, 100);
       setEfficiency(newEfficiency);
       
@@ -327,3 +350,4 @@ const Mining: React.FC<MiningProps> = ({
 };
 
 export default Mining;
+

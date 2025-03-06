@@ -32,6 +32,9 @@ interface GameEffectsProps {
   setDollars: React.Dispatch<React.SetStateAction<number>>;
 }
 
+// Ключ для хранения информации о показанных уведомлениях
+const NOTIFICATIONS_SHOWN_KEY = 'crypto_clicker_notifications_shown';
+
 export const useGameEffects = (props: GameEffectsProps) => {
   const { 
     dollars, 
@@ -64,16 +67,37 @@ export const useGameEffects = (props: GameEffectsProps) => {
   } = props;
   
   const [bullMarketActive, setBullMarketActive] = useState(false);
-  const [unlockNotifications, setUnlockNotifications] = useState<Record<string, boolean>>({
-    resources: false,
-    education: false,
-    buyCrypto: false,
-    staking: false,
-    trading: false,
-    mining: false,
-    career: false,
-    marketEvents: false
-  });
+  
+  // Загружаем информацию о показанных уведомлениях из localStorage
+  const loadNotificationsShown = () => {
+    try {
+      const saved = localStorage.getItem(NOTIFICATIONS_SHOWN_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error("Ошибка при загрузке состояния уведомлений:", e);
+    }
+    
+    return {
+      resources: false,
+      education: false,
+      buyCrypto: false,
+      staking: false,
+      trading: false,
+      mining: false,
+      career: false,
+      marketEvents: false,
+      bullMarket: false
+    };
+  };
+  
+  const [unlockNotifications, setUnlockNotifications] = useState(loadNotificationsShown());
+  
+  // Сохраняем информацию о показанных уведомлениях в localStorage
+  useEffect(() => {
+    localStorage.setItem(NOTIFICATIONS_SHOWN_KEY, JSON.stringify(unlockNotifications));
+  }, [unlockNotifications]);
   
   // Механика аирдропа - получение бесплатных криптовалют
   const handleAirdrop = useCallback(() => {
@@ -295,27 +319,24 @@ export const useGameEffects = (props: GameEffectsProps) => {
       if (Math.random() < 0.05 && showMarketEvents) {
         setBullMarketActive(true);
         
-        toast({
-          title: "Бычий рынок!",
-          description: "Рынок идет вверх! +50% к доходности на следующие 5 минут.",
-          duration: 5000
-        });
+        if (!unlockNotifications.bullMarket) {
+          toast({
+            title: "Бычий рынок!",
+            description: "Рынок идет вверх! +50% к доходности на следующие 5 минут.",
+            duration: 5000
+          });
+          setUnlockNotifications(prev => ({...prev, bullMarket: true}));
+        }
         
         // Деактивация через 5 минут
         setTimeout(() => {
           setBullMarketActive(false);
-          
-          toast({
-            title: "Бычий рынок закончился",
-            description: "Рынок вернулся к обычным значениям.",
-            duration: 3000
-          });
         }, 300000); // 5 минут
       }
     }, 300000); // Проверка каждые 5 минут
     
     return () => clearInterval(eventInterval);
-  }, [showMarketEvents]);
+  }, [showMarketEvents, unlockNotifications]);
   
   return {
     handleAirdrop,

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -203,7 +204,7 @@ const CryptoGame: React.FC = () => {
       setStakedUsdt(prev => prev + 10);
       
       toast({
-        title: "Фоновый стейкинг активир��ван",
+        title: "Фоновый стейкинг активирован",
         description: "Вы будете получать пассивный доход даже когда не играете!",
         duration: 3000
       });

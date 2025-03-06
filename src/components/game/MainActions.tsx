@@ -78,8 +78,8 @@ const MainActions: React.FC<MainActionsProps> = ({
         {showEducation && (
           <ActionButton
             onClick={handleLearnButtonClick}
-            disabled={dollars < 10 || knowledge >= 1}
-            tooltip={dollars < 10 ? `Требуется $10` : knowledge >= 1 ? `Уже изучено` : "Изучить основы криптовалют"}
+            disabled={dollars < 10}
+            tooltip={dollars < 10 ? `Требуется $10` : "Изучить основы криптовалют"}
             longPressTooltip="Узнайте базовые принципы работы блокчейна и криптовалют"
             longPressTime={1000}
           >

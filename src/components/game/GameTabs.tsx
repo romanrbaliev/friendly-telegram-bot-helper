@@ -88,37 +88,37 @@ const GameTabs: React.FC<GameTabsProps> = ({
         gridTemplateColumns: `repeat(${visibleTabsCount}, minmax(0, 1fr))` 
       }}>
         <TabsTrigger value="main" className="flex items-center gap-1">
-          <DollarSign size={16} />
-          Основное
+          <DollarSign size={14} className="sm:size-16" />
+          <span className="sm:inline">Основное</span>
         </TabsTrigger>
         {showTrading && (
           <TabsTrigger value="trading" className="flex items-center gap-1">
-            <ArrowUpDown size={16} />
-            Трейдинг
+            <ArrowUpDown size={14} className="sm:size-16" />
+            <span className="sm:inline">Трейдинг</span>
           </TabsTrigger>
         )}
         {showEducation && (
           <TabsTrigger value="education" className="flex items-center gap-1">
-            <GraduationCap size={16} />
-            Образование
+            <GraduationCap size={14} className="sm:size-16" />
+            <span className="sm:inline">Обучение</span>
           </TabsTrigger>
         )}
         {showMining && (
           <TabsTrigger value="mining" className="flex items-center gap-1">
-            <HardDrive size={16} />
-            Майнинг
+            <HardDrive size={14} className="sm:size-16" />
+            <span className="sm:inline">Майнинг</span>
           </TabsTrigger>
         )}
         {showCareer && (
           <TabsTrigger value="career" className="flex items-center gap-1">
-            <Briefcase size={16} />
-            Карьера
+            <Briefcase size={14} className="sm:size-16" />
+            <span className="sm:inline">Карьера</span>
           </TabsTrigger>
         )}
         {showMarketEvents && (
           <TabsTrigger value="market" className="flex items-center gap-1">
-            <BarChart4 size={16} />
-            Рынок
+            <BarChart4 size={14} className="sm:size-16" />
+            <span className="sm:inline">Рынок</span>
           </TabsTrigger>
         )}
       </TabsList>

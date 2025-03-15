@@ -1,6 +1,8 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, AlertCircle } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
 import Trading from './Trading';
 import Education from './Education';
 import Mining from './Mining';
@@ -71,6 +73,25 @@ const GameTabs: React.FC<GameTabsProps> = ({
     (showMining ? 1 : 0) + 
     (showCareer ? 1 : 0) + 
     (showMarketEvents ? 1 : 0);
+  
+  const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
+  
+  // Генерация случайного события на рынке при первой загрузке вкладки "Рынок"
+  useEffect(() => {
+    if (showMarketEvents && !hasNewMarketEvent) {
+      const randomChance = Math.random();
+      if (randomChance > 0.5) {
+        setHasNewMarketEvent(true);
+      }
+    }
+  }, [showMarketEvents, hasNewMarketEvent]);
+  
+  // Сброс индикатора нового события при переходе на вкладку "Рынок"
+  useEffect(() => {
+    if (activeTab === 'market') {
+      setHasNewMarketEvent(false);
+    }
+  }, [activeTab]);
     
   console.log("GameTabs rendering with:", {
     showTrading,
@@ -79,7 +100,8 @@ const GameTabs: React.FC<GameTabsProps> = ({
     showCareer,
     showMarketEvents,
     dollars,
-    knowledge
+    knowledge,
+    miningPower
   });
     
   return (
@@ -108,6 +130,11 @@ const GameTabs: React.FC<GameTabsProps> = ({
           <TabsTrigger value="mining" className="flex items-center gap-1">
             <HardDrive size={14} className="sm:size-16" />
             <span className="sm:inline">Майнинг</span>
+            {miningPower > 0 && (
+              <Badge variant="outline" className="ml-1 text-xs py-0">
+                {miningPower}
+              </Badge>
+            )}
           </TabsTrigger>
         )}
         {showCareer && (
@@ -117,9 +144,12 @@ const GameTabs: React.FC<GameTabsProps> = ({
           </TabsTrigger>
         )}
         {showMarketEvents && (
-          <TabsTrigger value="market" className="flex items-center gap-1">
+          <TabsTrigger value="market" className="flex items-center gap-1 relative">
             <BarChart4 size={14} className="sm:size-16" />
             <span className="sm:inline">Рынок</span>
+            {hasNewMarketEvent && (
+              <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
+            )}
           </TabsTrigger>
         )}
       </TabsList>

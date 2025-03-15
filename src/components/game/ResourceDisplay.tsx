@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { DollarSign, GraduationCap, Briefcase, HelpCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -135,7 +134,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
 
   return (
     <TooltipProvider>
-      <div className="glass-morphism p-1.5 rounded-lg animate-fade-in sticky top-0 z-10 text-[10px]">
+      <div className="glass-morphism p-1.5 rounded-lg animate-fade-in sticky top-0 z-10 text-[10px] max-w-[240px]">
         <h2 className="text-xs font-semibold mb-0.5 text-white border-b border-white/10 pb-0.5">
           Ресурсы
         </h2>
@@ -146,7 +145,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <span className="text-gray-200">Наличные:</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-mono text-white">${displayDollars.toFixed(2)}</span>
+              <span className="font-mono text-white">${dollars.toFixed(2)}</span>
               <Popover>
                 <PopoverTrigger>
                   <HelpCircle size={10} className="text-gray-400 hover:text-white cursor-help transition-colors" />

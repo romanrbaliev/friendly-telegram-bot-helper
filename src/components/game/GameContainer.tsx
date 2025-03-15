@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -307,8 +308,8 @@ const GameContainer: React.FC = () => {
       
       <GameHeader bullMarketActive={bullMarketActive} />
       
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <div className="md:col-span-12">
+      <div className="flex flex-col md:flex-row gap-6">
+        <div>
           {showResources && (
             <ResourceDisplay 
               dollars={dollars} 
@@ -323,7 +324,8 @@ const GameContainer: React.FC = () => {
               role={role}
             />
           )}
-          
+        </div>
+        <div className="flex-1">
           {!showTabs ? (
             <MainActions 
               dollars={dollars}

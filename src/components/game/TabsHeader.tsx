@@ -124,7 +124,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   if (isMobile) {
     return (
       <div className="mobile-tabs-header">
-        <div className="mobile-tabs-row">
+        <div className="mobile-tabs-wrapper">
           {tabs.filter(tab => tab.show).map(tab => (
             <button
               key={tab.id}
@@ -136,8 +136,6 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
                   {tab.icon}
                   {tab.notification && <span className="mobile-notification-dot"></span>}
                 </span>
-                <span className="mobile-tab-text">{tab.text}</span>
-                {tab.badge}
               </div>
             </button>
           ))}

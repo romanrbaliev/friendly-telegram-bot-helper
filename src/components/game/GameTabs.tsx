@@ -96,6 +96,37 @@ const GameTabs: React.FC<GameTabsProps> = ({
         miningAnimation={miningAnimation}
         marketMultiplier={marketMultiplier}
       />
+      
+      <TabsContentComponent 
+        activeTab={activeTab}
+        dollars={dollars}
+        usdt={usdt}
+        btc={btc}
+        knowledge={knowledge}
+        miningPower={miningPower}
+        showTrading={showTrading}
+        showEducation={showEducation}
+        showMining={showMining}
+        showCareer={showCareer}
+        showMarketEvents={showMarketEvents}
+        handleSaveDollar={handleSaveDollar}
+        handleBuyCrypto={handleBuyCrypto}
+        handleStaking={handleStaking}
+        handleTrade={handleTrade}
+        handleLearn={handleLearn}
+        handlePurchaseRig={handlePurchaseRig}
+        handleSelectRole={handleSelectRole}
+        handleMarketChange={handleMarketChange}
+        handlePrepareForEvent={handlePrepareForEvent}
+        marketMultiplier={marketMultiplier}
+        showBuyCrypto={showBuyCrypto}
+        showStaking={showStaking}
+        showBuyUsdt={showBuyUsdt}
+        role={role}
+        handleLearnBasics={handleLearnBasics}
+        clicks={clicks}
+        handleBuyUsdt={handleBuyUsdt}
+      />
     </Tabs>
   );
 };

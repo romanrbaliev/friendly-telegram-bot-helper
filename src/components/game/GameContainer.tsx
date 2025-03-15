@@ -296,46 +296,27 @@ const GameContainer: React.FC = () => {
       
       <GameHeader bullMarketActive={bullMarketActive} />
       
-      <div className="flex flex-row gap-4">
-        {showResources && (
-          <div className="shrink-0">
-            <ResourceDisplay 
-              dollars={dollars} 
-              usdt={usdt} 
-              showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
-              stakedUsdt={stakedUsdt}
-              showStaking={showStaking || stakedUsdt > 0}
-              knowledge={knowledge}
-              showKnowledge={showEducation || knowledge > 0}
-              btc={btc}
-              showBtc={btc > 0 || showBuyCrypto}
-              role={role}
-            />
-          </div>
-        )}
-        
-        <div className="flex-1">
-          {!showTabs ? (
-            <MainActions 
-              dollars={dollars}
-              usdt={usdt}
-              showBuyCrypto={showBuyCrypto}
-              showBuyUsdt={showBuyUsdt}
-              showStaking={showStaking}
-              showEducation={showEducation}
-              handleSaveDollar={handleSaveDollar}
-              handleBuyCrypto={handleBuyCrypto}
-              handleStaking={null}
-              handleLearnBasics={handleLearnBasics}
-              handleBuyUsdt={handleBuyUsdtFixed}
-              knowledge={knowledge}
-              showHint={showHint}
-              hintInfo={hintInfo}
-              onCloseHint={handleCloseHint}
-              currentFeature={currentFeature}
-            />
-          ) : (
-            <>
+      <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2 mb-4">
+        <div className="flex flex-row gap-4 flex-wrap">
+          {showResources && (
+            <div className="shrink-0">
+              <ResourceDisplay 
+                dollars={dollars} 
+                usdt={usdt} 
+                showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
+                stakedUsdt={stakedUsdt}
+                showStaking={showStaking || stakedUsdt > 0}
+                knowledge={knowledge}
+                showKnowledge={showEducation || knowledge > 0}
+                btc={btc}
+                showBtc={btc > 0 || showBuyCrypto}
+                role={role}
+              />
+            </div>
+          )}
+          
+          <div className="flex-grow">
+            {showTabs && (
               <GameTabs 
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -367,19 +348,42 @@ const GameContainer: React.FC = () => {
                 clicks={clicks}
                 handleBuyUsdt={handleBuyUsdt}
               />
-              
-              {activeTab === 'staking' && (
-                <StakingTab 
-                  usdt={usdt}
-                  stakedUsdt={stakedUsdt}
-                  onStake={handleStake}
-                  onWithdraw={handleWithdraw}
-                  role={role}
-                />
-              )}
-            </>
-          )}
+            )}
+          </div>
         </div>
+      </div>
+      
+      <div className="flex-1">
+        {!showTabs ? (
+          <MainActions 
+            dollars={dollars}
+            usdt={usdt}
+            showBuyCrypto={showBuyCrypto}
+            showBuyUsdt={showBuyUsdt}
+            showStaking={showStaking}
+            showEducation={showEducation}
+            handleSaveDollar={handleSaveDollar}
+            handleBuyCrypto={handleBuyCrypto}
+            handleStaking={null}
+            handleLearnBasics={handleLearnBasics}
+            handleBuyUsdt={handleBuyUsdtFixed}
+            knowledge={knowledge}
+            showHint={showHint}
+            hintInfo={hintInfo}
+            onCloseHint={handleCloseHint}
+            currentFeature={currentFeature}
+          />
+        ) : (
+          activeTab === 'staking' && (
+            <StakingTab 
+              usdt={usdt}
+              stakedUsdt={stakedUsdt}
+              onStake={handleStake}
+              onWithdraw={handleWithdraw}
+              role={role}
+            />
+          )
+        )}
       </div>
     </div>
   );

@@ -81,18 +81,6 @@ const GameTabs: React.FC<GameTabsProps> = ({
     }
   }, [marketMultiplier]);
   
-  console.log("GameTabs rendering with:", {
-    showTrading,
-    showEducation,
-    showMining,
-    showCareer,
-    showMarketEvents,
-    dollars,
-    knowledge,
-    miningPower,
-    clicks
-  });
-  
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
       <div className="flex flex-col h-full">
@@ -111,38 +99,73 @@ const GameTabs: React.FC<GameTabsProps> = ({
         />
       </div>
       
-      <div className="w-full mt-2">
-        <TabsContentComponent 
-          activeTab={activeTab}
-          dollars={dollars}
-          usdt={usdt}
-          btc={btc}
-          knowledge={knowledge}
-          miningPower={miningPower}
-          showTrading={showTrading}
-          showEducation={showEducation}
-          showMining={showMining}
-          showCareer={showCareer}
-          showMarketEvents={showMarketEvents}
-          handleSaveDollar={handleSaveDollar}
-          handleBuyCrypto={handleBuyCrypto}
-          handleStaking={handleStaking}
-          handleTrade={handleTrade}
-          handleLearn={handleLearn}
-          handlePurchaseRig={handlePurchaseRig}
-          handleSelectRole={handleSelectRole}
-          handleMarketChange={handleMarketChange}
-          handlePrepareForEvent={handlePrepareForEvent}
-          marketMultiplier={marketMultiplier}
-          showBuyCrypto={showBuyCrypto}
-          showStaking={showStaking}
-          showBuyUsdt={showBuyUsdt}
-          role={role}
-          handleLearnBasics={handleLearnBasics}
-          clicks={clicks}
-          handleBuyUsdt={handleBuyUsdt}
-        />
-      </div>
+      {isMobile ? (
+        <div className="w-full mt-1">
+          <TabsContentComponent 
+            activeTab={activeTab}
+            dollars={dollars}
+            usdt={usdt}
+            btc={btc}
+            knowledge={knowledge}
+            miningPower={miningPower}
+            showTrading={showTrading}
+            showEducation={showEducation}
+            showMining={showMining}
+            showCareer={showCareer}
+            showMarketEvents={showMarketEvents}
+            handleSaveDollar={handleSaveDollar}
+            handleBuyCrypto={handleBuyCrypto}
+            handleStaking={handleStaking}
+            handleTrade={handleTrade}
+            handleLearn={handleLearn}
+            handlePurchaseRig={handlePurchaseRig}
+            handleSelectRole={handleSelectRole}
+            handleMarketChange={handleMarketChange}
+            handlePrepareForEvent={handlePrepareForEvent}
+            marketMultiplier={marketMultiplier}
+            showBuyCrypto={showBuyCrypto}
+            showStaking={showStaking}
+            showBuyUsdt={showBuyUsdt}
+            role={role}
+            handleLearnBasics={handleLearnBasics}
+            clicks={clicks}
+            handleBuyUsdt={handleBuyUsdt}
+          />
+        </div>
+      ) : (
+        <div className="w-full mt-2">
+          <TabsContentComponent 
+            activeTab={activeTab}
+            dollars={dollars}
+            usdt={usdt}
+            btc={btc}
+            knowledge={knowledge}
+            miningPower={miningPower}
+            showTrading={showTrading}
+            showEducation={showEducation}
+            showMining={showMining}
+            showCareer={showCareer}
+            showMarketEvents={showMarketEvents}
+            handleSaveDollar={handleSaveDollar}
+            handleBuyCrypto={handleBuyCrypto}
+            handleStaking={handleStaking}
+            handleTrade={handleTrade}
+            handleLearn={handleLearn}
+            handlePurchaseRig={handlePurchaseRig}
+            handleSelectRole={handleSelectRole}
+            handleMarketChange={handleMarketChange}
+            handlePrepareForEvent={handlePrepareForEvent}
+            marketMultiplier={marketMultiplier}
+            showBuyCrypto={showBuyCrypto}
+            showStaking={showStaking}
+            showBuyUsdt={showBuyUsdt}
+            role={role}
+            handleLearnBasics={handleLearnBasics}
+            clicks={clicks}
+            handleBuyUsdt={handleBuyUsdt}
+          />
+        </div>
+      )}
     </Tabs>
   );
 };

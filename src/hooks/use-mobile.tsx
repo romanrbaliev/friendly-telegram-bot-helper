@@ -5,34 +5,36 @@ import * as React from "react"
 const MOBILE_BREAKPOINT = 600 
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+  const [isMobile, setIsMobile] = React.useState(true) // По умолчанию считаем мобильным
 
   React.useEffect(() => {
-    const checkIsMobile = () => {
-      // Проверка для среды Telegram WebApp
-      if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-        return true; // В Telegram WebApp всегда считаем, что это мобильное устройство
-      }
-      
-      // Традиционная проверка по ширине экрана
-      return window.innerWidth < MOBILE_BREAKPOINT;
-    };
+    // Проверка для среды Telegram WebApp
+    if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+      setIsMobile(true)
+      return
+    }
     
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
+    const checkIsMobile = () => window.innerWidth < MOBILE_BREAKPOINT
+    
+    const handleResize = () => {
       setIsMobile(checkIsMobile())
     }
     
-    mql.addEventListener("change", onChange)
-    setIsMobile(checkIsMobile())
+    // Инициализация
+    handleResize()
     
-    return () => mql.removeEventListener("change", onChange)
+    // Подписка на изменение размера
+    window.addEventListener('resize', handleResize)
+    
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   // Для Telegram mini app всегда возвращаем true
   if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-    return true;
+    return true
   }
   
-  return isMobile !== undefined ? isMobile : false; // По умолчанию не считаем мобильным
+  return isMobile
 }

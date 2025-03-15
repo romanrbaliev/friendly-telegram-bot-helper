@@ -4,6 +4,7 @@ import ActionButton from './ActionButton';
 import { DollarSign, GraduationCap, ArrowUpRight } from 'lucide-react';
 import BuyUSDT from './BuyUSDT';
 import HintPopup from './HintPopup';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MainActionsProps {
   dollars: number;
@@ -42,12 +43,14 @@ const MainActions: React.FC<MainActionsProps> = ({
   onCloseHint,
   currentFeature = ''
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="w-full max-w-3xl mx-auto animate-fade-in space-y-6">
-      <div className="glass-morphism p-6 rounded-lg shadow-lg">
-        <h2 className="text-xl font-bold mb-4 text-center text-white">Основные действия</h2>
+    <div className={`w-full mx-auto animate-fade-in ${isMobile ? 'p-1' : 'max-w-3xl space-y-6'}`}>
+      <div className="glass-morphism p-3 rounded-lg shadow-lg">
+        <h2 className="text-xl font-bold mb-3 text-center text-white">Основные действия</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-2">
           <div>
             <ActionButton 
               onClick={handleSaveDollar}

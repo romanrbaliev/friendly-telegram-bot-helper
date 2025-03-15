@@ -10,10 +10,12 @@ import { useGameState } from '@/hooks/useGameState';
 import { useSaveGame } from '@/hooks/useSaveGame';
 import { useGameEffects } from '@/hooks/useGameEffects';
 import { toast } from '@/components/ui/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const GameContainer: React.FC = () => {
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
   const [currentFeature, setCurrentFeature] = useState('');
+  const isMobile = useIsMobile();
   
   const gameState = useGameState();
   
@@ -300,9 +302,9 @@ const GameContainer: React.FC = () => {
       
       <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2 mb-4">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-full flex flex-col md:flex-row gap-4 justify-between">
+          <div className="w-full flex flex-row gap-2 justify-between">
             {showResources && (
-              <div className="w-full md:w-3/5">
+              <div className="w-3/5">
                 <ResourceDisplay 
                   dollars={dollars} 
                   usdt={usdt} 
@@ -319,7 +321,7 @@ const GameContainer: React.FC = () => {
             )}
             
             {showTabs && (
-              <div className="w-full md:w-2/5">
+              <div className="w-2/5">
                 <GameTabs 
                   activeTab={activeTab}
                   setActiveTab={setActiveTab}

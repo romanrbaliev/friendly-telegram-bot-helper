@@ -3,6 +3,7 @@ import { Tabs } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
 import TabsContentComponent from './TabsContent';
 import { GameTabsProps } from './types/GameTabsProps';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const GameTabs: React.FC<GameTabsProps> = ({
   activeTab,
@@ -37,6 +38,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
 }) => {
   const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
   const [miningAnimation, setMiningAnimation] = useState(false);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     if (showMarketEvents && !hasNewMarketEvent) {
@@ -91,7 +93,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
   });
   
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className={`${isMobile ? 'w-full' : 'w-full'}`}>
       <div className="flex flex-col h-full">
         <TabsHeader 
           activeTab={activeTab}

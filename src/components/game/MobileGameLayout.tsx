@@ -1,11 +1,11 @@
 
-import React from 'react';
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import React, { useState } from 'react';
 import ResourceDisplay from './ResourceDisplay';
+import GameTabs from './GameTabs';
 import MainActions from './MainActions';
-import StakingTab from './StakingTab';
-import TabsContentComponent from './TabsContent';
 import TabsHeader from './TabsHeader';
+import { Badge } from "@/components/ui/badge";
+import HintPopup from './HintPopup';
 
 interface MobileGameLayoutProps {
   showResources: boolean;
@@ -17,7 +17,7 @@ interface MobileGameLayoutProps {
   knowledge: number;
   showBuyCrypto: boolean;
   showBuyUsdt: boolean;
-  showStaking: boolean; 
+  showStaking: boolean;
   showEducation: boolean;
   showTrading: boolean;
   showMining: boolean;
@@ -26,7 +26,7 @@ interface MobileGameLayoutProps {
   miningPower: number;
   marketMultiplier: number;
   activeTab: string;
-  setActiveTab: (tab: string) => void;
+  setActiveTab: (value: string) => void;
   role: string;
   clicks: number;
   handleSaveDollar: () => void;
@@ -42,10 +42,10 @@ interface MobileGameLayoutProps {
   handleBuyUsdtWrapper: () => void;
   handleStake: (amount: number) => void;
   handleWithdraw: (amount: number) => void;
-  showHint?: boolean;
-  hintInfo?: { title: string, description: string };
-  handleCloseHint?: (feature: string) => void;
-  currentFeature?: string;
+  showHint: boolean;
+  hintInfo: { title: string; description: string };
+  handleCloseHint: (feature: string) => void;
+  currentFeature: string;
 }
 
 const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
@@ -84,33 +84,68 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
   handleStake,
   handleWithdraw,
   showHint,
-  hintInfo = { title: '', description: '' },
+  hintInfo,
   handleCloseHint,
-  currentFeature = ''
+  currentFeature
 }) => {
+  const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
+  const [miningAnimation, setMiningAnimation] = useState(false);
+  const isBullMarket = marketMultiplier > 1;
+
   return (
-    <div className="game-layout bg-[#1A1F2C]">
+    <div className="game-layout">
       {showResources && (
         <div className="resources-section">
-          <div className="sidebar-container">
-            <div className="resources-area">
-              <ResourceDisplay 
-                dollars={dollars} 
-                usdt={usdt} 
-                showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
-                stakedUsdt={stakedUsdt}
-                showStaking={showStaking || stakedUsdt > 0}
-                knowledge={knowledge}
-                showKnowledge={showEducation || knowledge > 0}
-                btc={btc}
-                showBtc={btc > 0 || showBuyCrypto}
-                role={role}
-              />
+          <div className="mobile-sidebar-container">
+            <div className="mobile-resources-area">
+              <div className="flex flex-col items-start w-full">
+                <div className="flex gap-2 mb-1 w-full">
+                  <span className="text-xs text-gray-400">Доллары:</span>
+                  <span className="text-xs font-medium">${dollars.toFixed(2)}</span>
+                </div>
+                
+                {(usdt > 0 || showBuyCrypto || showBuyUsdt) && (
+                  <div className="flex gap-2 mb-1 w-full">
+                    <span className="text-xs text-gray-400">USDT:</span>
+                    <span className="text-xs font-medium">${usdt.toFixed(2)}</span>
+                  </div>
+                )}
+                
+                {btc > 0 && (
+                  <div className="flex gap-2 mb-1 w-full">
+                    <span className="text-xs text-gray-400">BTC:</span>
+                    <span className="text-xs font-medium">{btc.toFixed(5)} BTC</span>
+                  </div>
+                )}
+                
+                {stakedUsdt > 0 && (
+                  <div className="flex gap-2 mb-1 w-full">
+                    <span className="text-xs text-gray-400">Стейкинг:</span>
+                    <span className="text-xs font-medium">${stakedUsdt.toFixed(2)}</span>
+                  </div>
+                )}
+                
+                {knowledge > 0 && (
+                  <div className="flex gap-2 mb-1 w-full">
+                    <span className="text-xs text-gray-400">Знания:</span>
+                    <span className="text-xs font-medium">{knowledge}</span>
+                  </div>
+                )}
+                
+                {role && role !== 'none' && (
+                  <div className="flex gap-2 w-full">
+                    <span className="text-xs text-gray-400">Роль:</span>
+                    <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
+                      {role === 'investor' ? 'Инвестор' : 'Трейдер'}
+                    </Badge>
+                  </div>
+                )}
+              </div>
             </div>
             
             {showTabs && (
-              <div className="tabs-sidebar">
-                <TabsHeader 
+              <div className="mobile-tabs-sidebar">
+                <TabsHeader
                   activeTab={activeTab}
                   setActiveTab={setActiveTab}
                   showTrading={showTrading}
@@ -119,8 +154,8 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
                   showCareer={showCareer}
                   showMarketEvents={showMarketEvents}
                   miningPower={miningPower}
-                  hasNewMarketEvent={false}
-                  miningAnimation={false}
+                  hasNewMarketEvent={hasNewMarketEvent}
+                  miningAnimation={miningAnimation}
                   marketMultiplier={marketMultiplier}
                 />
               </div>
@@ -130,77 +165,58 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
       )}
       
       <div className="main-container">
-        <div className="tab-content-container">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            {(!showTabs || !showResources) && (
-              <TabsContent value="main">
-                <MainActions 
-                  dollars={dollars}
-                  usdt={usdt}
-                  showBuyCrypto={showBuyCrypto}
-                  showBuyUsdt={showBuyUsdt}
-                  showStaking={showStaking}
-                  showEducation={showEducation}
-                  handleSaveDollar={handleSaveDollar}
-                  handleBuyCrypto={handleBuyCrypto}
-                  handleStaking={handleStakingWrapper}
-                  handleLearnBasics={handleLearnBasics}
-                  handleBuyUsdt={handleBuyUsdtWrapper}
-                  knowledge={knowledge}
-                  showHint={showHint}
-                  hintInfo={hintInfo}
-                  onCloseHint={handleCloseHint}
-                  currentFeature={currentFeature}
-                />
-              </TabsContent>
-            )}
-            
-            {showTabs && showResources && (
-              <TabsContentComponent 
-                activeTab={activeTab}
-                dollars={dollars}
-                usdt={usdt}
-                btc={btc}
-                knowledge={knowledge}
-                miningPower={miningPower}
-                showTrading={showTrading}
-                showEducation={showEducation}
-                showMining={showMining}
-                showCareer={showCareer}
-                showMarketEvents={showMarketEvents}
-                handleSaveDollar={handleSaveDollar}
-                handleBuyCrypto={handleBuyCrypto}
-                handleStaking={handleStakingWrapper}
-                handleTrade={handleTrade}
-                handleLearn={handleLearnMarket}
-                handlePurchaseRig={handlePurchaseRig}
-                handleSelectRole={handleSelectRole}
-                handleMarketChange={handleMarketChange}
-                handlePrepareForEvent={handlePrepareForEvent}
-                marketMultiplier={marketMultiplier}
-                showBuyCrypto={showBuyCrypto}
-                showStaking={showStaking}
-                showBuyUsdt={showBuyUsdt}
-                role={role}
-                handleLearnBasics={handleLearnBasics}
-                clicks={clicks}
-                handleBuyUsdt={handleBuyUsdtWrapper}
-              />
-            )}
-            
-            {activeTab === 'staking' && showTabs && (
-              <TabsContent value="staking">
-                <StakingTab 
-                  usdt={usdt}
-                  stakedUsdt={stakedUsdt}
-                  onStake={handleStake}
-                  onWithdraw={handleWithdraw}
-                  role={role}
-                />
-              </TabsContent>
-            )}
-          </Tabs>
-        </div>
+        {showTabs ? (
+          <GameTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            showTrading={showTrading}
+            showEducation={showEducation}
+            showMining={showMining}
+            showCareer={showCareer}
+            showMarketEvents={showMarketEvents}
+            dollars={dollars}
+            usdt={usdt}
+            btc={btc}
+            knowledge={knowledge}
+            marketMultiplier={marketMultiplier}
+            miningPower={miningPower}
+            handleSaveDollar={handleSaveDollar}
+            handleBuyCrypto={handleBuyCrypto}
+            handleStaking={handleStakingWrapper}
+            handleTrade={handleTrade}
+            handleLearn={handleLearnMarket}
+            handlePurchaseRig={handlePurchaseRig}
+            handleSelectRole={handleSelectRole}
+            handleMarketChange={handleMarketChange}
+            handlePrepareForEvent={handlePrepareForEvent}
+            showBuyCrypto={showBuyCrypto}
+            showBuyUsdt={showBuyUsdt}
+            showStaking={showStaking}
+            role={role}
+            handleLearnBasics={handleLearnBasics}
+            clicks={clicks}
+            handleBuyUsdt={handleBuyUsdtWrapper}
+          />
+        ) : (
+          <MainActions
+            dollars={dollars}
+            usdt={usdt}
+            showBuyCrypto={showBuyCrypto}
+            showBuyUsdt={showBuyUsdt}
+            showStaking={showStaking}
+            showEducation={showEducation}
+            handleSaveDollar={handleSaveDollar}
+            handleBuyCrypto={handleBuyCrypto}
+            handleStaking={handleStakingWrapper}
+            handleLearnBasics={handleLearnBasics}
+            handleBuyUsdt={handleBuyUsdtWrapper}
+            knowledge={knowledge}
+            showHint={showHint}
+            hintInfo={hintInfo}
+            onCloseHint={handleCloseHint}
+            currentFeature={currentFeature}
+          />
+        )}
       </div>
     </div>
   );

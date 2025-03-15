@@ -81,8 +81,10 @@ const GameTabs: React.FC<GameTabsProps> = ({
     }
   }, [marketMultiplier]);
   
+  // Для мобильных устройств не отображаем сайдбар с вкладками в этом компоненте,
+  // так как он уже отображается в MobileGameLayout
   return (
-    <div className="flex flex-row w-full">
+    <div className="w-full">
       <div className="content-section">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsContentComponent 
@@ -118,21 +120,23 @@ const GameTabs: React.FC<GameTabsProps> = ({
         </Tabs>
       </div>
       
-      <div className="tabs-section">
-        <TabsHeader 
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          showTrading={showTrading}
-          showEducation={showEducation}
-          showMining={showMining}
-          showCareer={showCareer}
-          showMarketEvents={showMarketEvents}
-          miningPower={miningPower}
-          hasNewMarketEvent={hasNewMarketEvent}
-          miningAnimation={miningAnimation}
-          marketMultiplier={marketMultiplier}
-        />
-      </div>
+      {!isMobile && (
+        <div className="tabs-section">
+          <TabsHeader 
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            showTrading={showTrading}
+            showEducation={showEducation}
+            showMining={showMining}
+            showCareer={showCareer}
+            showMarketEvents={showMarketEvents}
+            miningPower={miningPower}
+            hasNewMarketEvent={hasNewMarketEvent}
+            miningAnimation={miningAnimation}
+            marketMultiplier={marketMultiplier}
+          />
+        </div>
+      )}
     </div>
   );
 };

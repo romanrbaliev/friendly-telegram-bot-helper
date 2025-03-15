@@ -46,7 +46,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'trading', 
       show: showTrading, 
       icon: <ArrowUpDown size={14} />, 
-      text: 'Трейд',
+      text: 'Т',
       badge: null,
       animation: false,
       notification: false
@@ -55,7 +55,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'education', 
       show: showEducation, 
       icon: <GraduationCap size={14} />, 
-      text: 'Обуч',
+      text: 'О',
       badge: null,
       animation: false,
       notification: false
@@ -64,9 +64,9 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'mining', 
       show: showMining, 
       icon: <HardDrive size={14} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
-      text: 'Майн',
+      text: 'М',
       badge: miningPower > 0 ? (
-        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-xs py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
+        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-[8px] py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
           {miningPower}
         </Badge>
       ) : null,
@@ -77,7 +77,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'career', 
       show: showCareer, 
       icon: <Briefcase size={14} />, 
-      text: 'Карьера',
+      text: 'К',
       badge: null,
       animation: false,
       notification: false
@@ -90,9 +90,9 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       ) : (
         <BarChart4 size={14} />
       ), 
-      text: isBullMarket ? "+" : "Рынок",
+      text: isBullMarket ? "+" : "Р",
       badge: isBullMarket ? (
-        <Badge variant="success" className="ml-1 text-xs py-0 px-1 animate-pulse">
+        <Badge variant="success" className="ml-1 text-[8px] py-0 px-1 animate-pulse">
           +{((marketMultiplier - 1) * 100).toFixed(0)}%
         </Badge>
       ) : null,
@@ -103,7 +103,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'staking', 
       show: true, 
       icon: <Shield size={14} />, 
-      text: 'Стейк',
+      text: 'С',
       badge: null,
       animation: false,
       notification: false
@@ -112,7 +112,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'achievements', 
       show: true, 
       icon: <Medal size={14} />, 
-      text: 'Ачивки',
+      text: 'А',
       badge: null,
       animation: false,
       notification: false
@@ -121,22 +121,20 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   
   return (
     <div className="animate-fade-in w-full">
-      <div className="flex flex-col gap-1 w-full h-auto bg-transparent">
+      <div className="flex flex-col gap-1 w-full h-auto">
         {tabs.filter(tab => tab.show).map(tab => (
           <button
             key={tab.id}
-            className={`flex items-center justify-start gap-1 p-1 text-xs h-7 ${tab.animation ? 'animate-pulse' : ''} relative w-full 
-            ${activeTab === tab.id ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:bg-muted/80'} 
-            rounded-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+            className={`mobile-tab-button ${activeTab === tab.id ? 'active' : ''} ${tab.animation ? 'animate-pulse' : ''} relative`}
             onClick={() => setActiveTab(tab.id)}
           >
             <div className="flex items-center gap-1">
               {tab.icon}
-              <span className="text-[10px] whitespace-nowrap">{tab.text}</span>
+              <span className="text-[9px] whitespace-nowrap">{tab.text}</span>
             </div>
             {tab.badge}
             {tab.notification && (
-              <span className="absolute top-1 left-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
+              <span className="absolute top-0 right-0 h-1.5 w-1.5 bg-red-500 rounded-full animate-pulse"></span>
             )}
           </button>
         ))}

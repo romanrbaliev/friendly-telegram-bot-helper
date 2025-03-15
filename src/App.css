@@ -1,3 +1,4 @@
+
 /* Для десктопов */
 @media (min-width: 600px) {
   #root {
@@ -47,31 +48,58 @@
   backdrop-filter: blur(5px);
 }
 
-/* Стиль для контейнера вкладок и ресурсов */
-.sidebar-container {
+/* Новый стиль для контейнера ресурсов и вкладок */
+.mobile-sidebar-container {
   display: flex;
   flex-direction: row;
   width: 100%;
   background-color: #1A1F2C;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: stretch;
 }
 
 /* Стиль для раздела с ресурсами */
-.resources-area {
+.mobile-resources-area {
   width: 70%;
-  padding: 10px;
+  padding: 8px 6px;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 /* Стиль для вкладок в сайдбаре */
-.tabs-sidebar {
+.mobile-tabs-sidebar {
   width: 30%;
   display: flex;
   flex-direction: column;
-  padding: 8px 4px;
+  padding: 4px 2px;
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   background-color: rgba(0, 0, 0, 0.1);
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+/* Стили для вкладок */
+.mobile-tab-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 4px;
+  font-size: 10px;
+  height: 24px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.mobile-tab-button.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-tab-button:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* Стиль для контейнера содержимого вкладки */

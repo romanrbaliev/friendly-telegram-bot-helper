@@ -261,16 +261,18 @@ const GameContainer: React.FC = () => {
     }
   };
   
-  const handleBuyUsdtFixed = (amount: number = 10) => {
-    console.log("handleBuyUsdtFixed вызван, текущий баланс: $", dollars);
-    
-    if (dollars >= amount) {
-      handleBuyUsdt(amount);
+  const handleStakingWrapper = () => {
+    handleStake(10);
+  };
+
+  const handleBuyUsdtWrapper = () => {
+    if (dollars >= 10) {
+      handleBuyUsdt(10);
     } else {
       console.log("Недостаточно средств для покупки USDT");
       toast({
         title: "Недостаточно средств",
-        description: `Нужно $${amount} для покупки USDT`,
+        description: "Нужно $10 для покупки USDT",
         duration: 3000
       });
     }
@@ -297,7 +299,7 @@ const GameContainer: React.FC = () => {
       <GameHeader bullMarketActive={bullMarketActive} />
       
       <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2 mb-4">
-        <div className="flex flex-row items-start">
+        <div className="flex flex-row items-start gap-2">
           {showResources && (
             <div className="shrink-0">
               <ResourceDisplay 
@@ -333,7 +335,7 @@ const GameContainer: React.FC = () => {
                 miningPower={miningPower}
                 handleSaveDollar={handleSaveDollar}
                 handleBuyCrypto={handleBuyCrypto}
-                handleStaking={handleStake}
+                handleStaking={handleStakingWrapper}
                 handleTrade={handleTrade}
                 handleLearn={handleLearnMarket}
                 handlePurchaseRig={handlePurchaseRig}
@@ -346,7 +348,7 @@ const GameContainer: React.FC = () => {
                 role={role}
                 handleLearnBasics={handleLearnBasics}
                 clicks={clicks}
-                handleBuyUsdt={handleBuyUsdt}
+                handleBuyUsdt={handleBuyUsdtWrapper}
               />
             </div>
           )}
@@ -364,9 +366,9 @@ const GameContainer: React.FC = () => {
             showEducation={showEducation}
             handleSaveDollar={handleSaveDollar}
             handleBuyCrypto={handleBuyCrypto}
-            handleStaking={handleStake}
+            handleStaking={handleStakingWrapper}
             handleLearnBasics={handleLearnBasics}
-            handleBuyUsdt={handleBuyUsdtFixed}
+            handleBuyUsdt={handleBuyUsdtWrapper}
             knowledge={knowledge}
             showHint={showHint}
             hintInfo={hintInfo}

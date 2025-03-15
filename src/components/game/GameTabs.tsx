@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
@@ -54,25 +53,21 @@ const GameTabs: React.FC<GameTabsProps> = ({
     }
   }, [activeTab]);
   
-  // Mining power notification effect
   useEffect(() => {
     if (miningPower > 0) {
       const interval = setInterval(() => {
         setMiningAnimation(true);
         setTimeout(() => setMiningAnimation(false), 1000);
-      }, 30000); // Show animation every 30 seconds to indicate mining is active
+      }, 30000);
       
       return () => clearInterval(interval);
     }
   }, [miningPower]);
   
-  // Добавим эффект "бычьего рынка" - анимацию для подсветки вкладки "Рынок"
   useEffect(() => {
     if (marketMultiplier > 1) {
-      // Если активен "бычий рынок", добавим анимацию для вкладки "Рынок"
       setHasNewMarketEvent(true);
       
-      // Если бычий рынок закончился, удалим анимацию
       const timeout = setTimeout(() => {
         if (marketMultiplier === 1) {
           setHasNewMarketEvent(false);
@@ -111,7 +106,6 @@ const GameTabs: React.FC<GameTabsProps> = ({
         marketMultiplier={marketMultiplier}
       />
       
-      {/* Возвращаем отображение контента вкладок */}
       <TabsContentComponent 
         activeTab={activeTab}
         dollars={dollars}

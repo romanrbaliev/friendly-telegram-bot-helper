@@ -72,9 +72,9 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
   handleBuyUsdt
 }) => {
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-full max-w-3xl">
-        <TabsContent value="main" className="space-y-4 mt-4">
+    <div className="w-full">
+      <TabsContent value="main" className="animate-fade-in">
+        <div className="glass-morphism p-4 rounded-lg">
           <MainActions 
             dollars={dollars}
             usdt={usdt}
@@ -89,95 +89,97 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
             knowledge={knowledge}
             handleBuyUsdt={handleBuyUsdt}
           />
-        </TabsContent>
-        
-        {showTrading && (
-          <TabsContent value="trading" className="mt-4 space-y-6 p-4">
-            <div className="glass-morphism p-4 rounded-lg">
-              <Trading 
-                dollars={dollars}
-                usdt={usdt}
-                btc={btc}
-                onTrade={handleTrade}
-                knowledge={knowledge}
-                role={role}
-              />
-              
-              {/* Добавляем информацию о криптовалютах */}
-              {knowledge >= 5 && (
+        </div>
+      </TabsContent>
+      
+      {showTrading && (
+        <TabsContent value="trading" className="animate-fade-in">
+          <div className="glass-morphism p-4 rounded-lg">
+            <Trading 
+              dollars={dollars}
+              usdt={usdt}
+              btc={btc}
+              onTrade={handleTrade}
+              knowledge={knowledge}
+              role={role}
+            />
+            
+            {/* Добавляем информацию о криптовалютах */}
+            {knowledge >= 5 && (
+              <div className="mt-4">
                 <CryptoCurrencyInfo 
                   marketMultiplier={marketMultiplier} 
                   knowledge={knowledge} 
                 />
-              )}
-            </div>
-          </TabsContent>
-        )}
-        
-        {showEducation && (
-          <TabsContent value="education" className="mt-4 p-4">
-            <div className="glass-morphism p-4 rounded-lg">
-              <Education
-                dollars={dollars}
-                onLearn={handleLearn}
-                knowledge={knowledge}
-              />
-            </div>
-          </TabsContent>
-        )}
-        
-        {showMining && (
-          <TabsContent value="mining" className="mt-4 p-4">
-            <div className="glass-morphism p-4 rounded-lg">
-              <Mining
-                dollars={dollars}
-                btc={btc}
-                miningPower={miningPower}
-                onPurchaseRig={handlePurchaseRig}
-                knowledge={knowledge}
-                marketMultiplier={marketMultiplier}
-              />
-            </div>
-          </TabsContent>
-        )}
-        
-        {showCareer && (
-          <TabsContent value="career" className="mt-4 p-4">
-            <div className="glass-morphism p-4 rounded-lg">
-              <Career
-                dollars={dollars}
-                onSelectRole={handleSelectRole}
-                selectedRole={role}
-                knowledge={knowledge}
-              />
-            </div>
-          </TabsContent>
-        )}
-        
-        {showMarketEvents && (
-          <TabsContent value="market" className="mt-4 p-4">
-            <div className="glass-morphism p-4 rounded-lg">
-              <MarketEvents
-                knowledge={knowledge}
-                onPrepareForEvent={handlePrepareForEvent}
-                onMarketChange={handleMarketChange}
-              />
-            </div>
-          </TabsContent>
-        )}
-        
-        <TabsContent value="achievements" className="mt-4 p-4">
+              </div>
+            )}
+          </div>
+        </TabsContent>
+      )}
+      
+      {showEducation && (
+        <TabsContent value="education" className="animate-fade-in">
           <div className="glass-morphism p-4 rounded-lg">
-            <Achievements
-              clickCount={clicks}
+            <Education
               dollars={dollars}
+              onLearn={handleLearn}
               knowledge={knowledge}
-              miningPower={miningPower}
-              btc={btc}
             />
           </div>
         </TabsContent>
-      </div>
+      )}
+      
+      {showMining && (
+        <TabsContent value="mining" className="animate-fade-in">
+          <div className="glass-morphism p-4 rounded-lg">
+            <Mining
+              dollars={dollars}
+              btc={btc}
+              miningPower={miningPower}
+              onPurchaseRig={handlePurchaseRig}
+              knowledge={knowledge}
+              marketMultiplier={marketMultiplier}
+            />
+          </div>
+        </TabsContent>
+      )}
+      
+      {showCareer && (
+        <TabsContent value="career" className="animate-fade-in">
+          <div className="glass-morphism p-4 rounded-lg">
+            <Career
+              dollars={dollars}
+              onSelectRole={handleSelectRole}
+              selectedRole={role}
+              knowledge={knowledge}
+            />
+          </div>
+        </TabsContent>
+      )}
+      
+      {showMarketEvents && (
+        <TabsContent value="market" className="animate-fade-in">
+          <div className="glass-morphism p-4 rounded-lg">
+            <MarketEvents
+              knowledge={knowledge}
+              onPrepareForEvent={handlePrepareForEvent}
+              onMarketChange={handleMarketChange}
+            />
+          </div>
+        </TabsContent>
+      )}
+      
+      <TabsContent value="achievements" className="animate-fade-in">
+        <div className="glass-morphism p-4 rounded-lg">
+          <Achievements
+            clickCount={clicks}
+            dollars={dollars}
+            knowledge={knowledge}
+            miningPower={miningPower}
+            btc={btc}
+          />
+        </div>
+      </TabsContent>
     </div>
   );
 };

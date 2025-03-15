@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ActionButton from './ActionButton';
-import { DollarSign, GraduationCap, ArrowUpRight, Shield } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpRight, Shield, DollarSignIcon } from 'lucide-react';
 import BuyUSDT from './BuyUSDT';
 import HintPopup from './HintPopup';
 
@@ -90,6 +90,21 @@ const MainActions: React.FC<MainActionsProps> = ({
             </div>
           )}
 
+          {showBuyUsdt && handleBuyUsdt && (
+            <div>
+              <ActionButton 
+                onClick={() => handleBuyUsdt(10)}
+                disabled={dollars < 10}
+                tooltip={dollars < 10 ? "Недостаточно средств" : "Купить USDT за $10"}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center text-[10px] font-bold text-white">₮</span>
+                  <span>Купить USDT</span>
+                </div>
+              </ActionButton>
+            </div>
+          )}
+
           {showStaking && (
             <div>
               <ActionButton 
@@ -106,14 +121,6 @@ const MainActions: React.FC<MainActionsProps> = ({
           )}
         </div>
       </div>
-      
-      {showBuyUsdt && handleBuyUsdt && (
-        <BuyUSDT 
-          dollars={dollars} 
-          onBuyUSDT={handleBuyUsdt}
-          knowledge={knowledge}
-        />
-      )}
       
       {showHint && hintInfo && onCloseHint && (
         <HintPopup

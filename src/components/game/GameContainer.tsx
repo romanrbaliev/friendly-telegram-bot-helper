@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -297,6 +296,23 @@ const GameContainer: React.FC = () => {
       });
     }
   };
+  
+  // Новый обработчик для покупки USDT на фиксированную сумму
+  const handleBuyUsdtFixed = () => {
+    console.log("handleBuyUsdtFixed вызван, текущий баланс: $", dollars);
+    const fixedAmount = 10; // Покупаем на 10$
+    
+    if (dollars >= fixedAmount) {
+      handleBuyUsdt(fixedAmount);
+    } else {
+      console.log("Недостаточно средств для покупки USDT");
+      toast({
+        title: "Недостаточно средств",
+        description: `Нужно $${fixedAmount} для покупки USDT`,
+        duration: 3000
+      });
+    }
+  };
 
   // Проверяем, нужно ли показывать табы
   const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents || showStaking;
@@ -310,26 +326,13 @@ const GameContainer: React.FC = () => {
   const renderTabContent = () => {
     if (activeTab === 'staking') {
       return (
-        <div>
-          <div className="mb-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleBackFromStaking}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft size={16} />
-              Назад
-            </Button>
-          </div>
-          <StakingTab 
-            usdt={usdt}
-            stakedUsdt={stakedUsdt}
-            onStake={handleStake}
-            onWithdraw={handleWithdraw}
-            role={role}
-          />
-        </div>
+        <StakingTab 
+          usdt={usdt}
+          stakedUsdt={stakedUsdt}
+          onStake={handleStake}
+          onWithdraw={handleWithdraw}
+          role={role}
+        />
       );
     }
     
@@ -403,9 +406,7 @@ const GameContainer: React.FC = () => {
             />
           )}
           
-          {showTabs ? (
-            renderTabContent()
-          ) : (
+          {!showTabs ? (
             <MainActions 
               dollars={dollars}
               usdt={usdt}
@@ -417,13 +418,57 @@ const GameContainer: React.FC = () => {
               handleBuyCrypto={handleBuyCrypto}
               handleStaking={handleStakingActivation}
               handleLearnBasics={handleLearnBasics}
-              handleBuyUsdt={handleBuyUsdt}
+              handleBuyUsdt={handleBuyUsdtFixed} // Используем новый обработчик
               knowledge={knowledge}
               showHint={showHint}
               hintInfo={hintInfo}
               onCloseHint={handleCloseHint}
               currentFeature={currentFeature}
             />
+          ) : (
+            <>
+              <GameTabs 
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                showTrading={showTrading}
+                showEducation={showEducation}
+                showMining={showMining}
+                showCareer={showCareer}
+                showMarketEvents={showMarketEvents}
+                dollars={dollars}
+                usdt={usdt}
+                btc={btc}
+                knowledge={knowledge}
+                marketMultiplier={marketMultiplier}
+                miningPower={miningPower}
+                handleSaveDollar={handleSaveDollar}
+                handleBuyCrypto={handleBuyCrypto}
+                handleStaking={handleStakingActivation}
+                handleTrade={handleTrade}
+                handleLearn={handleLearnMarket}
+                handlePurchaseRig={handlePurchaseRig}
+                handleSelectRole={handleSelectRole}
+                handleMarketChange={handleMarketChange}
+                handlePrepareForEvent={handlePrepareForEvent}
+                showBuyCrypto={showBuyCrypto}
+                showBuyUsdt={showBuyUsdt}
+                showStaking={showStaking}
+                role={role}
+                handleLearnBasics={handleLearnBasics}
+                clicks={clicks}
+                handleBuyUsdt={handleBuyUsdt}
+              />
+              
+              {activeTab === 'staking' && (
+                <StakingTab 
+                  usdt={usdt}
+                  stakedUsdt={stakedUsdt}
+                  onStake={handleStake}
+                  onWithdraw={handleWithdraw}
+                  role={role}
+                />
+              )}
+            </>
           )}
         </div>
       </div>

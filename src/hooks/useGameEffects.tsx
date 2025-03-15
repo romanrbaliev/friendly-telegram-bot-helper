@@ -35,6 +35,7 @@ interface GameEffectsProps {
 }
 
 const NOTIFICATIONS_SHOWN_KEY = 'crypto_clicker_notifications_shown';
+const STAKING_PROGRESS_KEY = 'crypto_clicker_staking_progress';
 
 export const useGameEffects = (props: GameEffectsProps) => {
   const { 
@@ -73,6 +74,56 @@ export const useGameEffects = (props: GameEffectsProps) => {
   const [bullMarketActive, setBullMarketActive] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [hintInfo, setHintInfo] = useState({ title: '', description: '' });
+  const lastStakingUpdateRef = useRef<number>(Date.now());
+  
+  useEffect(() => {
+    try {
+      const stakingProgressStr = localStorage.getItem(STAKING_PROGRESS_KEY);
+      if (stakingProgressStr) {
+        const stakingProgress = JSON.parse(stakingProgressStr);
+        
+        if (stakingProgress && stakingProgress.stakedUsdt > 0 && stakingProgress.lastUpdate) {
+          const now = Date.now();
+          const lastUpdate = stakingProgress.lastUpdate;
+          const elapsedMinutes = (now - lastUpdate) / (1000 * 60);
+          
+          if (elapsedMinutes > 0) {
+            const yearlyRatePercent = 10;
+            const yearlyRate = yearlyRatePercent / 100;
+            const minuteRate = yearlyRate / (365 * 24 * 60);
+            
+            const income = stakingProgress.stakedUsdt * minuteRate * elapsedMinutes;
+            
+            if (income > 0) {
+              setUsdt(prev => prev + income);
+              lastStakingUpdateRef.current = now;
+              saveStakingProgress(stakingProgress.stakedUsdt);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Ошибка при загрузке прогресса стейкинга:", error);
+    }
+  }, []);
+  
+  const saveStakingProgress = (currentStakedUsdt: number) => {
+    try {
+      const stakingProgress = {
+        stakedUsdt: currentStakedUsdt,
+        lastUpdate: Date.now()
+      };
+      localStorage.setItem(STAKING_PROGRESS_KEY, JSON.stringify(stakingProgress));
+    } catch (error) {
+      console.error("Ошибка при сохранении прогресса стейкинга:", error);
+    }
+  };
+  
+  useEffect(() => {
+    if (stakedUsdt > 0) {
+      saveStakingProgress(stakedUsdt);
+    }
+  }, [stakedUsdt]);
   
   const loadNotificationsShown = () => {
     try {
@@ -108,9 +159,6 @@ export const useGameEffects = (props: GameEffectsProps) => {
     if (!unlockNotifications[feature as keyof typeof unlockNotifications]) {
       setHintInfo({ title, description });
       setShowHint(true);
-      
-      // Не обновляем unlockNotifications здесь, это будет сделано 
-      // только когда пользователь закроет подсказку
     }
   };
   
@@ -260,10 +308,6 @@ export const useGameEffects = (props: GameEffectsProps) => {
     setShowMarketEvents, unlockNotifications
   ]);
   
-  useEffect(() => {
-    checkPurchaseMilestones();
-  }, [dollars, knowledge, usdt, stakedUsdt, clicks, checkPurchaseMilestones]);
-  
   const handleLearn = useCallback((cost: number, knowledgeGain: number) => {
     console.log(`Попытка обучения: стоимость $${cost}, прирост знаний +${knowledgeGain}`);
     if (dollars >= cost) {
@@ -294,8 +338,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
   const handleBuyUsdt = useCallback((amount: number) => {
     console.log(`Попытка покупки USDT за $${amount}`);
     if (dollars >= amount) {
-      // Рассчитываем комиссию на основе знаний
-      let fee = 5; // Базовая комиссия 5%
+      let fee = 5;
       if (knowledge >= 5) fee = 4;
       if (knowledge >= 10) fee = 3;
       if (knowledge >= 20) fee = 2;
@@ -330,6 +373,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
       setStakedUsdt(prev => prev + amount);
       
       console.log(`Отправлено ${amount} USDT в стейкинг`);
+      saveStakingProgress(stakedUsdt + amount);
       
       setTimeout(() => checkPurchaseMilestones(), 0);
       
@@ -344,12 +388,16 @@ export const useGameEffects = (props: GameEffectsProps) => {
       
       return false;
     }
-  }, [usdt, setUsdt, setStakedUsdt, checkPurchaseMilestones]);
+  }, [usdt, stakedUsdt, setUsdt, setStakedUsdt, checkPurchaseMilestones]);
   
   const handleWithdraw = useCallback((amount: number) => {
     console.log(`Попытка вывода ${amount} USDT из стейкинга`);
     if (stakedUsdt >= amount) {
-      setStakedUsdt(prev => prev - amount);
+      setStakedUsdt(prev => {
+        const newValue = prev - amount;
+        saveStakingProgress(newValue);
+        return newValue;
+      });
       setUsdt(prev => prev + amount);
       
       console.log(`Выведено ${amount} USDT из стейкинга`);
@@ -370,10 +418,16 @@ export const useGameEffects = (props: GameEffectsProps) => {
   useEffect(() => {
     if (stakedUsdt > 0) {
       const interval = setInterval(() => {
-        const baseIncome = stakedUsdt * 0.01; // 1% в минуту
+        const baseIncome = stakedUsdt * 0.01;
         const marketBonus = bullMarketActive ? 1.5 : 1;
-        setUsdt(prev => prev + baseIncome * marketBonus);
-      }, 60000); // Каждую минуту
+        const income = baseIncome * marketBonus;
+        
+        setUsdt(prev => prev + income);
+        console.log(`Доход от стейкинга: +${income.toFixed(4)} USDT (бонус рынка: ${marketBonus}x)`);
+        
+        lastStakingUpdateRef.current = Date.now();
+        saveStakingProgress(stakedUsdt);
+      }, 60000);
       
       return () => clearInterval(interval);
     }
@@ -384,13 +438,13 @@ export const useGameEffects = (props: GameEffectsProps) => {
       console.log(`Mining effect activated with power: ${miningPower}, market multiplier: ${marketMultiplier}`);
       
       const interval = setInterval(() => {
-        const baseMining = miningPower * 0.0001; // 0.0001 BTC в час для каждой единицы мощности
+        const baseMining = miningPower * 0.0001;
         const marketModifier = marketMultiplier;
         const btcEarned = baseMining * marketModifier;
         
         console.log(`Mining tick: +${btcEarned.toFixed(8)} BTC earned`);
         setBtc(prev => prev + btcEarned);
-      }, 300000); // Каждые 5 минут (переведено из часа)
+      }, 300000);
       
       return () => {
         console.log("Mining effect cleanup");
@@ -412,9 +466,9 @@ export const useGameEffects = (props: GameEffectsProps) => {
         
         setTimeout(() => {
           setBullMarketActive(false);
-        }, 300000); // 5 минут
+        }, 300000);
       }
-    }, 300000); // Проверка каждые 5 минут
+    }, 300000);
     
     return () => clearInterval(eventInterval);
   }, [showMarketEvents]);

@@ -49,11 +49,9 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         if (stakedUsdt > 0) {
           const usdtIncrement = stakedUsdt * 0.1 / (365 * 24 * 36000); // 10% yearly return per 100ms
           setDisplayUsdt(prev => prev + usdtIncrement);
-        }
-        
-        // If we have staked USDT, update that too with real-time visualization
-        if (stakedUsdt > 0) {
-          const stakedIncrement = stakedUsdt * 0.001 / (365 * 24 * 36000); // Minimal visual increment
+          
+          // Also animate the staked USDT with a minimal visual increment
+          const stakedIncrement = stakedUsdt * 0.001 / (365 * 24 * 36000); // Visual increment
           setDisplayStakedUsdt(prev => prev + stakedIncrement);
         }
         

@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, AlertCircle } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, AlertCircle, Medal } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import Trading from './Trading';
 import Education from './Education';
@@ -9,6 +8,7 @@ import Mining from './Mining';
 import Career from './Career';
 import MarketEvents from './MarketEvents';
 import MainActions from './MainActions';
+import Achievements from './Achievements';
 
 interface GameTabsProps {
   activeTab: string;
@@ -37,6 +37,7 @@ interface GameTabsProps {
   showStaking: boolean;
   role: string | null;
   handleLearnBasics: () => void;
+  clicks: number;
 }
 
 const GameTabs: React.FC<GameTabsProps> = ({
@@ -65,18 +66,19 @@ const GameTabs: React.FC<GameTabsProps> = ({
   showBuyCrypto,
   showStaking,
   role,
-  handleLearnBasics
+  handleLearnBasics,
+  clicks
 }) => {
   const visibleTabsCount = 1 + 
     (showTrading ? 1 : 0) + 
     (showEducation ? 1 : 0) + 
     (showMining ? 1 : 0) + 
     (showCareer ? 1 : 0) + 
-    (showMarketEvents ? 1 : 0);
+    (showMarketEvents ? 1 : 0) + 
+    1;
   
   const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
   
-  // Генерация случайного события на рынке при первой загрузке вкладки "Рынок"
   useEffect(() => {
     if (showMarketEvents && !hasNewMarketEvent) {
       const randomChance = Math.random();
@@ -86,13 +88,12 @@ const GameTabs: React.FC<GameTabsProps> = ({
     }
   }, [showMarketEvents, hasNewMarketEvent]);
   
-  // Сброс индикатора нового события при переходе на вкладку "Рынок"
   useEffect(() => {
     if (activeTab === 'market') {
       setHasNewMarketEvent(false);
     }
   }, [activeTab]);
-    
+  
   console.log("GameTabs rendering with:", {
     showTrading,
     showEducation,
@@ -101,9 +102,10 @@ const GameTabs: React.FC<GameTabsProps> = ({
     showMarketEvents,
     dollars,
     knowledge,
-    miningPower
+    miningPower,
+    clicks
   });
-    
+  
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
       <TabsList className="w-full animate-fade-in" style={{ 
@@ -152,6 +154,10 @@ const GameTabs: React.FC<GameTabsProps> = ({
             )}
           </TabsTrigger>
         )}
+        <TabsTrigger value="achievements" className="flex items-center gap-1">
+          <Medal size={14} className="sm:size-16" />
+          <span className="sm:inline">Ачивки</span>
+        </TabsTrigger>
       </TabsList>
       
       <TabsContent value="main" className="space-y-4 mt-4">
@@ -225,6 +231,16 @@ const GameTabs: React.FC<GameTabsProps> = ({
           />
         </TabsContent>
       )}
+      
+      <TabsContent value="achievements" className="mt-4">
+        <Achievements
+          clickCount={clicks}
+          dollars={dollars}
+          knowledge={knowledge}
+          miningPower={miningPower}
+          btc={btc}
+        />
+      </TabsContent>
     </Tabs>
   );
 };

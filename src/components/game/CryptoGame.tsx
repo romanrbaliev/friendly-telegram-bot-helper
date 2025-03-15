@@ -379,6 +379,7 @@ const CryptoGame: React.FC = () => {
               showStaking={showStaking}
               role={role}
               handleLearnBasics={handleLearnBasics}
+              clicks={clicks}
             />
           ) : (
             <MainActions 

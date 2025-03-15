@@ -62,6 +62,8 @@
 .tabs-section {
   width: 130px;
   padding: 0.5rem 0.25rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .glass-morphism {

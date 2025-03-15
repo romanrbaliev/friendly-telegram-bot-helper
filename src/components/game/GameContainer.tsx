@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -343,6 +344,82 @@ const GameContainer: React.FC = () => {
           currentFeature={currentFeature}
         />
       ) : (
-        <>
+        <div className="flex flex-row w-full h-full gap-2">
+          {showResources && (
+            <div className="w-1/4">
+              <ResourceDisplay 
+                dollars={dollars} 
+                usdt={usdt} 
+                showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
+                stakedUsdt={stakedUsdt}
+                showStaking={showStaking || stakedUsdt > 0}
+                knowledge={knowledge}
+                showKnowledge={showEducation || knowledge > 0}
+                btc={btc}
+                showBtc={btc > 0 || showBuyCrypto}
+                role={role}
+              />
+            </div>
+          )}
+          
+          <div className={`${showResources ? 'w-3/4' : 'w-full'} flex flex-col`}>
+            {showTabsCondition ? (
+              <GameTabs 
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                showTrading={showTrading}
+                showEducation={showEducation}
+                showMining={showMining}
+                showCareer={showCareer}
+                showMarketEvents={showMarketEvents}
+                dollars={dollars}
+                usdt={usdt}
+                btc={btc}
+                knowledge={knowledge}
+                marketMultiplier={marketMultiplier}
+                miningPower={miningPower}
+                handleSaveDollar={handleSaveDollar}
+                handleBuyCrypto={handleBuyCrypto}
+                handleStaking={handleStakingWrapper}
+                handleTrade={handleTrade}
+                handleLearn={handleLearn}
+                handlePurchaseRig={handlePurchaseRig}
+                handleSelectRole={handleSelectRole}
+                handleMarketChange={handleMarketChange}
+                handlePrepareForEvent={handlePrepareForEvent}
+                showBuyCrypto={showBuyCrypto}
+                showBuyUsdt={showBuyUsdt}
+                showStaking={showStaking}
+                role={role}
+                handleLearnBasics={handleLearnBasics}
+                clicks={clicks}
+                handleBuyUsdt={handleBuyUsdtWrapper}
+              />
+            ) : (
+              <MainActions 
+                dollars={dollars}
+                usdt={usdt}
+                showBuyCrypto={showBuyCrypto}
+                showBuyUsdt={showBuyUsdt}
+                showStaking={showStaking}
+                showEducation={showEducation}
+                handleSaveDollar={handleSaveDollar}
+                handleBuyCrypto={handleBuyCrypto}
+                handleStaking={handleStakingWrapper}
+                handleLearnBasics={handleLearnBasics}
+                handleBuyUsdt={handleBuyUsdtWrapper}
+                knowledge={knowledge}
+                showHint={showHint}
+                hintInfo={hintInfo}
+                onCloseHint={handleCloseHint}
+                currentFeature={currentFeature}
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
-
+export default GameContainer;

@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
 import GameTabs from './GameTabs';
 import MainActions from './MainActions';
 import GameHeader from './GameHeader';
+import StakingTab from './StakingTab';
+import HintPopup from './HintPopup';
 import { useGameState } from '@/hooks/useGameState';
 import { useSaveGame } from '@/hooks/useSaveGame';
 import { useGameEffects } from '@/hooks/useGameEffects';
@@ -12,6 +14,7 @@ import { toast } from '@/components/ui/use-toast';
 
 const GameContainer: React.FC = () => {
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
+  const [currentFeature, setCurrentFeature] = useState('');
   
   // Используем созданный хук для управления состоянием
   const gameState = useGameState();
@@ -28,6 +31,7 @@ const GameContainer: React.FC = () => {
     marketMultiplier, setMarketMultiplier,
     showResources, setShowResources,
     showBuyCrypto, setShowBuyCrypto,
+    showBuyUsdt, setShowBuyUsdt,
     showStaking, setShowStaking,
     showTrading, setShowTrading,
     showEducation, setShowEducation,
@@ -52,6 +56,7 @@ const GameContainer: React.FC = () => {
     setRole,
     setShowResources,
     setShowBuyCrypto,
+    setShowBuyUsdt,
     setShowStaking,
     setShowTrading,
     setShowEducation,
@@ -62,7 +67,17 @@ const GameContainer: React.FC = () => {
   });
   
   // Используем хук игровых эффектов
-  const { handleAirdrop, handleLearn, bullMarketActive } = useGameEffects({
+  const { 
+    handleAirdrop, 
+    handleLearn, 
+    handleBuyUsdt, 
+    handleStake, 
+    handleWithdraw, 
+    bullMarketActive,
+    showHint,
+    hintInfo,
+    closeHint
+  } = useGameEffects({
     dollars,
     usdt,
     stakedUsdt,
@@ -76,9 +91,11 @@ const GameContainer: React.FC = () => {
     showCareer,
     showMarketEvents,
     showBuyCrypto,
+    showBuyUsdt,
     showStaking,
     setShowResources,
     setShowBuyCrypto,
+    setShowBuyUsdt,
     setShowStaking,
     setShowTrading,
     setShowEducation,
@@ -91,6 +108,39 @@ const GameContainer: React.FC = () => {
     setKnowledge,
     setDollars
   });
+  
+  // Эффект для отслеживания того, какая подсказка должна быть показана
+  useEffect(() => {
+    if (showHint) {
+      // Определяем, к какой функции относится текущая подсказка
+      if (hintInfo.title.includes("Ресурсы")) {
+        setCurrentFeature("resources");
+      } else if (hintInfo.title.includes("Образование")) {
+        setCurrentFeature("education");
+      } else if (hintInfo.title.includes("Покупка криптовалют")) {
+        setCurrentFeature("buyCrypto");
+      } else if (hintInfo.title.includes("Покупка USDT")) {
+        setCurrentFeature("buyUsdt");
+      } else if (hintInfo.title.includes("Стейкинг")) {
+        setCurrentFeature("staking");
+      } else if (hintInfo.title.includes("Трейдинг")) {
+        setCurrentFeature("trading");
+      } else if (hintInfo.title.includes("Майнинг")) {
+        setCurrentFeature("mining");
+      } else if (hintInfo.title.includes("Карьера")) {
+        setCurrentFeature("career");
+      } else if (hintInfo.title.includes("События рынка")) {
+        setCurrentFeature("marketEvents");
+      } else if (hintInfo.title.includes("Бычий рынок")) {
+        setCurrentFeature("bullMarket");
+      }
+    }
+  }, [showHint, hintInfo]);
+  
+  // Обработчик закрытия подсказки
+  const handleCloseHint = (feature: string) => {
+    closeHint(feature);
+  };
   
   // Обработчики действий
   const handleSaveDollar = () => {
@@ -125,7 +175,7 @@ const GameContainer: React.FC = () => {
     }
   };
   
-  const handleStaking = () => {
+  const handleStakingActivation = () => {
     console.log("handleStaking вызван, текущий баланс: $", dollars);
     if (dollars >= 100) {
       setDollars(prev => {
@@ -246,7 +296,54 @@ const GameContainer: React.FC = () => {
   };
 
   // Проверяем, нужно ли показывать табы
-  const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents;
+  const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents || showStaking;
+
+  // Определяем контент вкладки
+  const renderTabContent = () => {
+    if (activeTab === 'staking') {
+      return (
+        <StakingTab 
+          usdt={usdt}
+          stakedUsdt={stakedUsdt}
+          onStake={handleStake}
+          onWithdraw={handleWithdraw}
+          role={role}
+        />
+      );
+    }
+    
+    return (
+      <GameTabs 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        showTrading={showTrading}
+        showEducation={showEducation}
+        showMining={showMining}
+        showCareer={showCareer}
+        showMarketEvents={showMarketEvents}
+        dollars={dollars}
+        usdt={usdt}
+        btc={btc}
+        knowledge={knowledge}
+        marketMultiplier={marketMultiplier}
+        miningPower={miningPower}
+        handleSaveDollar={handleSaveDollar}
+        handleBuyCrypto={handleBuyCrypto}
+        handleStaking={handleStakingActivation}
+        handleTrade={handleTrade}
+        handleLearn={handleLearnMarket}
+        handlePurchaseRig={handlePurchaseRig}
+        handleSelectRole={handleSelectRole}
+        handleMarketChange={handleMarketChange}
+        handlePrepareForEvent={handlePrepareForEvent}
+        showBuyCrypto={showBuyCrypto}
+        showStaking={showStaking}
+        role={role}
+        handleLearnBasics={handleLearnBasics}
+        clicks={clicks}
+      />
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#1A1F2C] text-white p-4 flex flex-col">
@@ -254,6 +351,15 @@ const GameContainer: React.FC = () => {
         open={showWelcomePopup} 
         onClose={() => setShowWelcomePopup(false)} 
       />
+      
+      {showHint && (
+        <HintPopup
+          title={hintInfo.title}
+          description={hintInfo.description}
+          isOpen={showHint}
+          onClose={() => handleCloseHint(currentFeature)}
+        />
+      )}
       
       <GameHeader bullMarketActive={bullMarketActive} />
       
@@ -263,7 +369,7 @@ const GameContainer: React.FC = () => {
             <ResourceDisplay 
               dollars={dollars} 
               usdt={usdt} 
-              showUsdt={usdt > 0 || showBuyCrypto}
+              showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
               stakedUsdt={stakedUsdt}
               showStaking={showStaking || stakedUsdt > 0}
               knowledge={knowledge}
@@ -275,47 +381,25 @@ const GameContainer: React.FC = () => {
           )}
           
           {showTabs ? (
-            <GameTabs 
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              showTrading={showTrading}
-              showEducation={showEducation}
-              showMining={showMining}
-              showCareer={showCareer}
-              showMarketEvents={showMarketEvents}
-              dollars={dollars}
-              usdt={usdt}
-              btc={btc}
-              knowledge={knowledge}
-              marketMultiplier={marketMultiplier}
-              miningPower={miningPower}
-              handleSaveDollar={handleSaveDollar}
-              handleBuyCrypto={handleBuyCrypto}
-              handleStaking={handleStaking}
-              handleTrade={handleTrade}
-              handleLearn={handleLearnMarket}
-              handlePurchaseRig={handlePurchaseRig}
-              handleSelectRole={handleSelectRole}
-              handleMarketChange={handleMarketChange}
-              handlePrepareForEvent={handlePrepareForEvent}
-              showBuyCrypto={showBuyCrypto}
-              showStaking={showStaking}
-              role={role}
-              handleLearnBasics={handleLearnBasics}
-              clicks={clicks}
-            />
+            renderTabContent()
           ) : (
             <MainActions 
               dollars={dollars}
               usdt={usdt}
               showBuyCrypto={showBuyCrypto}
+              showBuyUsdt={showBuyUsdt}
               showStaking={showStaking}
               showEducation={showEducation}
               handleSaveDollar={handleSaveDollar}
               handleBuyCrypto={handleBuyCrypto}
-              handleStaking={handleStaking}
+              handleStaking={handleStakingActivation}
               handleLearnBasics={handleLearnBasics}
+              handleBuyUsdt={handleBuyUsdt}
               knowledge={knowledge}
+              showHint={showHint}
+              hintInfo={hintInfo}
+              onCloseHint={handleCloseHint}
+              currentFeature={currentFeature}
             />
           )}
         </div>

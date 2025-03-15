@@ -28,14 +28,18 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
   role
 }) => {
   // State for real-time resource display
+  const [displayDollars, setDisplayDollars] = useState(dollars);
   const [displayUsdt, setDisplayUsdt] = useState(usdt);
   const [displayBtc, setDisplayBtc] = useState(btc);
+  const [displayStakedUsdt, setDisplayStakedUsdt] = useState(stakedUsdt);
   
   // Real-time updates for resources
   useEffect(() => {
-    // Update base values when prop changes
+    // Update base values when props change
+    setDisplayDollars(dollars);
     setDisplayUsdt(usdt);
     setDisplayBtc(btc);
+    setDisplayStakedUsdt(stakedUsdt);
     
     // Only set up interval if we have staked USDT or mining power
     if (stakedUsdt > 0 || btc > 0) {
@@ -47,15 +51,22 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
           setDisplayUsdt(prev => prev + usdtIncrement);
         }
         
+        // If we have staked USDT, update that too with real-time visualization
+        if (stakedUsdt > 0) {
+          const stakedIncrement = stakedUsdt * 0.001 / (365 * 24 * 36000); // Minimal visual increment
+          setDisplayStakedUsdt(prev => prev + stakedIncrement);
+        }
+        
         // If we have btc, update that too (assuming mining updates)
         if (btc > 0) {
-          setDisplayBtc(prev => prev);
+          const btcIncrement = 0.00000001; // Very small increment for visual purposes
+          setDisplayBtc(prev => prev + btcIncrement);
         }
       }, 100);
       
       return () => clearInterval(interval);
     }
-  }, [usdt, btc, stakedUsdt]);
+  }, [dollars, usdt, btc, stakedUsdt]);
 
   const getRoleName = (roleId: string | null): string => {
     if (!roleId) return "";
@@ -84,7 +95,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
             <DollarSign size={18} className="text-green-400" />
             <span className="text-gray-200">Наличные:</span>
           </div>
-          <span className="font-mono text-white">${dollars.toFixed(2)}</span>
+          <span className="font-mono text-white">${displayDollars.toFixed(2)}</span>
         </div>
         
         {showUsdt && (
@@ -113,7 +124,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <div className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center text-[10px] font-bold text-white">₮</div>
               <span className="text-gray-200">Стейкинг:</span>
             </div>
-            <span className="font-mono text-white">{stakedUsdt.toFixed(2)}</span>
+            <span className="font-mono text-white">{displayStakedUsdt.toFixed(2)}</span>
           </div>
         )}
 

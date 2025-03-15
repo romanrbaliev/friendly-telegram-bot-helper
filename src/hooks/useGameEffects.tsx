@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 
@@ -15,9 +16,11 @@ interface GameEffectsProps {
   showCareer: boolean;
   showMarketEvents: boolean;
   showBuyCrypto: boolean;
+  showBuyUsdt: boolean;
   showStaking: boolean;
   setShowResources: React.Dispatch<React.SetStateAction<boolean>>;
   setShowBuyCrypto: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowBuyUsdt: React.Dispatch<React.SetStateAction<boolean>>;
   setShowStaking: React.Dispatch<React.SetStateAction<boolean>>;
   setShowTrading: React.Dispatch<React.SetStateAction<boolean>>;
   setShowEducation: React.Dispatch<React.SetStateAction<boolean>>;
@@ -48,9 +51,11 @@ export const useGameEffects = (props: GameEffectsProps) => {
     showCareer, 
     showMarketEvents, 
     showBuyCrypto,
+    showBuyUsdt,
     showStaking,
     setShowResources, 
     setShowBuyCrypto, 
+    setShowBuyUsdt,
     setShowStaking, 
     setShowTrading, 
     setShowEducation, 
@@ -65,6 +70,8 @@ export const useGameEffects = (props: GameEffectsProps) => {
   } = props;
   
   const [bullMarketActive, setBullMarketActive] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [hintInfo, setHintInfo] = useState({ title: '', description: '' });
   
   const loadNotificationsShown = () => {
     try {
@@ -80,6 +87,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
       resources: false,
       education: false,
       buyCrypto: false,
+      buyUsdt: false,
       staking: false,
       trading: false,
       mining: false,
@@ -94,6 +102,21 @@ export const useGameEffects = (props: GameEffectsProps) => {
   useEffect(() => {
     localStorage.setItem(NOTIFICATIONS_SHOWN_KEY, JSON.stringify(unlockNotifications));
   }, [unlockNotifications]);
+  
+  const showFeatureHint = (title: string, description: string, feature: string) => {
+    if (!unlockNotifications[feature as keyof typeof unlockNotifications]) {
+      setHintInfo({ title, description });
+      setShowHint(true);
+      
+      // Не обновляем unlockNotifications здесь, это будет сделано 
+      // только когда пользователь закроет подсказку
+    }
+  };
+  
+  const closeHint = (feature: string) => {
+    setShowHint(false);
+    setUnlockNotifications(prev => ({...prev, [feature]: true}));
+  };
   
   const handleAirdrop = useCallback(() => {
     let baseReward = 1;
@@ -124,6 +147,7 @@ export const useGameEffects = (props: GameEffectsProps) => {
       showResources,
       showEducation,
       showBuyCrypto,
+      showBuyUsdt,
       showStaking,
       showTrading
     });
@@ -132,114 +156,108 @@ export const useGameEffects = (props: GameEffectsProps) => {
       console.log("Разблокируем ресурсы");
       setShowResources(true);
       
-      if (!unlockNotifications.resources) {
-        toast({
-          title: "Разблокировано: Ресурсы",
-          description: "Теперь вы можете видеть свои накопления вверху экрана.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, resources: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: Ресурсы", 
+        "Теперь вы можете видеть свои накопления вверху экрана.", 
+        "resources"
+      );
     }
     
     if (dollars >= 10 && !showEducation) {
       console.log("Разблокируем образование");
       setShowEducation(true);
       
-      if (!unlockNotifications.education) {
-        toast({
-          title: "Разблокировано: Образование",
-          description: "Теперь вы можете изучать основы криптовалют.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, education: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: Образование", 
+        "Теперь вы можете изучать основы криптовалют.", 
+        "education"
+      );
+    }
+    
+    if (knowledge >= 1 && !showBuyUsdt) {
+      console.log("Разблокируем покупку USDT");
+      setShowBuyUsdt(true);
+      
+      showFeatureHint(
+        "Разблокировано: Покупка USDT", 
+        "Теперь вы можете покупать стейблкоины для дальнейших инвестиций.", 
+        "buyUsdt"
+      );
     }
     
     if (knowledge >= 1 && dollars >= 50 && !showBuyCrypto) {
       console.log("Разблокируем покупку криптовалют");
       setShowBuyCrypto(true);
       
-      if (!unlockNotifications.buyCrypto) {
-        toast({
-          title: "Разблокировано: Покупка криптовалют",
-          description: "Теперь вы можете купить свою первую криптовалюту.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, buyCrypto: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: Покупка криптовалют", 
+        "Теперь вы можете купить свою первую криптовалюту.", 
+        "buyCrypto"
+      );
     }
     
-    if (usdt >= 0.001 && dollars >= 100 && !showStaking) {
+    if (usdt >= 10 && !showStaking) {
       console.log("Разблокируем стейкинг");
       setShowStaking(true);
       
-      if (!unlockNotifications.staking) {
-        toast({
-          title: "Разблокировано: Стейкинг",
-          description: "Теперь вы можете зарабатывать пассивный доход.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, staking: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: Стейкинг", 
+        "Теперь вы можете зарабатывать пассивный доход, отправляя USDT в стейкинг.", 
+        "staking"
+      );
     }
     
     if (stakedUsdt > 0 && !showTrading) {
       console.log("Разблокируем трейдинг");
       setShowTrading(true);
       
-      if (!unlockNotifications.trading) {
-        toast({
-          title: "Разблокировано: Трейдинг",
-          description: "Теперь вы можете торговать криптовалютами.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, trading: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: Трейдинг", 
+        "Теперь вы можете торговать криптовалютами.", 
+        "trading"
+      );
     }
     
     if (knowledge >= 15 && !showMining) {
       console.log("Разблокируем майнинг");
       setShowMining(true);
       
-      if (!unlockNotifications.mining) {
-        toast({
-          title: "Разблокировано: Майнинг",
-          description: "Теперь вы можете добывать криптовалюту с помощью оборудования.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, mining: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: Майнинг", 
+        "Теперь вы можете добывать криптовалюту с помощью оборудования.", 
+        "mining"
+      );
     }
     
     if (dollars >= 500 && !showCareer) {
       console.log("Разблокируем карьеру");
       setShowCareer(true);
       
-      if (!unlockNotifications.career) {
-        toast({
-          title: "Разблокировано: Карьера",
-          description: "Теперь вы можете выбрать специализацию в криптомире.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, career: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: Карьера", 
+        "Теперь вы можете выбрать специализацию в криптомире.", 
+        "career"
+      );
     }
     
     if (knowledge >= 30 && !showMarketEvents) {
       console.log("Разблокируем события рынка");
       setShowMarketEvents(true);
       
-      if (!unlockNotifications.marketEvents) {
-        toast({
-          title: "Разблокировано: События рынка",
-          description: "Теперь вы можете отслеживать и реагировать на события рынка.",
-          duration: 5000
-        });
-        setUnlockNotifications(prev => ({...prev, marketEvents: true}));
-      }
+      showFeatureHint(
+        "Разблокировано: События рынка", 
+        "Теперь вы можете отслеживать и реагировать на события рынка.", 
+        "marketEvents"
+      );
     }
-  }, [dollars, knowledge, usdt, stakedUsdt, clicks, showResources, showEducation, showBuyCrypto, showStaking, showTrading, showMining, showCareer, showMarketEvents, setShowResources, setShowBuyCrypto, setShowStaking, setShowTrading, setShowEducation, setShowMining, setShowCareer, setShowMarketEvents, unlockNotifications]);
+  }, [
+    dollars, knowledge, usdt, stakedUsdt, clicks, 
+    showResources, showEducation, showBuyCrypto, showBuyUsdt, 
+    showStaking, showTrading, showMining, showCareer, showMarketEvents, 
+    setShowResources, setShowBuyCrypto, setShowBuyUsdt, setShowStaking, 
+    setShowTrading, setShowEducation, setShowMining, setShowCareer, 
+    setShowMarketEvents, unlockNotifications
+  ]);
   
   useEffect(() => {
     checkPurchaseMilestones();
@@ -271,6 +289,82 @@ export const useGameEffects = (props: GameEffectsProps) => {
       return false;
     }
   }, [dollars, setDollars, setKnowledge, checkPurchaseMilestones]);
+  
+  const handleBuyUsdt = useCallback((amount: number) => {
+    console.log(`Попытка покупки USDT за $${amount}`);
+    if (dollars >= amount) {
+      // Рассчитываем комиссию на основе знаний
+      let fee = 5; // Базовая комиссия 5%
+      if (knowledge >= 5) fee = 4;
+      if (knowledge >= 10) fee = 3;
+      if (knowledge >= 20) fee = 2;
+      if (knowledge >= 50) fee = 1;
+      
+      const usdtAmount = amount * (1 - fee/100);
+      
+      setDollars(prev => prev - amount);
+      setUsdt(prev => prev + usdtAmount);
+      
+      console.log(`Куплено ${usdtAmount.toFixed(2)} USDT за $${amount} с комиссией ${fee}%`);
+      
+      setTimeout(() => checkPurchaseMilestones(), 0);
+      
+      return true;
+    } else {
+      console.log("Недостаточно средств для покупки USDT");
+      toast({
+        title: "Недостаточно средств",
+        description: `Для покупки нужно $${amount}`,
+        duration: 3000
+      });
+      
+      return false;
+    }
+  }, [dollars, knowledge, setDollars, setUsdt, checkPurchaseMilestones]);
+  
+  const handleStake = useCallback((amount: number) => {
+    console.log(`Попытка стейкинга ${amount} USDT`);
+    if (usdt >= amount) {
+      setUsdt(prev => prev - amount);
+      setStakedUsdt(prev => prev + amount);
+      
+      console.log(`Отправлено ${amount} USDT в стейкинг`);
+      
+      setTimeout(() => checkPurchaseMilestones(), 0);
+      
+      return true;
+    } else {
+      console.log("Недостаточно USDT для стейкинга");
+      toast({
+        title: "Недостаточно USDT",
+        description: `Для стейкинга нужно ${amount} USDT`,
+        duration: 3000
+      });
+      
+      return false;
+    }
+  }, [usdt, setUsdt, setStakedUsdt, checkPurchaseMilestones]);
+  
+  const handleWithdraw = useCallback((amount: number) => {
+    console.log(`Попытка вывода ${amount} USDT из стейкинга`);
+    if (stakedUsdt >= amount) {
+      setStakedUsdt(prev => prev - amount);
+      setUsdt(prev => prev + amount);
+      
+      console.log(`Выведено ${amount} USDT из стейкинга`);
+      
+      return true;
+    } else {
+      console.log("Недостаточно USDT в стейкинге");
+      toast({
+        title: "Недостаточно средств в стейкинге",
+        description: `В стейкинге только ${stakedUsdt} USDT`,
+        duration: 3000
+      });
+      
+      return false;
+    }
+  }, [stakedUsdt, setStakedUsdt, setUsdt]);
   
   useEffect(() => {
     if (stakedUsdt > 0) {
@@ -309,14 +403,11 @@ export const useGameEffects = (props: GameEffectsProps) => {
       if (Math.random() < 0.05 && showMarketEvents) {
         setBullMarketActive(true);
         
-        if (!unlockNotifications.bullMarket) {
-          toast({
-            title: "Бычий рынок!",
-            description: "Рынок идет вверх! +50% к доходности на следующие 5 минут.",
-            duration: 5000
-          });
-          setUnlockNotifications(prev => ({...prev, bullMarket: true}));
-        }
+        showFeatureHint(
+          "Бычий рынок!",
+          "Рынок идет вверх! +50% к доходности на следующие 5 минут.",
+          "bullMarket"
+        );
         
         setTimeout(() => {
           setBullMarketActive(false);
@@ -325,11 +416,17 @@ export const useGameEffects = (props: GameEffectsProps) => {
     }, 300000); // Проверка каждые 5 минут
     
     return () => clearInterval(eventInterval);
-  }, [showMarketEvents, unlockNotifications]);
+  }, [showMarketEvents]);
   
   return {
     handleAirdrop,
     handleLearn,
-    bullMarketActive
+    handleBuyUsdt,
+    handleStake,
+    handleWithdraw,
+    bullMarketActive,
+    showHint,
+    hintInfo,
+    closeHint
   };
 };

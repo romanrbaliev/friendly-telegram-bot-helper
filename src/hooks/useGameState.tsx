@@ -15,6 +15,7 @@ export interface GameState {
   // Флаги открытия функций
   showResources: boolean;
   showBuyCrypto: boolean;
+  showBuyUsdt: boolean;
   showStaking: boolean;
   showTrading: boolean;
   showEducation: boolean;
@@ -40,6 +41,7 @@ export const useGameState = (initialState: Partial<GameState> = {}) => {
   // Флаги открытия функций
   const [showResources, setShowResources] = useState(initialState.showResources || false);
   const [showBuyCrypto, setShowBuyCrypto] = useState(initialState.showBuyCrypto || false);
+  const [showBuyUsdt, setShowBuyUsdt] = useState(initialState.showBuyUsdt || false);
   const [showStaking, setShowStaking] = useState(initialState.showStaking || false);
   const [showTrading, setShowTrading] = useState(initialState.showTrading || false);
   const [showEducation, setShowEducation] = useState(initialState.showEducation || false);
@@ -64,6 +66,7 @@ export const useGameState = (initialState: Partial<GameState> = {}) => {
     marketMultiplier,
     showResources,
     showBuyCrypto,
+    showBuyUsdt,
     showStaking,
     showTrading,
     showEducation,
@@ -85,6 +88,7 @@ export const useGameState = (initialState: Partial<GameState> = {}) => {
     marketMultiplier,
     showResources,
     showBuyCrypto,
+    showBuyUsdt,
     showStaking,
     showTrading,
     showEducation,
@@ -105,6 +109,7 @@ export const useGameState = (initialState: Partial<GameState> = {}) => {
     setMarketMultiplier,
     setShowResources,
     setShowBuyCrypto,
+    setShowBuyUsdt,
     setShowStaking,
     setShowTrading,
     setShowEducation,

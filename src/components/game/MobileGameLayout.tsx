@@ -96,69 +96,67 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
     <div className="game-layout">
       {showResources && (
         <div className="resources-section">
-          <div className="mobile-header-container">
-            <div className="mobile-resources-area">
-              <div className="resource-row">
-                <span className="resource-label">Доллары:</span>
-                <span className="resource-value">${dollars.toFixed(2)}</span>
-              </div>
-              
-              {(usdt > 0 || showBuyCrypto || showBuyUsdt) && (
-                <div className="resource-row">
-                  <span className="resource-label">USDT:</span>
-                  <span className="resource-value">${usdt.toFixed(2)}</span>
-                </div>
-              )}
-              
-              {btc > 0 && (
-                <div className="resource-row">
-                  <span className="resource-label">BTC:</span>
-                  <span className="resource-value">{btc.toFixed(5)} BTC</span>
-                </div>
-              )}
-              
-              {stakedUsdt > 0 && (
-                <div className="resource-row">
-                  <span className="resource-label">Стейкинг:</span>
-                  <span className="resource-value">${stakedUsdt.toFixed(2)}</span>
-                </div>
-              )}
-              
-              {knowledge > 0 && (
-                <div className="resource-row">
-                  <span className="resource-label">Знания:</span>
-                  <span className="resource-value">{knowledge}</span>
-                </div>
-              )}
-              
-              {role && role !== 'none' && (
-                <div className="resource-row">
-                  <span className="resource-label">Роль:</span>
-                  <span className="resource-value">
-                    {role === 'investor' ? 'Инвестор' : 'Трейдер'}
-                  </span>
-                </div>
-              )}
+          <div className="mobile-resources-content">
+            <div className="resource-item">
+              <span className="resource-label">Доллары:</span>
+              <span className="resource-value">${dollars.toFixed(2)}</span>
             </div>
             
-            {showTabs && (
-              <div className="mobile-tabs-area">
-                <TabsHeader
-                  activeTab={activeTab}
-                  setActiveTab={setActiveTab}
-                  showTrading={showTrading}
-                  showEducation={showEducation}
-                  showMining={showMining}
-                  showCareer={showCareer}
-                  showMarketEvents={showMarketEvents}
-                  miningPower={miningPower}
-                  hasNewMarketEvent={hasNewMarketEvent}
-                  miningAnimation={miningAnimation}
-                  marketMultiplier={marketMultiplier}
-                />
+            {(usdt > 0 || showBuyCrypto || showBuyUsdt) && (
+              <div className="resource-item">
+                <span className="resource-label">USDT:</span>
+                <span className="resource-value">${usdt.toFixed(2)}</span>
+              </div>
+            )}
+            
+            {btc > 0 && (
+              <div className="resource-item">
+                <span className="resource-label">BTC:</span>
+                <span className="resource-value">{btc.toFixed(5)} BTC</span>
+              </div>
+            )}
+            
+            {stakedUsdt > 0 && (
+              <div className="resource-item">
+                <span className="resource-label">Стейкинг:</span>
+                <span className="resource-value">${stakedUsdt.toFixed(2)}</span>
+              </div>
+            )}
+            
+            {knowledge > 0 && (
+              <div className="resource-item">
+                <span className="resource-label">Знания:</span>
+                <span className="resource-value">{knowledge}</span>
+              </div>
+            )}
+            
+            {role && role !== 'none' && (
+              <div className="resource-item">
+                <span className="resource-label">Роль:</span>
+                <span className="resource-value">
+                  {role === 'investor' ? 'Инвестор' : 'Трейдер'}
+                </span>
               </div>
             )}
           </div>
+          
+          {showTabs && (
+            <div className="mobile-tabs-wrapper">
+              <TabsHeader
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                showTrading={showTrading}
+                showEducation={showEducation}
+                showMining={showMining}
+                showCareer={showCareer}
+                showMarketEvents={showMarketEvents}
+                miningPower={miningPower}
+                hasNewMarketEvent={hasNewMarketEvent}
+                miningAnimation={miningAnimation}
+                marketMultiplier={marketMultiplier}
+              />
+            </div>
+          )}
         </div>
       )}
       

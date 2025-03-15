@@ -132,7 +132,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
         className={`flex items-center justify-start gap-1 p-1 text-xs h-8 ${tab.animation ? 'animate-pulse' : ''} relative`}
       >
         {tab.icon}
-        <span className="text-xs">{tab.text}</span>
+        <span className="text-xs whitespace-nowrap overflow-hidden">{tab.text}</span>
         {tab.badge}
         {tab.notification && (
           <span className="absolute top-1 left-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
@@ -142,13 +142,13 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   };
   
   return (
-    <div className="flex-grow animate-fade-in w-full">
+    <div className="animate-fade-in w-full">
       <div className="flex flex-col gap-1">
-        <TabsList className="grid grid-cols-2 gap-1 w-full">
+        <TabsList className="grid grid-cols-1 gap-1 w-full">
           {renderTabRow(firstRowTabs)}
         </TabsList>
         
-        <TabsList className="grid grid-cols-2 gap-1 w-full">
+        <TabsList className="grid grid-cols-1 gap-1 w-full">
           {renderTabRow(secondRowTabs)}
         </TabsList>
       </div>

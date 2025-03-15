@@ -4,6 +4,7 @@ import ResourceDisplay from './ResourceDisplay';
 import GameTabs from './GameTabs';
 import MainActions from './MainActions';
 import StakingTab from './StakingTab';
+import TabsContentComponent from './TabsContent';
 
 interface MobileGameLayoutProps {
   showResources: boolean;
@@ -87,10 +88,10 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
   currentFeature = ''
 }) => {
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#1A1F2C]">
+    <div className="game-layout bg-[#1A1F2C]">
       {/* Верхняя секция с ресурсами */}
       {showResources && (
-        <div className="w-full p-2 sticky top-0 z-10 bg-[#1A1F2C]">
+        <div className="resources-section bg-[#1A1F2C] p-2">
           <ResourceDisplay 
             dollars={dollars} 
             usdt={usdt} 
@@ -106,10 +107,10 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
         </div>
       )}
       
-      {/* Основной контент и вкладки */}
-      <div className="flex flex-row flex-1 gap-2 p-2">
-        {/* Основной контент слева */}
-        <div className="flex-1 order-1">
+      {/* Основной контейнер для контента и вкладок */}
+      <div className="main-container">
+        {/* Контент слева/снизу */}
+        <div className="content-section">
           {(!showTabs || !showResources) && (
             <MainActions 
               dollars={dollars}
@@ -131,6 +132,39 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
             />
           )}
           
+          {showTabs && showResources && (
+            <TabsContentComponent 
+              activeTab={activeTab}
+              dollars={dollars}
+              usdt={usdt}
+              btc={btc}
+              knowledge={knowledge}
+              miningPower={miningPower}
+              showTrading={showTrading}
+              showEducation={showEducation}
+              showMining={showMining}
+              showCareer={showCareer}
+              showMarketEvents={showMarketEvents}
+              handleSaveDollar={handleSaveDollar}
+              handleBuyCrypto={handleBuyCrypto}
+              handleStaking={handleStakingWrapper}
+              handleTrade={handleTrade}
+              handleLearn={handleLearnMarket}
+              handlePurchaseRig={handlePurchaseRig}
+              handleSelectRole={handleSelectRole}
+              handleMarketChange={handleMarketChange}
+              handlePrepareForEvent={handlePrepareForEvent}
+              marketMultiplier={marketMultiplier}
+              showBuyCrypto={showBuyCrypto}
+              showStaking={showStaking}
+              showBuyUsdt={showBuyUsdt}
+              role={role}
+              handleLearnBasics={handleLearnBasics}
+              clicks={clicks}
+              handleBuyUsdt={handleBuyUsdtWrapper}
+            />
+          )}
+          
           {activeTab === 'staking' && showTabs && (
             <StakingTab 
               usdt={usdt}
@@ -144,7 +178,7 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
         
         {/* Вкладки справа */}
         {showTabs && (
-          <div className="w-48 order-2">
+          <div className="tabs-section">
             <GameTabs 
               activeTab={activeTab}
               setActiveTab={setActiveTab}

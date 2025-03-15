@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
 import { GameTabsProps } from './types/GameTabsProps';
 import { useIsMobile } from '@/hooks/use-mobile';
-import TabsContentComponent from './TabsContent';
 
 const GameTabs: React.FC<GameTabsProps> = ({
   activeTab,
@@ -95,8 +95,6 @@ const GameTabs: React.FC<GameTabsProps> = ({
         miningAnimation={miningAnimation}
         marketMultiplier={marketMultiplier}
       />
-      
-      {/* Content будет отображаться в MobileGameLayout */}
     </Tabs>
   );
 };

@@ -167,52 +167,17 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
             onCloseHint={handleCloseHint}
             currentFeature={currentFeature}
           />
-        ) : (
-          activeTab === 'staking' ? (
-            <div className="w-full max-w-md">
-              <StakingTab 
-                usdt={usdt}
-                stakedUsdt={stakedUsdt}
-                onStake={handleStake}
-                onWithdraw={handleWithdraw}
-                role={role}
-              />
-            </div>
-          ) : (
-            <div className="w-full max-w-md">
-              <TabsContentComponent 
-                activeTab={activeTab}
-                dollars={dollars}
-                usdt={usdt}
-                btc={btc}
-                knowledge={knowledge}
-                miningPower={miningPower}
-                showTrading={showTrading}
-                showEducation={showEducation}
-                showMining={showMining}
-                showCareer={showCareer}
-                showMarketEvents={showMarketEvents}
-                handleSaveDollar={handleSaveDollar}
-                handleBuyCrypto={handleBuyCrypto}
-                handleStaking={handleStakingWrapper}
-                handleTrade={handleTrade}
-                handleLearn={handleLearnMarket}
-                handlePurchaseRig={handlePurchaseRig}
-                handleSelectRole={handleSelectRole}
-                handleMarketChange={handleMarketChange}
-                handlePrepareForEvent={handlePrepareForEvent}
-                marketMultiplier={marketMultiplier}
-                showBuyCrypto={showBuyCrypto}
-                showStaking={showStaking}
-                showBuyUsdt={showBuyUsdt}
-                role={role}
-                handleLearnBasics={handleLearnBasics}
-                clicks={clicks}
-                handleBuyUsdt={handleBuyUsdtWrapper}
-              />
-            </div>
-          )
-        )}
+        ) : activeTab === 'staking' ? (
+          <div className="w-full max-w-md">
+            <StakingTab 
+              usdt={usdt}
+              stakedUsdt={stakedUsdt}
+              onStake={handleStake}
+              onWithdraw={handleWithdraw}
+              role={role}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

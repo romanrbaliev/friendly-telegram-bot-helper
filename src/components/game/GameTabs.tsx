@@ -108,7 +108,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
         />
       </div>
       
-      <div className="absolute left-0 w-full mt-4">
+      <div className="w-full mt-4">
         <TabsContentComponent 
           activeTab={activeTab}
           dollars={dollars}

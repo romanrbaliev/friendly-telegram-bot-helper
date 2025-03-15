@@ -300,7 +300,7 @@ const GameContainer: React.FC = () => {
       
       <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2 mb-4">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-full flex flex-col md:flex-row gap-4 items-start">
+          <div className="w-full flex flex-col md:flex-row gap-4 justify-between">
             {showResources && (
               <div className="w-full md:w-3/5">
                 <ResourceDisplay 

@@ -34,9 +34,9 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   const isBullMarket = marketMultiplier > 1;
   
   return (
-    <div className="w-full animate-fade-in flex flex-col md:flex-row gap-1">
-      {/* Основная строка вкладок */}
-      <TabsList className="w-full mb-1 grid grid-cols-1 md:grid-cols-4">
+    <div className="w-full animate-fade-in flex flex-col gap-1">
+      {/* Первый ряд вкладок */}
+      <TabsList className="w-full mb-1 grid grid-cols-5">
         <TabsTrigger value="main" className="flex items-center justify-center gap-1">
           <DollarSign size={16} />
           <span>Основное</span>
@@ -67,17 +67,17 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
             )}
           </TabsTrigger>
         )}
-      </TabsList>
-      
-      {/* Вторая строка вкладок */}
-      <TabsList className="w-full grid grid-cols-1 md:grid-cols-4">
+        
         {showCareer && (
           <TabsTrigger value="career" className="flex items-center justify-center gap-1">
             <Briefcase size={16} />
             <span>Карьера</span>
           </TabsTrigger>
         )}
-        
+      </TabsList>
+      
+      {/* Второй ряд вкладок */}
+      <TabsList className="w-full grid grid-cols-5">
         {showMarketEvents && (
           <TabsTrigger value="market" className={`flex items-center justify-center gap-1 relative ${isBullMarket ? 'animate-pulse' : ''}`}>
             {isBullMarket ? (

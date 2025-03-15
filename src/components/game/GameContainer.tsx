@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -16,10 +15,8 @@ const GameContainer: React.FC = () => {
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
   const [currentFeature, setCurrentFeature] = useState('');
   
-  // Используем созданный хук для управления состоянием
   const gameState = useGameState();
   
-  // Деструктурируем необходимые переменные и функции из gameState
   const {
     dollars, setDollars,
     usdt, setUsdt,
@@ -43,7 +40,6 @@ const GameContainer: React.FC = () => {
     getFullState
   } = gameState;
   
-  // Используем хук для сохранения/загрузки игры
   useSaveGame({
     gameState: getFullState(),
     setShowWelcomePopup,
@@ -66,7 +62,6 @@ const GameContainer: React.FC = () => {
     setClicks
   });
   
-  // Используем хук игровых эффектов
   const { 
     handleAirdrop, 
     handleLearn, 
@@ -110,10 +105,8 @@ const GameContainer: React.FC = () => {
     setStakedUsdt
   });
   
-  // Эффект для отслеживания того, какая подсказка должна быть показана
   useEffect(() => {
     if (showHint) {
-      // Определяем, к какой функции относится текущая подсказка
       if (hintInfo.title.includes("Ресурсы")) {
         setCurrentFeature("resources");
       } else if (hintInfo.title.includes("Образование")) {
@@ -138,12 +131,10 @@ const GameContainer: React.FC = () => {
     }
   }, [showHint, hintInfo]);
   
-  // Обработчик закрытия подсказки
   const handleCloseHint = (feature: string) => {
     closeHint(feature);
   };
   
-  // Обработчики действий
   const handleSaveDollar = () => {
     console.log("handleSaveDollar вызван");
     const reward = handleAirdrop();
@@ -221,7 +212,6 @@ const GameContainer: React.FC = () => {
     if (dollars >= cost) {
       setDollars(prev => prev - cost);
       
-      // Only increase mining power if powerIncrease is provided and greater than 0
       if (powerIncrease > 0) {
         setMiningPower(prev => prev + powerIncrease);
         
@@ -271,7 +261,6 @@ const GameContainer: React.FC = () => {
     }
   };
   
-  // Новый обработчик для покупки USDT на фиксированную сумму
   const handleBuyUsdtFixed = (amount: number = 10) => {
     console.log("handleBuyUsdtFixed вызван, текущий баланс: $", dollars);
     
@@ -287,7 +276,6 @@ const GameContainer: React.FC = () => {
     }
   };
 
-  // Проверяем, нужно ли показывать табы
   const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents || showStaking;
 
   return (
@@ -308,9 +296,9 @@ const GameContainer: React.FC = () => {
       
       <GameHeader bullMarketActive={bullMarketActive} />
       
-      <div className="flex flex-col md:flex-row gap-6">
-        <div>
-          {showResources && (
+      <div className="flex flex-row gap-4">
+        {showResources && (
+          <div className="shrink-0">
             <ResourceDisplay 
               dollars={dollars} 
               usdt={usdt} 
@@ -323,8 +311,9 @@ const GameContainer: React.FC = () => {
               showBtc={btc > 0 || showBuyCrypto}
               role={role}
             />
-          )}
-        </div>
+          </div>
+        )}
+        
         <div className="flex-1">
           {!showTabs ? (
             <MainActions 

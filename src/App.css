@@ -53,6 +53,7 @@
 .mobile-header-container {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   width: 100%;
   background-color: #1A1F2C;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -60,21 +61,21 @@
 
 /* Ресурсы занимают левую часть */
 .mobile-resources-area {
-  width: 75%;
+  flex: 3;
   padding: 10px;
   text-align: left;
 }
 
 /* Вкладки занимают правую часть */
 .mobile-tabs-area {
-  width: 25%;
+  flex: 1;
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   padding: 5px;
   background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 /* Стили для строк с ресурсами */
@@ -101,16 +102,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 26px;
+  height: 26px;
   font-size: 10px;
-  padding: 4px;
+  padding: 2px;
+  margin: 2px 0;
   border-radius: 4px;
   background: transparent;
   color: white;
   border: none;
   cursor: pointer;
-  margin-bottom: 2px;
-  height: 20px;
-  width: 20px;
 }
 
 .tab-button.active {

@@ -38,8 +38,8 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'main', 
       show: true, 
-      icon: <DollarSign size={12} />, 
-      text: isMobile ? 'О' : 'Осн',
+      icon: <DollarSign size={16} />, 
+      text: 'О',
       badge: null,
       animation: false,
       notification: false
@@ -47,7 +47,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'trading', 
       show: showTrading, 
-      icon: <ArrowUpDown size={12} />, 
+      icon: <ArrowUpDown size={16} />, 
       text: 'Т',
       badge: null,
       animation: false,
@@ -56,7 +56,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'education', 
       show: showEducation, 
-      icon: <GraduationCap size={12} />, 
+      icon: <GraduationCap size={16} />, 
       text: 'О',
       badge: null,
       animation: false,
@@ -65,7 +65,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'mining', 
       show: showMining, 
-      icon: <HardDrive size={12} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
+      icon: <HardDrive size={16} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
       text: 'М',
       badge: miningPower > 0 ? (
         <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-[7px] py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
@@ -78,7 +78,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'career', 
       show: showCareer, 
-      icon: <Briefcase size={12} />, 
+      icon: <Briefcase size={16} />, 
       text: 'К',
       badge: null,
       animation: false,
@@ -88,9 +88,9 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'market', 
       show: showMarketEvents, 
       icon: isBullMarket ? (
-        <TrendingUp size={12} className="text-green-500" />
+        <TrendingUp size={16} className="text-green-500" />
       ) : (
-        <BarChart4 size={12} />
+        <BarChart4 size={16} />
       ), 
       text: isBullMarket ? "+" : "Р",
       badge: isBullMarket ? (
@@ -104,7 +104,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'staking', 
       show: true, 
-      icon: <Shield size={12} />, 
+      icon: <Shield size={16} />, 
       text: 'С',
       badge: null,
       animation: false,
@@ -113,7 +113,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'achievements', 
       show: true, 
-      icon: <Medal size={12} />, 
+      icon: <Medal size={16} />, 
       text: 'А',
       badge: null,
       animation: false,

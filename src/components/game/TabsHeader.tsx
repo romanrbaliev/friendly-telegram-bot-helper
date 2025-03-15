@@ -35,30 +35,30 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   
   return (
     <div className="flex-grow animate-fade-in">
-      <div className="flex flex-wrap justify-start gap-1">
-        <TabsList className="flex flex-wrap">
-          <TabsTrigger value="main" className="flex items-center justify-center gap-1 px-3 py-1.5">
-            <DollarSign size={16} />
+      <div className="flex flex-col space-y-1">
+        <TabsList className="flex flex-wrap justify-start gap-1">
+          <TabsTrigger value="main" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
+            <DollarSign size={14} />
             <span>Основное</span>
           </TabsTrigger>
           
           {showTrading && (
-            <TabsTrigger value="trading" className="flex items-center justify-center gap-1 px-3 py-1.5">
-              <ArrowUpDown size={16} />
+            <TabsTrigger value="trading" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
+              <ArrowUpDown size={14} />
               <span>Трейдинг</span>
             </TabsTrigger>
           )}
           
           {showEducation && (
-            <TabsTrigger value="education" className="flex items-center justify-center gap-1 px-3 py-1.5">
-              <GraduationCap size={16} />
+            <TabsTrigger value="education" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
+              <GraduationCap size={14} />
               <span>Обучение</span>
             </TabsTrigger>
           )}
           
           {showMining && (
-            <TabsTrigger value="mining" className={`flex items-center justify-center gap-1 px-3 py-1.5 ${miningAnimation ? 'animate-pulse' : ''}`}>
-              <HardDrive size={16} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />
+            <TabsTrigger value="mining" className={`flex items-center justify-center gap-1 px-2 py-1 text-xs ${miningAnimation ? 'animate-pulse' : ''}`}>
+              <HardDrive size={14} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />
               <span>Майнинг</span>
               {miningPower > 0 && (
                 <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-xs py-0 ${miningAnimation ? 'animate-pulse' : ''}`}>
@@ -69,28 +69,26 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
           )}
           
           {showCareer && (
-            <TabsTrigger value="career" className="flex items-center justify-center gap-1 px-3 py-1.5">
-              <Briefcase size={16} />
+            <TabsTrigger value="career" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
+              <Briefcase size={14} />
               <span>Карьера</span>
             </TabsTrigger>
           )}
         </TabsList>
-      </div>
-      
-      <div className="flex flex-wrap justify-start gap-1 mt-1">
-        <TabsList className="flex flex-wrap">
+        
+        <TabsList className="flex flex-wrap justify-start gap-1">
           {showMarketEvents && (
-            <TabsTrigger value="market" className={`flex items-center justify-center gap-1 px-3 py-1.5 relative ${isBullMarket ? 'animate-pulse' : ''}`}>
+            <TabsTrigger value="market" className={`flex items-center justify-center gap-1 px-2 py-1 text-xs relative ${isBullMarket ? 'animate-pulse' : ''}`}>
               {isBullMarket ? (
-                <TrendingUp size={16} className="text-green-500" />
+                <TrendingUp size={14} className="text-green-500" />
               ) : (
-                <BarChart4 size={16} />
+                <BarChart4 size={14} />
               )}
               <span>
                 {isBullMarket ? "Бычий рынок!" : "Рынок"}
               </span>
               {hasNewMarketEvent && !isBullMarket && (
-                <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
+                <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
               )}
               {isBullMarket && (
                 <Badge variant="success" className="ml-1 text-xs py-0 animate-pulse">
@@ -100,13 +98,13 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
             </TabsTrigger>
           )}
           
-          <TabsTrigger value="staking" className="flex items-center justify-center gap-1 px-3 py-1.5">
-            <Shield size={16} />
+          <TabsTrigger value="staking" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
+            <Shield size={14} />
             <span>Стейкинг</span>
           </TabsTrigger>
           
-          <TabsTrigger value="achievements" className="flex items-center justify-center gap-1 px-3 py-1.5">
-            <Medal size={16} />
+          <TabsTrigger value="achievements" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
+            <Medal size={14} />
             <span>Ачивки</span>
           </TabsTrigger>
         </TabsList>

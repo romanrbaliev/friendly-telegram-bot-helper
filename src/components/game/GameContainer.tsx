@@ -333,7 +333,7 @@ const GameContainer: React.FC = () => {
                 miningPower={miningPower}
                 handleSaveDollar={handleSaveDollar}
                 handleBuyCrypto={handleBuyCrypto}
-                handleStaking={null}
+                handleStaking={handleStake}
                 handleTrade={handleTrade}
                 handleLearn={handleLearnMarket}
                 handlePurchaseRig={handlePurchaseRig}
@@ -364,7 +364,7 @@ const GameContainer: React.FC = () => {
             showEducation={showEducation}
             handleSaveDollar={handleSaveDollar}
             handleBuyCrypto={handleBuyCrypto}
-            handleStaking={null}
+            handleStaking={handleStake}
             handleLearnBasics={handleLearnBasics}
             handleBuyUsdt={handleBuyUsdtFixed}
             knowledge={knowledge}

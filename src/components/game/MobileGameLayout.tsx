@@ -1,10 +1,8 @@
 
-import React, { useState } from 'react';
-import ResourceDisplay from './ResourceDisplay';
+import React, { useState, useEffect } from 'react';
 import GameTabs from './GameTabs';
 import MainActions from './MainActions';
 import TabsHeader from './TabsHeader';
-import { Badge } from "@/components/ui/badge";
 import HintPopup from './HintPopup';
 
 interface MobileGameLayoutProps {
@@ -90,13 +88,45 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
 }) => {
   const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
   const [miningAnimation, setMiningAnimation] = useState(false);
-  const isBullMarket = marketMultiplier > 1;
+  
+  // Эффект для анимации майнинга
+  useEffect(() => {
+    if (miningPower > 0) {
+      const interval = setInterval(() => {
+        setMiningAnimation(true);
+        setTimeout(() => setMiningAnimation(false), 1000);
+      }, 30000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [miningPower]);
+  
+  // Эффект для уведомлений о рыночных событиях
+  useEffect(() => {
+    if (showMarketEvents && !hasNewMarketEvent) {
+      const randomChance = Math.random();
+      if (randomChance > 0.7) {
+        setHasNewMarketEvent(true);
+      }
+    }
+    
+    if (marketMultiplier > 1) {
+      setHasNewMarketEvent(true);
+    }
+  }, [showMarketEvents, hasNewMarketEvent, marketMultiplier]);
+  
+  // Сброс уведомления при переходе на вкладку рынка
+  useEffect(() => {
+    if (activeTab === 'market') {
+      setHasNewMarketEvent(false);
+    }
+  }, [activeTab]);
 
   return (
     <div className="game-layout">
       {showResources && (
-        <div className="resources-section">
-          <div className="mobile-resources-content">
+        <div className="mobile-header">
+          <div className="resources-section">
             <div className="resource-item">
               <span className="resource-label">Доллары:</span>
               <span className="resource-value">${dollars.toFixed(2)}</span>
@@ -141,7 +171,7 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
           </div>
           
           {showTabs && (
-            <div className="mobile-tabs-wrapper">
+            <div className="tabs-section">
               <TabsHeader
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -214,6 +244,15 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
           />
         )}
       </div>
+      
+      {showHint && (
+        <HintPopup
+          title={hintInfo.title}
+          description={hintInfo.description}
+          isOpen={showHint}
+          onClose={() => handleCloseHint(currentFeature)}
+        />
+      )}
     </div>
   );
 };

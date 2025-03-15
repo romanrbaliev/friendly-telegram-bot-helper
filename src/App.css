@@ -31,52 +31,32 @@
   }
 }
 
-/* Мобильная верстка - коррекция для макета игры */
+/* Мобильная верстка - глобальные стили для макета игры */
 .game-layout {
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
+  background-color: #1A1F2C;
 }
 
-.resources-section {
-  width: 100%;
+/* Ресурсы и вкладки в мобильном режиме */
+.mobile-header {
   position: sticky;
   top: 0;
   z-index: 10;
+  width: 100%;
   background-color: rgba(26, 31, 44, 0.97);
   backdrop-filter: blur(5px);
-  padding-bottom: 5px;
   display: flex;
   flex-direction: row;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Контент с ресурсами */
-.mobile-resources-content {
+/* Секция с ресурсами */
+.resources-section {
   flex: 1;
-  padding: 10px;
-  text-align: left;
-}
-
-/* Обертка для вкладок */
-.mobile-tabs-wrapper {
-  width: 50px;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  background-color: rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 5px 0;
-}
-
-/* Контейнер для вкладок */
-.mobile-tabs-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  align-items: center;
+  padding: 8px 10px;
 }
 
 /* Стили для строк с ресурсами */
@@ -84,28 +64,44 @@
   display: flex;
   align-items: center;
   margin-bottom: 5px;
+  font-size: 14px;
 }
 
 .resource-label {
   color: #8E9196;
   font-size: 14px;
   margin-right: 5px;
-  min-width: 80px;
 }
 
 .resource-value {
-  font-size: 14px;
   font-weight: 500;
 }
 
-/* Стиль для кнопок вкладок на мобильных устройствах */
-.mobile-tab-button {
+/* Секция с вкладками */
+.tabs-section {
+  width: 50px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: center;
+}
+
+/* Контейнер иконок вкладок */
+.tabs-icons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+  align-items: center;
+}
+
+/* Кнопка иконки вкладки */
+.tab-icon-button {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
-  padding: 0;
   border-radius: 6px;
   background: transparent;
   color: white;
@@ -114,11 +110,11 @@
   transition: all 0.2s ease;
 }
 
-.mobile-tab-button.active-tab {
+.tab-icon-button.active-tab-icon {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-.mobile-tab-button:hover:not(.active-tab) {
+.tab-icon-button:hover:not(.active-tab-icon) {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -126,6 +122,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Точка уведомления */
+.notification-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  height: 6px;
+  width: 6px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* Основной контейнер контента */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px;
 }
 
 /* Для десктопа стили остаются прежними */
@@ -153,17 +169,11 @@
   background-color: rgba(255, 255, 255, 0.05);
 }
 
+/* Контейнер контента вкладок */
 .tab-content-container {
   width: 100%;
   flex: 1;
   padding: 10px 5px;
-}
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
 }
 
 .content-section {
@@ -172,7 +182,7 @@
   overflow-y: auto;
 }
 
-.tabs-section {
+.tabs-section.desktop {
   width: 100%;
   padding: 0.5rem 0.25rem;
   display: flex;

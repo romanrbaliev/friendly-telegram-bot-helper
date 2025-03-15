@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, Medal } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, Medal, TrendingUp } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 
 interface TabsHeaderProps {
@@ -15,6 +15,7 @@ interface TabsHeaderProps {
   miningPower: number;
   hasNewMarketEvent: boolean;
   miningAnimation?: boolean;
+  marketMultiplier?: number;
 }
 
 const TabsHeader: React.FC<TabsHeaderProps> = ({
@@ -27,7 +28,8 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   showMarketEvents,
   miningPower,
   hasNewMarketEvent,
-  miningAnimation = false
+  miningAnimation = false,
+  marketMultiplier = 1
 }) => {
   const visibleTabsCount = 1 + 
     (showTrading ? 1 : 0) + 
@@ -36,6 +38,8 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     (showCareer ? 1 : 0) + 
     (showMarketEvents ? 1 : 0) + 
     1;
+  
+  const isBullMarket = marketMultiplier > 1;
   
   return (
     <TabsList className="w-full animate-fade-in" style={{ 
@@ -76,11 +80,22 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
         </TabsTrigger>
       )}
       {showMarketEvents && (
-        <TabsTrigger value="market" className="flex items-center gap-1 relative">
-          <BarChart4 size={14} className="sm:size-16" />
-          <span className="sm:inline">Рынок</span>
-          {hasNewMarketEvent && (
+        <TabsTrigger value="market" className={`flex items-center gap-1 relative ${isBullMarket ? 'animate-pulse' : ''}`}>
+          {isBullMarket ? (
+            <TrendingUp size={14} className="sm:size-16 text-green-500" />
+          ) : (
+            <BarChart4 size={14} className="sm:size-16" />
+          )}
+          <span className="sm:inline">
+            {isBullMarket ? "Бычий рынок!" : "Рынок"}
+          </span>
+          {hasNewMarketEvent && !isBullMarket && (
             <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
+          )}
+          {isBullMarket && (
+            <Badge variant="success" className="ml-1 text-xs py-0 animate-pulse">
+              +{((marketMultiplier - 1) * 100).toFixed(0)}%
+            </Badge>
           )}
         </TabsTrigger>
       )}

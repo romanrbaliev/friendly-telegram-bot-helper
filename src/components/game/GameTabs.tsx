@@ -64,6 +64,23 @@ const GameTabs: React.FC<GameTabsProps> = ({
     }
   }, [miningPower]);
   
+  // Добавим эффект "бычьего рынка" - анимацию для подсветки вкладки "Рынок"
+  useEffect(() => {
+    if (marketMultiplier > 1) {
+      // Если активен "бычий рынок", добавим анимацию для вкладки "Рынок"
+      setHasNewMarketEvent(true);
+      
+      // Если бычий рынок закончился, удалим анимацию
+      const timeout = setTimeout(() => {
+        if (marketMultiplier === 1) {
+          setHasNewMarketEvent(false);
+        }
+      }, 5000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [marketMultiplier]);
+  
   console.log("GameTabs rendering with:", {
     showTrading,
     showEducation,
@@ -89,6 +106,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
         miningPower={miningPower}
         hasNewMarketEvent={hasNewMarketEvent}
         miningAnimation={miningAnimation}
+        marketMultiplier={marketMultiplier}
       />
       
       <TabsContentComponent 

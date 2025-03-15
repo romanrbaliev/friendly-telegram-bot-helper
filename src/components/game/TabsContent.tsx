@@ -8,6 +8,7 @@ import Career from './Career';
 import MarketEvents from './MarketEvents';
 import MainActions from './MainActions';
 import Achievements from './Achievements';
+import CryptoCurrencyInfo from './CryptoCurrencyInfo';
 
 interface TabsContentComponentProps {
   activeTab: string;
@@ -84,7 +85,7 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
       </TabsContent>
       
       {showTrading && (
-        <TabsContent value="trading" className="mt-4">
+        <TabsContent value="trading" className="mt-4 space-y-6">
           <Trading 
             dollars={dollars}
             usdt={usdt}
@@ -93,6 +94,14 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
             knowledge={knowledge}
             role={role}
           />
+          
+          {/* Добавляем информацию о криптовалютах */}
+          {knowledge >= 5 && (
+            <CryptoCurrencyInfo 
+              marketMultiplier={marketMultiplier} 
+              knowledge={knowledge} 
+            />
+          )}
         </TabsContent>
       )}
       

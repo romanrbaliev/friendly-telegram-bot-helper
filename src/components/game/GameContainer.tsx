@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -299,9 +300,9 @@ const GameContainer: React.FC = () => {
       <GameHeader bullMarketActive={bullMarketActive} />
       
       <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2 mb-4">
-        <div className="flex flex-row items-start gap-2">
+        <div className="flex flex-col items-start gap-4">
           {showResources && (
-            <div className="shrink-0">
+            <div className="w-full">
               <ResourceDisplay 
                 dollars={dollars} 
                 usdt={usdt} 
@@ -318,7 +319,7 @@ const GameContainer: React.FC = () => {
           )}
           
           {showTabs && (
-            <div className="flex-grow">
+            <div className="w-full">
               <GameTabs 
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -355,7 +356,7 @@ const GameContainer: React.FC = () => {
         </div>
       </div>
       
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         {!showTabs ? (
           <MainActions 
             dollars={dollars}

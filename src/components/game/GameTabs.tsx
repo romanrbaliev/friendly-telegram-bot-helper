@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
-import TabsContentComponent from './TabsContent';
 import { GameTabsProps } from './types/GameTabsProps';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -95,37 +93,6 @@ const GameTabs: React.FC<GameTabsProps> = ({
         hasNewMarketEvent={hasNewMarketEvent}
         miningAnimation={miningAnimation}
         marketMultiplier={marketMultiplier}
-      />
-      
-      <TabsContentComponent 
-        activeTab={activeTab}
-        dollars={dollars}
-        usdt={usdt}
-        btc={btc}
-        knowledge={knowledge}
-        miningPower={miningPower}
-        showTrading={showTrading}
-        showEducation={showEducation}
-        showMining={showMining}
-        showCareer={showCareer}
-        showMarketEvents={showMarketEvents}
-        handleSaveDollar={handleSaveDollar}
-        handleBuyCrypto={handleBuyCrypto}
-        handleStaking={handleStaking}
-        handleTrade={handleTrade}
-        handleLearn={handleLearn}
-        handlePurchaseRig={handlePurchaseRig}
-        handleSelectRole={handleSelectRole}
-        handleMarketChange={handleMarketChange}
-        handlePrepareForEvent={handlePrepareForEvent}
-        marketMultiplier={marketMultiplier}
-        showBuyCrypto={showBuyCrypto}
-        showStaking={showStaking}
-        showBuyUsdt={showBuyUsdt}
-        role={role}
-        handleLearnBasics={handleLearnBasics}
-        clicks={clicks}
-        handleBuyUsdt={handleBuyUsdt}
       />
     </Tabs>
   );

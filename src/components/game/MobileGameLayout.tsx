@@ -88,87 +88,49 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
   currentFeature = ''
 }) => {
   return (
-    <div className="flex flex-col w-full">
-      {/* Отображаем ресурсы и вкладки рядом друг с другом */}
-      <div className="w-full sticky top-0 z-10 bg-[#1A1F2C]">
-        <div className="flex flex-row justify-between space-x-1 p-1">
-          {showResources && (
-            <div className="w-[65%] min-w-0">
-              <ResourceDisplay 
-                dollars={dollars} 
-                usdt={usdt} 
-                showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
-                stakedUsdt={stakedUsdt}
-                showStaking={showStaking || stakedUsdt > 0}
-                knowledge={knowledge}
-                showKnowledge={showEducation || knowledge > 0}
-                btc={btc}
-                showBtc={btc > 0 || showBuyCrypto}
-                role={role}
-              />
-            </div>
-          )}
-          
-          {showTabs && (
-            <div className="w-[35%] min-w-0">
-              <GameTabs 
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                showTrading={showTrading}
-                showEducation={showEducation}
-                showMining={showMining}
-                showCareer={showCareer}
-                showMarketEvents={showMarketEvents}
-                dollars={dollars}
-                usdt={usdt}
-                btc={btc}
-                knowledge={knowledge}
-                marketMultiplier={marketMultiplier}
-                miningPower={miningPower}
-                handleSaveDollar={handleSaveDollar}
-                handleBuyCrypto={handleBuyCrypto}
-                handleStaking={handleStakingWrapper}
-                handleTrade={handleTrade}
-                handleLearn={handleLearnMarket}
-                handlePurchaseRig={handlePurchaseRig}
-                handleSelectRole={handleSelectRole}
-                handleMarketChange={handleMarketChange}
-                handlePrepareForEvent={handlePrepareForEvent}
-                showBuyCrypto={showBuyCrypto}
-                showBuyUsdt={showBuyUsdt}
-                showStaking={showStaking}
-                role={role}
-                handleLearnBasics={handleLearnBasics}
-                clicks={clicks}
-                handleBuyUsdt={handleBuyUsdtWrapper}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-      
-      <div className="flex-1 w-full flex flex-col items-center mt-2 px-2">
-        {!showTabs ? (
-          <MainActions 
-            dollars={dollars}
-            usdt={usdt}
-            showBuyCrypto={showBuyCrypto}
-            showBuyUsdt={showBuyUsdt}
-            showStaking={showStaking}
-            showEducation={showEducation}
-            handleSaveDollar={handleSaveDollar}
-            handleBuyCrypto={handleBuyCrypto}
-            handleStaking={handleStakingWrapper}
-            handleLearnBasics={handleLearnBasics}
-            handleBuyUsdt={handleBuyUsdtWrapper}
+    <div className="flex flex-col w-full min-h-screen bg-[#1A1F2C]">
+      {/* Верхняя секция с ресурсами */}
+      {showResources && (
+        <div className="w-full p-2 sticky top-0 z-10 bg-[#1A1F2C]">
+          <ResourceDisplay 
+            dollars={dollars} 
+            usdt={usdt} 
+            showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
+            stakedUsdt={stakedUsdt}
+            showStaking={showStaking || stakedUsdt > 0}
             knowledge={knowledge}
-            showHint={showHint}
-            hintInfo={hintInfo}
-            onCloseHint={handleCloseHint}
-            currentFeature={currentFeature}
+            showKnowledge={showEducation || knowledge > 0}
+            btc={btc}
+            showBtc={btc > 0 || showBuyCrypto}
+            role={role}
           />
-        ) : activeTab === 'staking' ? (
-          <div className="w-full max-w-md">
+        </div>
+      )}
+      
+      {/* Контент и вкладки */}
+      <div className="flex flex-col md:flex-row flex-1 gap-2 p-2">
+        {/* Основной контент слева/снизу */}
+        <div className="flex-1 order-2 md:order-1">
+          {!showTabs ? (
+            <MainActions 
+              dollars={dollars}
+              usdt={usdt}
+              showBuyCrypto={showBuyCrypto}
+              showBuyUsdt={showBuyUsdt}
+              showStaking={showStaking}
+              showEducation={showEducation}
+              handleSaveDollar={handleSaveDollar}
+              handleBuyCrypto={handleBuyCrypto}
+              handleStaking={handleStakingWrapper}
+              handleLearnBasics={handleLearnBasics}
+              handleBuyUsdt={handleBuyUsdtWrapper}
+              knowledge={knowledge}
+              showHint={showHint}
+              hintInfo={hintInfo}
+              onCloseHint={handleCloseHint}
+              currentFeature={currentFeature}
+            />
+          ) : activeTab === 'staking' ? (
             <StakingTab 
               usdt={usdt}
               stakedUsdt={stakedUsdt}
@@ -176,8 +138,76 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
               onWithdraw={handleWithdraw}
               role={role}
             />
+          ) : (
+            <TabsContentComponent 
+              activeTab={activeTab}
+              dollars={dollars}
+              usdt={usdt}
+              btc={btc}
+              knowledge={knowledge}
+              miningPower={miningPower}
+              showTrading={showTrading}
+              showEducation={showEducation}
+              showMining={showMining}
+              showCareer={showCareer}
+              showMarketEvents={showMarketEvents}
+              handleSaveDollar={handleSaveDollar}
+              handleBuyCrypto={handleBuyCrypto}
+              handleStaking={handleStakingWrapper}
+              handleTrade={handleTrade}
+              handleLearn={handleLearnMarket}
+              handlePurchaseRig={handlePurchaseRig}
+              handleSelectRole={handleSelectRole}
+              handleMarketChange={handleMarketChange}
+              handlePrepareForEvent={handlePrepareForEvent}
+              marketMultiplier={marketMultiplier}
+              showBuyCrypto={showBuyCrypto}
+              showStaking={showStaking}
+              showBuyUsdt={showBuyUsdt}
+              role={role}
+              handleLearnBasics={handleLearnBasics}
+              clicks={clicks}
+              handleBuyUsdt={handleBuyUsdtWrapper}
+            />
+          )}
+        </div>
+        
+        {/* Вкладки справа */}
+        {showTabs && (
+          <div className="w-full md:w-48 order-1 md:order-2">
+            <GameTabs 
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              showTrading={showTrading}
+              showEducation={showEducation}
+              showMining={showMining}
+              showCareer={showCareer}
+              showMarketEvents={showMarketEvents}
+              dollars={dollars}
+              usdt={usdt}
+              btc={btc}
+              knowledge={knowledge}
+              marketMultiplier={marketMultiplier}
+              miningPower={miningPower}
+              handleSaveDollar={handleSaveDollar}
+              handleBuyCrypto={handleBuyCrypto}
+              handleStaking={handleStakingWrapper}
+              handleTrade={handleTrade}
+              handleLearn={handleLearnMarket}
+              handlePurchaseRig={handlePurchaseRig}
+              handleSelectRole={handleSelectRole}
+              handleMarketChange={handleMarketChange}
+              handlePrepareForEvent={handlePrepareForEvent}
+              showBuyCrypto={showBuyCrypto}
+              showBuyUsdt={showBuyUsdt}
+              showStaking={showStaking}
+              role={role}
+              handleLearnBasics={handleLearnBasics}
+              clicks={clicks}
+              handleBuyUsdt={handleBuyUsdtWrapper}
+            />
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

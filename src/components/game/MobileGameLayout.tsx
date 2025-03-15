@@ -167,7 +167,7 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
             currentFeature={currentFeature}
           />
         ) : (
-          activeTab === 'staking' && (
+          activeTab === 'staking' ? (
             <StakingTab 
               usdt={usdt}
               stakedUsdt={stakedUsdt}
@@ -175,7 +175,7 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
               onWithdraw={handleWithdraw}
               role={role}
             />
-          )
+          ) : null
         )}
       </div>
     </div>

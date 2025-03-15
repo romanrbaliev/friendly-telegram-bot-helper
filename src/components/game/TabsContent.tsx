@@ -72,99 +72,113 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
   handleBuyUsdt
 }) => {
   return (
-    <>
-      <TabsContent value="main" className="space-y-4 mt-4">
-        <MainActions 
-          dollars={dollars}
-          usdt={usdt}
-          handleSaveDollar={handleSaveDollar}
-          handleBuyCrypto={handleBuyCrypto}
-          handleStaking={handleStaking}
-          handleLearnBasics={handleLearnBasics}
-          showBuyCrypto={showBuyCrypto}
-          showStaking={showStaking}
-          showEducation={showEducation}
-          showBuyUsdt={showBuyUsdt}
-          knowledge={knowledge}
-          handleBuyUsdt={handleBuyUsdt}
-        />
-      </TabsContent>
-      
-      {showTrading && (
-        <TabsContent value="trading" className="mt-4 space-y-6">
-          <Trading 
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-3xl">
+        <TabsContent value="main" className="space-y-4 mt-4">
+          <MainActions 
             dollars={dollars}
             usdt={usdt}
-            btc={btc}
-            onTrade={handleTrade}
+            handleSaveDollar={handleSaveDollar}
+            handleBuyCrypto={handleBuyCrypto}
+            handleStaking={handleStaking}
+            handleLearnBasics={handleLearnBasics}
+            showBuyCrypto={showBuyCrypto}
+            showStaking={showStaking}
+            showEducation={showEducation}
+            showBuyUsdt={showBuyUsdt}
             knowledge={knowledge}
-            role={role}
+            handleBuyUsdt={handleBuyUsdt}
           />
-          
-          {/* Добавляем информацию о криптовалютах */}
-          {knowledge >= 5 && (
-            <CryptoCurrencyInfo 
-              marketMultiplier={marketMultiplier} 
-              knowledge={knowledge} 
+        </TabsContent>
+        
+        {showTrading && (
+          <TabsContent value="trading" className="mt-4 space-y-6 p-4">
+            <div className="glass-morphism p-4 rounded-lg">
+              <Trading 
+                dollars={dollars}
+                usdt={usdt}
+                btc={btc}
+                onTrade={handleTrade}
+                knowledge={knowledge}
+                role={role}
+              />
+              
+              {/* Добавляем информацию о криптовалютах */}
+              {knowledge >= 5 && (
+                <CryptoCurrencyInfo 
+                  marketMultiplier={marketMultiplier} 
+                  knowledge={knowledge} 
+                />
+              )}
+            </div>
+          </TabsContent>
+        )}
+        
+        {showEducation && (
+          <TabsContent value="education" className="mt-4 p-4">
+            <div className="glass-morphism p-4 rounded-lg">
+              <Education
+                dollars={dollars}
+                onLearn={handleLearn}
+                knowledge={knowledge}
+              />
+            </div>
+          </TabsContent>
+        )}
+        
+        {showMining && (
+          <TabsContent value="mining" className="mt-4 p-4">
+            <div className="glass-morphism p-4 rounded-lg">
+              <Mining
+                dollars={dollars}
+                btc={btc}
+                miningPower={miningPower}
+                onPurchaseRig={handlePurchaseRig}
+                knowledge={knowledge}
+                marketMultiplier={marketMultiplier}
+              />
+            </div>
+          </TabsContent>
+        )}
+        
+        {showCareer && (
+          <TabsContent value="career" className="mt-4 p-4">
+            <div className="glass-morphism p-4 rounded-lg">
+              <Career
+                dollars={dollars}
+                onSelectRole={handleSelectRole}
+                selectedRole={role}
+                knowledge={knowledge}
+              />
+            </div>
+          </TabsContent>
+        )}
+        
+        {showMarketEvents && (
+          <TabsContent value="market" className="mt-4 p-4">
+            <div className="glass-morphism p-4 rounded-lg">
+              <MarketEvents
+                knowledge={knowledge}
+                onPrepareForEvent={handlePrepareForEvent}
+                onMarketChange={handleMarketChange}
+              />
+            </div>
+          </TabsContent>
+        )}
+        
+        <TabsContent value="achievements" className="mt-4 p-4">
+          <div className="glass-morphism p-4 rounded-lg">
+            <Achievements
+              clickCount={clicks}
+              dollars={dollars}
+              knowledge={knowledge}
+              miningPower={miningPower}
+              btc={btc}
             />
-          )}
+          </div>
         </TabsContent>
-      )}
-      
-      {showEducation && (
-        <TabsContent value="education" className="mt-4">
-          <Education
-            dollars={dollars}
-            onLearn={handleLearn}
-            knowledge={knowledge}
-          />
-        </TabsContent>
-      )}
-      
-      {showMining && (
-        <TabsContent value="mining" className="mt-4">
-          <Mining
-            dollars={dollars}
-            btc={btc}
-            miningPower={miningPower}
-            onPurchaseRig={handlePurchaseRig}
-            knowledge={knowledge}
-            marketMultiplier={marketMultiplier}
-          />
-        </TabsContent>
-      )}
-      
-      {showCareer && (
-        <TabsContent value="career" className="mt-4">
-          <Career
-            dollars={dollars}
-            onSelectRole={handleSelectRole}
-            selectedRole={role}
-            knowledge={knowledge}
-          />
-        </TabsContent>
-      )}
-      
-      {showMarketEvents && (
-        <TabsContent value="market" className="mt-4">
-          <MarketEvents
-            knowledge={knowledge}
-            onPrepareForEvent={handlePrepareForEvent}
-            onMarketChange={handleMarketChange}
-          />
-        </TabsContent>
-      )}
-      
-      <TabsContent value="achievements" className="mt-4">
-        <Achievements
-          clickCount={clicks}
-          dollars={dollars}
-          knowledge={knowledge}
-          miningPower={miningPower}
-          btc={btc}
-        />
-      </TabsContent>
-    </>
+      </div>
+    </div>
   );
 };
 

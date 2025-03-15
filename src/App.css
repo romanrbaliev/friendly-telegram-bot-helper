@@ -60,10 +60,12 @@
 }
 
 .tabs-section {
-  width: 130px;
+  width: 110px;
+  min-width: 110px;
   padding: 0.5rem 0.25rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .glass-morphism {

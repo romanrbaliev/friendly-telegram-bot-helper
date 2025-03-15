@@ -1,7 +1,7 @@
+
 import React from 'react';
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ResourceDisplay from './ResourceDisplay';
-import GameTabs from './GameTabs';
 import MainActions from './MainActions';
 import StakingTab from './StakingTab';
 import TabsContentComponent from './TabsContent';
@@ -107,75 +107,95 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
         </div>
       )}
       
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="main-container">
-          {(!showTabs || !showResources) && (
-            <MainActions 
-              dollars={dollars}
-              usdt={usdt}
-              showBuyCrypto={showBuyCrypto}
-              showBuyUsdt={showBuyUsdt}
-              showStaking={showStaking}
-              showEducation={showEducation}
-              handleSaveDollar={handleSaveDollar}
-              handleBuyCrypto={handleBuyCrypto}
-              handleStaking={handleStakingWrapper}
-              handleLearnBasics={handleLearnBasics}
-              handleBuyUsdt={handleBuyUsdtWrapper}
-              knowledge={knowledge}
-              showHint={showHint}
-              hintInfo={hintInfo}
-              onCloseHint={handleCloseHint}
-              currentFeature={currentFeature}
-            />
-          )}
-          
-          {showTabs && showResources && (
-            <TabsContentComponent 
+      <div className="flex flex-row w-full">
+        <div className="content-section">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {(!showTabs || !showResources) && (
+              <MainActions 
+                dollars={dollars}
+                usdt={usdt}
+                showBuyCrypto={showBuyCrypto}
+                showBuyUsdt={showBuyUsdt}
+                showStaking={showStaking}
+                showEducation={showEducation}
+                handleSaveDollar={handleSaveDollar}
+                handleBuyCrypto={handleBuyCrypto}
+                handleStaking={handleStakingWrapper}
+                handleLearnBasics={handleLearnBasics}
+                handleBuyUsdt={handleBuyUsdtWrapper}
+                knowledge={knowledge}
+                showHint={showHint}
+                hintInfo={hintInfo}
+                onCloseHint={handleCloseHint}
+                currentFeature={currentFeature}
+              />
+            )}
+            
+            {showTabs && showResources && (
+              <TabsContentComponent 
+                activeTab={activeTab}
+                dollars={dollars}
+                usdt={usdt}
+                btc={btc}
+                knowledge={knowledge}
+                miningPower={miningPower}
+                showTrading={showTrading}
+                showEducation={showEducation}
+                showMining={showMining}
+                showCareer={showCareer}
+                showMarketEvents={showMarketEvents}
+                handleSaveDollar={handleSaveDollar}
+                handleBuyCrypto={handleBuyCrypto}
+                handleStaking={handleStakingWrapper}
+                handleTrade={handleTrade}
+                handleLearn={handleLearnMarket}
+                handlePurchaseRig={handlePurchaseRig}
+                handleSelectRole={handleSelectRole}
+                handleMarketChange={handleMarketChange}
+                handlePrepareForEvent={handlePrepareForEvent}
+                marketMultiplier={marketMultiplier}
+                showBuyCrypto={showBuyCrypto}
+                showStaking={showStaking}
+                showBuyUsdt={showBuyUsdt}
+                role={role}
+                handleLearnBasics={handleLearnBasics}
+                clicks={clicks}
+                handleBuyUsdt={handleBuyUsdtWrapper}
+              />
+            )}
+            
+            {activeTab === 'staking' && showTabs && (
+              <TabsContent value="staking">
+                <StakingTab 
+                  usdt={usdt}
+                  stakedUsdt={stakedUsdt}
+                  onStake={handleStake}
+                  onWithdraw={handleWithdraw}
+                  role={role}
+                />
+              </TabsContent>
+            )}
+          </Tabs>
+        </div>
+        
+        {showTabs && showResources && (
+          <div className="tabs-section">
+            <TabsHeader 
               activeTab={activeTab}
-              dollars={dollars}
-              usdt={usdt}
-              btc={btc}
-              knowledge={knowledge}
-              miningPower={miningPower}
+              setActiveTab={setActiveTab}
               showTrading={showTrading}
               showEducation={showEducation}
               showMining={showMining}
               showCareer={showCareer}
               showMarketEvents={showMarketEvents}
-              handleSaveDollar={handleSaveDollar}
-              handleBuyCrypto={handleBuyCrypto}
-              handleStaking={handleStakingWrapper}
-              handleTrade={handleTrade}
-              handleLearn={handleLearnMarket}
-              handlePurchaseRig={handlePurchaseRig}
-              handleSelectRole={handleSelectRole}
-              handleMarketChange={handleMarketChange}
-              handlePrepareForEvent={handlePrepareForEvent}
+              miningPower={miningPower}
+              hasNewMarketEvent={false}
+              miningAnimation={false}
               marketMultiplier={marketMultiplier}
-              showBuyCrypto={showBuyCrypto}
-              showStaking={showStaking}
-              showBuyUsdt={showBuyUsdt}
-              role={role}
-              handleLearnBasics={handleLearnBasics}
-              clicks={clicks}
-              handleBuyUsdt={handleBuyUsdtWrapper}
             />
-          )}
-          
-          {activeTab === 'staking' && showTabs && (
-            <TabsContent value="staking">
-              <StakingTab 
-                usdt={usdt}
-                stakedUsdt={stakedUsdt}
-                onStake={handleStake}
-                onWithdraw={handleWithdraw}
-                role={role}
-              />
-            </TabsContent>
-          )}
-        </div>
-      </Tabs>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

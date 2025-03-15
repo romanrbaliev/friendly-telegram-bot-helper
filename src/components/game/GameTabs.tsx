@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
 import { GameTabsProps } from './types/GameTabsProps';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -82,21 +82,58 @@ const GameTabs: React.FC<GameTabsProps> = ({
   }, [marketMultiplier]);
   
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsHeader 
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        showTrading={showTrading}
-        showEducation={showEducation}
-        showMining={showMining}
-        showCareer={showCareer}
-        showMarketEvents={showMarketEvents}
-        miningPower={miningPower}
-        hasNewMarketEvent={hasNewMarketEvent}
-        miningAnimation={miningAnimation}
-        marketMultiplier={marketMultiplier}
-      />
-    </Tabs>
+    <div className="flex flex-row w-full">
+      <div className="content-section">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsContentComponent 
+            activeTab={activeTab}
+            dollars={dollars}
+            usdt={usdt}
+            btc={btc}
+            knowledge={knowledge}
+            miningPower={miningPower}
+            showTrading={showTrading}
+            showEducation={showEducation}
+            showMining={showMining}
+            showCareer={showCareer}
+            showMarketEvents={showMarketEvents}
+            handleSaveDollar={handleSaveDollar}
+            handleBuyCrypto={handleBuyCrypto}
+            handleStaking={handleStaking}
+            handleTrade={handleTrade}
+            handleLearn={handleLearn}
+            handlePurchaseRig={handlePurchaseRig}
+            handleSelectRole={handleSelectRole}
+            handleMarketChange={handleMarketChange}
+            handlePrepareForEvent={handlePrepareForEvent}
+            marketMultiplier={marketMultiplier}
+            showBuyCrypto={showBuyCrypto}
+            showStaking={showStaking}
+            showBuyUsdt={showBuyUsdt}
+            role={role}
+            handleLearnBasics={handleLearnBasics}
+            clicks={clicks}
+            handleBuyUsdt={handleBuyUsdt}
+          />
+        </Tabs>
+      </div>
+      
+      <div className="tabs-section">
+        <TabsHeader 
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          showTrading={showTrading}
+          showEducation={showEducation}
+          showMining={showMining}
+          showCareer={showCareer}
+          showMarketEvents={showMarketEvents}
+          miningPower={miningPower}
+          hasNewMarketEvent={hasNewMarketEvent}
+          miningAnimation={miningAnimation}
+          marketMultiplier={marketMultiplier}
+        />
+      </div>
+    </div>
   );
 };
 

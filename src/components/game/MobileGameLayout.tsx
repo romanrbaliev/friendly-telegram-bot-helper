@@ -31,7 +31,7 @@ interface MobileGameLayoutProps {
   handleBuyCrypto: () => void;
   handleStakingWrapper: () => void;
   handleTrade: (fromUSDT: boolean, amount: number) => void;
-  handleLearnMarket: (cost: number, knowledgeGain: number) => void;
+  handleLearnMarket: (cost: number, knowledgeGain: number) => boolean;
   handlePurchaseRig: (cost: number, powerIncrease: number) => void;
   handleSelectRole: (role: string) => void;
   handleMarketChange: (multiplier: number) => void;

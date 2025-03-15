@@ -1,45 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, AlertCircle, Medal } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
-import Trading from './Trading';
-import Education from './Education';
-import Mining from './Mining';
-import Career from './Career';
-import MarketEvents from './MarketEvents';
-import MainActions from './MainActions';
-import Achievements from './Achievements';
-
-interface GameTabsProps {
-  activeTab: string;
-  setActiveTab: (value: string) => void;
-  showTrading: boolean;
-  showEducation: boolean;
-  showMining: boolean;
-  showCareer: boolean;
-  showMarketEvents: boolean;
-  dollars: number;
-  usdt: number;
-  btc: number;
-  knowledge: number;
-  marketMultiplier: number;
-  miningPower: number;
-  handleSaveDollar: () => void;
-  handleBuyCrypto: () => void;
-  handleStaking: () => void;
-  handleTrade: (fromUSDT: boolean, amount: number) => void;
-  handleLearn: (cost: number, knowledgeGain: number) => boolean;
-  handlePurchaseRig: (cost: number, powerIncrease?: number) => void;
-  handleSelectRole: (selectedRole: string) => void;
-  handleMarketChange: (multiplier: number) => void;
-  handlePrepareForEvent: (cost: number) => void;
-  showBuyCrypto: boolean;
-  showStaking: boolean;
-  role: string | null;
-  handleLearnBasics: () => void;
-  clicks: number;
-}
+import { Tabs } from "@/components/ui/tabs";
+import TabsHeader from './TabsHeader';
+import TabsContentComponent from './TabsContent';
+import { GameTabsProps } from './types/GameTabsProps';
 
 const GameTabs: React.FC<GameTabsProps> = ({
   activeTab,
@@ -70,14 +34,6 @@ const GameTabs: React.FC<GameTabsProps> = ({
   handleLearnBasics,
   clicks
 }) => {
-  const visibleTabsCount = 1 + 
-    (showTrading ? 1 : 0) + 
-    (showEducation ? 1 : 0) + 
-    (showMining ? 1 : 0) + 
-    (showCareer ? 1 : 0) + 
-    (showMarketEvents ? 1 : 0) + 
-    1;
-  
   const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
   
   useEffect(() => {
@@ -109,139 +65,46 @@ const GameTabs: React.FC<GameTabsProps> = ({
   
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-      <TabsList className="w-full animate-fade-in" style={{ 
-        display: 'grid', 
-        gridTemplateColumns: `repeat(${visibleTabsCount}, minmax(0, 1fr))` 
-      }}>
-        <TabsTrigger value="main" className="flex items-center gap-1">
-          <DollarSign size={14} className="sm:size-16" />
-          <span className="sm:inline">Основное</span>
-        </TabsTrigger>
-        {showTrading && (
-          <TabsTrigger value="trading" className="flex items-center gap-1">
-            <ArrowUpDown size={14} className="sm:size-16" />
-            <span className="sm:inline">Трейдинг</span>
-          </TabsTrigger>
-        )}
-        {showEducation && (
-          <TabsTrigger value="education" className="flex items-center gap-1">
-            <GraduationCap size={14} className="sm:size-16" />
-            <span className="sm:inline">Обучение</span>
-          </TabsTrigger>
-        )}
-        {showMining && (
-          <TabsTrigger value="mining" className="flex items-center gap-1">
-            <HardDrive size={14} className="sm:size-16" />
-            <span className="sm:inline">Майнинг</span>
-            {miningPower > 0 && (
-              <Badge variant="outline" className="ml-1 text-xs py-0">
-                {miningPower}
-              </Badge>
-            )}
-          </TabsTrigger>
-        )}
-        {showCareer && (
-          <TabsTrigger value="career" className="flex items-center gap-1">
-            <Briefcase size={14} className="sm:size-16" />
-            <span className="sm:inline">Карьера</span>
-          </TabsTrigger>
-        )}
-        {showMarketEvents && (
-          <TabsTrigger value="market" className="flex items-center gap-1 relative">
-            <BarChart4 size={14} className="sm:size-16" />
-            <span className="sm:inline">Рынок</span>
-            {hasNewMarketEvent && (
-              <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
-            )}
-          </TabsTrigger>
-        )}
-        <TabsTrigger value="achievements" className="flex items-center gap-1">
-          <Medal size={14} className="sm:size-16" />
-          <span className="sm:inline">Ачивки</span>
-        </TabsTrigger>
-      </TabsList>
+      <TabsHeader 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        showTrading={showTrading}
+        showEducation={showEducation}
+        showMining={showMining}
+        showCareer={showCareer}
+        showMarketEvents={showMarketEvents}
+        miningPower={miningPower}
+        hasNewMarketEvent={hasNewMarketEvent}
+      />
       
-      <TabsContent value="main" className="space-y-4 mt-4">
-        <MainActions 
-          dollars={dollars}
-          usdt={usdt}
-          handleSaveDollar={handleSaveDollar}
-          handleBuyCrypto={handleBuyCrypto}
-          handleStaking={handleStaking}
-          handleLearnBasics={handleLearnBasics}
-          showBuyCrypto={showBuyCrypto}
-          showStaking={showStaking}
-          showEducation={showEducation}
-          knowledge={knowledge}
-        />
-      </TabsContent>
-      
-      {showTrading && (
-        <TabsContent value="trading" className="mt-4">
-          <Trading 
-            dollars={dollars}
-            usdt={usdt}
-            btc={btc}
-            onTrade={handleTrade}
-            knowledge={knowledge}
-            role={role}
-          />
-        </TabsContent>
-      )}
-      
-      {showEducation && (
-        <TabsContent value="education" className="mt-4">
-          <Education
-            dollars={dollars}
-            onLearn={handleLearn}
-            knowledge={knowledge}
-          />
-        </TabsContent>
-      )}
-      
-      {showMining && (
-        <TabsContent value="mining" className="mt-4">
-          <Mining
-            dollars={dollars}
-            btc={btc}
-            miningPower={miningPower}
-            onPurchaseRig={handlePurchaseRig}
-            knowledge={knowledge}
-            marketMultiplier={marketMultiplier}
-          />
-        </TabsContent>
-      )}
-      
-      {showCareer && (
-        <TabsContent value="career" className="mt-4">
-          <Career
-            dollars={dollars}
-            onSelectRole={handleSelectRole}
-            selectedRole={role}
-            knowledge={knowledge}
-          />
-        </TabsContent>
-      )}
-      
-      {showMarketEvents && (
-        <TabsContent value="market" className="mt-4">
-          <MarketEvents
-            knowledge={knowledge}
-            onPrepareForEvent={handlePrepareForEvent}
-            onMarketChange={handleMarketChange}
-          />
-        </TabsContent>
-      )}
-      
-      <TabsContent value="achievements" className="mt-4">
-        <Achievements
-          clickCount={clicks}
-          dollars={dollars}
-          knowledge={knowledge}
-          miningPower={miningPower}
-          btc={btc}
-        />
-      </TabsContent>
+      <TabsContentComponent 
+        activeTab={activeTab}
+        dollars={dollars}
+        usdt={usdt}
+        btc={btc}
+        knowledge={knowledge}
+        miningPower={miningPower}
+        showTrading={showTrading}
+        showEducation={showEducation}
+        showMining={showMining}
+        showCareer={showCareer}
+        showMarketEvents={showMarketEvents}
+        handleSaveDollar={handleSaveDollar}
+        handleBuyCrypto={handleBuyCrypto}
+        handleStaking={handleStaking}
+        handleTrade={handleTrade}
+        handleLearn={handleLearn}
+        handlePurchaseRig={handlePurchaseRig}
+        handleSelectRole={handleSelectRole}
+        handleMarketChange={handleMarketChange}
+        handlePrepareForEvent={handlePrepareForEvent}
+        marketMultiplier={marketMultiplier}
+        showBuyCrypto={showBuyCrypto}
+        showStaking={showStaking}
+        role={role}
+        handleLearnBasics={handleLearnBasics}
+        clicks={clicks}
+      />
     </Tabs>
   );
 };

@@ -5,10 +5,10 @@ const bodyParser = require('body-parser');
 const TelegramBot = require('node-telegram-bot-api');
 
 // Замените этот токен вашим токеном, полученным от BotFather
-const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
+const BOT_TOKEN = 'ВАШ_ТОКЕН_ЗДЕСЬ';
 
-// URL вашего веб-приложения
-const WEBAPP_URL = 'https://your-deployed-app-url.com';
+// URL вашего веб-приложения (замените на URL, куда вы выложите приложение)
+const WEBAPP_URL = 'https://ваш-домен.com';
 
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 const app = express();
@@ -33,12 +33,14 @@ bot.onText(/\/start/, (msg) => {
   });
 });
 
-// Обработка любых других сообщений
+// Обработка данных из веб-приложения
 bot.on('message', (msg) => {
   if (msg.web_app_data) {
-    // Получить данные из веб-приложения, если они есть
-    console.log('Получены данные из веб-приложения:', msg.web_app_data.data);
-    bot.sendMessage(msg.chat.id, 'Данные получены!');
+    const data = JSON.parse(msg.web_app_data.data);
+    console.log('Получены данные из веб-приложения:', data);
+    
+    // Отправляем подтверждение пользователю
+    bot.sendMessage(msg.chat.id, `Данные сохранены! Ваш баланс: $${data.dollars.toFixed(2)}, USDT: ${data.usdt.toFixed(2)}, BTC: ${data.btc.toFixed(6)}`);
   }
 });
 

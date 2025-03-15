@@ -1,18 +1,32 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, AlertTriangle, Info } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, Info, RefreshCw } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "@/components/ui/use-toast";
 
 interface CryptoInfoProps {
   marketMultiplier: number;
   knowledge: number;
 }
 
+interface CryptoCurrency {
+  name: string;
+  symbol: string;
+  price: number;
+  basePrice: number;
+  volatility: number;
+  stakingAPY: number;
+  specialBonus: string;
+  bonusValue: number;
+  color: string;
+  description: string;
+}
+
 const CryptoCurrencyInfo: React.FC<CryptoInfoProps> = ({ marketMultiplier, knowledge }) => {
-  // Массив доступных криптовалют
-  const cryptoCurrencies = [
+  // Состояние для хранения данных о криптовалютах
+  const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>([
     {
       name: "Bitcoin",
       symbol: "BTC",
@@ -49,21 +63,114 @@ const CryptoCurrencyInfo: React.FC<CryptoInfoProps> = ({ marketMultiplier, knowl
       color: "#00FFA3",
       description: "Быстрый блокчейн с высокой пропускной способностью и низкими комиссиями."
     }
-  ];
+  ]);
+
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Функция для получения актуальных цен криптовалют
+  const fetchCryptoPrices = async () => {
+    setIsLoading(true);
+    try {
+      // Используем CoinGecko API для получения цен
+      const response = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd'
+      );
+      
+      if (!response.ok) {
+        throw new Error('Не удалось получить данные о ценах');
+      }
+      
+      const data = await response.json();
+      
+      // Обновляем данные о криптовалютах
+      setCryptoCurrencies(prev => prev.map(crypto => {
+        let newPrice = crypto.price;
+        let newBasePrice = crypto.basePrice;
+        
+        if (crypto.symbol === 'BTC' && data.bitcoin?.usd) {
+          newPrice = data.bitcoin.usd * marketMultiplier;
+          newBasePrice = data.bitcoin.usd;
+        } else if (crypto.symbol === 'ETH' && data.ethereum?.usd) {
+          newPrice = data.ethereum.usd * marketMultiplier;
+          newBasePrice = data.ethereum.usd;
+        } else if (crypto.symbol === 'SOL' && data.solana?.usd) {
+          newPrice = data.solana.usd * marketMultiplier;
+          newBasePrice = data.solana.usd;
+        }
+        
+        return {
+          ...crypto,
+          price: newPrice,
+          basePrice: newBasePrice
+        };
+      }));
+      
+      setLastUpdated(new Date());
+      toast({
+        title: "Цены обновлены",
+        description: "Актуальные цены криптовалют загружены",
+        duration: 3000
+      });
+    } catch (error) {
+      console.error('Ошибка при получении цен криптовалют:', error);
+      toast({
+        title: "Ошибка обновления",
+        description: "Не удалось получить текущие цены криптовалют",
+        variant: "destructive",
+        duration: 3000
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Эффект для автоматического обновления цен каждые 30 минут
+  useEffect(() => {
+    // Загружаем цены при первом рендере
+    fetchCryptoPrices();
+    
+    // Устанавливаем интервал обновления (30 минут = 1800000 мс)
+    const intervalId = setInterval(() => {
+      fetchCryptoPrices();
+    }, 30 * 60 * 1000);
+    
+    // Очищаем интервал при размонтировании компонента
+    return () => clearInterval(intervalId);
+  }, [marketMultiplier]);
 
   // Показываем только те валюты, которые доступны игроку в зависимости от его знаний
   const availableCryptos = cryptoCurrencies.slice(0, Math.floor(knowledge / 10) + 1);
+  
+  // Форматирование времени последнего обновления
+  const getLastUpdatedText = () => {
+    if (!lastUpdated) return 'Ожидание обновления...';
+    
+    const hours = lastUpdated.getHours().toString().padStart(2, '0');
+    const minutes = lastUpdated.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Информация о криптовалютах</h2>
-        {marketMultiplier > 1 && (
-          <Badge variant="success" className="animate-pulse">
-            <TrendingUp className="w-3 h-3 mr-1" />
-            Бычий рынок (+{((marketMultiplier - 1) * 100).toFixed(0)}%)
+        <div className="flex items-center gap-2">
+          {marketMultiplier > 1 && (
+            <Badge variant="success" className="animate-pulse">
+              <TrendingUp className="w-3 h-3 mr-1" />
+              Бычий рынок (+{((marketMultiplier - 1) * 100).toFixed(0)}%)
+            </Badge>
+          )}
+          <Badge 
+            variant="outline" 
+            className="flex items-center gap-1 cursor-pointer" 
+            onClick={() => fetchCryptoPrices()}
+          >
+            <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
+            <span className="text-xs">Обновлено: {getLastUpdatedText()}</span>
           </Badge>
-        )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -80,6 +80,7 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
           showBuyCrypto={showBuyCrypto}
           showStaking={showStaking}
           showEducation={showEducation}
+          showBuyUsdt={false} // Добавляем недостающий пропс
           knowledge={knowledge}
         />
       </TabsContent>

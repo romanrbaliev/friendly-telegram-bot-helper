@@ -17,6 +17,7 @@ interface UseSaveGameProps {
   setRole: (value: React.SetStateAction<string | null>) => void;
   setShowResources: (value: React.SetStateAction<boolean>) => void;
   setShowBuyCrypto: (value: React.SetStateAction<boolean>) => void;
+  setShowBuyUsdt: (value: React.SetStateAction<boolean>) => void;
   setShowStaking: (value: React.SetStateAction<boolean>) => void;
   setShowTrading: (value: React.SetStateAction<boolean>) => void;
   setShowEducation: (value: React.SetStateAction<boolean>) => void;
@@ -38,6 +39,7 @@ export const useSaveGame = ({
   setRole,
   setShowResources,
   setShowBuyCrypto,
+  setShowBuyUsdt,
   setShowStaking,
   setShowTrading,
   setShowEducation,

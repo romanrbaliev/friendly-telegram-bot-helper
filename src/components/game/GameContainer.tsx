@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -106,7 +105,8 @@ const GameContainer: React.FC = () => {
     marketMultiplier,
     knowledge,
     setKnowledge,
-    setDollars
+    setDollars,
+    setStakedUsdt
   });
   
   // Эффект для отслеживания того, какая подсказка должна быть показана

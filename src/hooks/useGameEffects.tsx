@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from '@/components/ui/use-toast';
 
@@ -32,6 +31,7 @@ interface GameEffectsProps {
   knowledge: number;
   setKnowledge: React.Dispatch<React.SetStateAction<number>>;
   setDollars: React.Dispatch<React.SetStateAction<number>>;
+  setStakedUsdt: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const NOTIFICATIONS_SHOWN_KEY = 'crypto_clicker_notifications_shown';
@@ -66,7 +66,8 @@ export const useGameEffects = (props: GameEffectsProps) => {
     marketMultiplier, 
     knowledge, 
     setKnowledge, 
-    setDollars 
+    setDollars,
+    setStakedUsdt 
   } = props;
   
   const [bullMarketActive, setBullMarketActive] = useState(false);

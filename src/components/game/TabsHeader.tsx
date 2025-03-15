@@ -36,7 +36,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'main', 
       show: true, 
-      icon: <DollarSign size={14} />, 
+      icon: <DollarSign size={12} />, 
       text: 'Осн',
       badge: null,
       animation: false,
@@ -45,7 +45,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'trading', 
       show: showTrading, 
-      icon: <ArrowUpDown size={14} />, 
+      icon: <ArrowUpDown size={12} />, 
       text: 'Т',
       badge: null,
       animation: false,
@@ -54,7 +54,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'education', 
       show: showEducation, 
-      icon: <GraduationCap size={14} />, 
+      icon: <GraduationCap size={12} />, 
       text: 'О',
       badge: null,
       animation: false,
@@ -63,10 +63,10 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'mining', 
       show: showMining, 
-      icon: <HardDrive size={14} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
+      icon: <HardDrive size={12} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
       text: 'М',
       badge: miningPower > 0 ? (
-        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-[8px] py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
+        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-[7px] py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
           {miningPower}
         </Badge>
       ) : null,
@@ -76,7 +76,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'career', 
       show: showCareer, 
-      icon: <Briefcase size={14} />, 
+      icon: <Briefcase size={12} />, 
       text: 'К',
       badge: null,
       animation: false,
@@ -86,13 +86,13 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       id: 'market', 
       show: showMarketEvents, 
       icon: isBullMarket ? (
-        <TrendingUp size={14} className="text-green-500" />
+        <TrendingUp size={12} className="text-green-500" />
       ) : (
-        <BarChart4 size={14} />
+        <BarChart4 size={12} />
       ), 
       text: isBullMarket ? "+" : "Р",
       badge: isBullMarket ? (
-        <Badge variant="success" className="ml-1 text-[8px] py-0 px-1 animate-pulse">
+        <Badge variant="success" className="ml-1 text-[7px] py-0 px-1 animate-pulse">
           +{((marketMultiplier - 1) * 100).toFixed(0)}%
         </Badge>
       ) : null,
@@ -102,7 +102,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'staking', 
       show: true, 
-      icon: <Shield size={14} />, 
+      icon: <Shield size={12} />, 
       text: 'С',
       badge: null,
       animation: false,
@@ -111,7 +111,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     { 
       id: 'achievements', 
       show: true, 
-      icon: <Medal size={14} />, 
+      icon: <Medal size={12} />, 
       text: 'А',
       badge: null,
       animation: false,
@@ -120,25 +120,21 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   ];
   
   return (
-    <div className="animate-fade-in w-full">
-      <div className="flex flex-col gap-1 w-full h-auto">
-        {tabs.filter(tab => tab.show).map(tab => (
-          <button
-            key={tab.id}
-            className={`mobile-tab-button ${activeTab === tab.id ? 'active' : ''} ${tab.animation ? 'animate-pulse' : ''} relative`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            <div className="flex items-center gap-1">
-              {tab.icon}
-              <span className="text-[9px] whitespace-nowrap">{tab.text}</span>
-            </div>
-            {tab.badge}
-            {tab.notification && (
-              <span className="absolute top-0 right-0 h-1.5 w-1.5 bg-red-500 rounded-full animate-pulse"></span>
-            )}
-          </button>
-        ))}
-      </div>
+    <div className="animate-fade-in w-full flex flex-col gap-1">
+      {tabs.filter(tab => tab.show).map(tab => (
+        <button
+          key={tab.id}
+          className={`tab-button ${activeTab === tab.id ? 'active' : ''} ${tab.animation ? 'animate-pulse' : ''} relative`}
+          onClick={() => setActiveTab(tab.id)}
+          aria-label={tab.text}
+        >
+          <span className="tab-icon">{tab.icon}</span>
+          {tab.notification && (
+            <span className="absolute top-0 right-0 h-1.5 w-1.5 bg-red-500 rounded-full animate-pulse"></span>
+          )}
+          {tab.badge}
+        </button>
+      ))}
     </div>
   );
 };

@@ -96,55 +96,53 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
     <div className="game-layout">
       {showResources && (
         <div className="resources-section">
-          <div className="mobile-sidebar-container">
+          <div className="mobile-header-container">
             <div className="mobile-resources-area">
-              <div className="flex flex-col items-start w-full">
-                <div className="flex gap-2 mb-1 w-full">
-                  <span className="text-xs text-gray-400">Доллары:</span>
-                  <span className="text-xs font-medium">${dollars.toFixed(2)}</span>
-                </div>
-                
-                {(usdt > 0 || showBuyCrypto || showBuyUsdt) && (
-                  <div className="flex gap-2 mb-1 w-full">
-                    <span className="text-xs text-gray-400">USDT:</span>
-                    <span className="text-xs font-medium">${usdt.toFixed(2)}</span>
-                  </div>
-                )}
-                
-                {btc > 0 && (
-                  <div className="flex gap-2 mb-1 w-full">
-                    <span className="text-xs text-gray-400">BTC:</span>
-                    <span className="text-xs font-medium">{btc.toFixed(5)} BTC</span>
-                  </div>
-                )}
-                
-                {stakedUsdt > 0 && (
-                  <div className="flex gap-2 mb-1 w-full">
-                    <span className="text-xs text-gray-400">Стейкинг:</span>
-                    <span className="text-xs font-medium">${stakedUsdt.toFixed(2)}</span>
-                  </div>
-                )}
-                
-                {knowledge > 0 && (
-                  <div className="flex gap-2 mb-1 w-full">
-                    <span className="text-xs text-gray-400">Знания:</span>
-                    <span className="text-xs font-medium">{knowledge}</span>
-                  </div>
-                )}
-                
-                {role && role !== 'none' && (
-                  <div className="flex gap-2 w-full">
-                    <span className="text-xs text-gray-400">Роль:</span>
-                    <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
-                      {role === 'investor' ? 'Инвестор' : 'Трейдер'}
-                    </Badge>
-                  </div>
-                )}
+              <div className="resource-row">
+                <span className="resource-label">Доллары:</span>
+                <span className="resource-value">${dollars.toFixed(2)}</span>
               </div>
+              
+              {(usdt > 0 || showBuyCrypto || showBuyUsdt) && (
+                <div className="resource-row">
+                  <span className="resource-label">USDT:</span>
+                  <span className="resource-value">${usdt.toFixed(2)}</span>
+                </div>
+              )}
+              
+              {btc > 0 && (
+                <div className="resource-row">
+                  <span className="resource-label">BTC:</span>
+                  <span className="resource-value">{btc.toFixed(5)} BTC</span>
+                </div>
+              )}
+              
+              {stakedUsdt > 0 && (
+                <div className="resource-row">
+                  <span className="resource-label">Стейкинг:</span>
+                  <span className="resource-value">${stakedUsdt.toFixed(2)}</span>
+                </div>
+              )}
+              
+              {knowledge > 0 && (
+                <div className="resource-row">
+                  <span className="resource-label">Знания:</span>
+                  <span className="resource-value">{knowledge}</span>
+                </div>
+              )}
+              
+              {role && role !== 'none' && (
+                <div className="resource-row">
+                  <span className="resource-label">Роль:</span>
+                  <span className="resource-value">
+                    {role === 'investor' ? 'Инвестор' : 'Трейдер'}
+                  </span>
+                </div>
+              )}
             </div>
             
             {showTabs && (
-              <div className="mobile-tabs-sidebar">
+              <div className="mobile-tabs-area">
                 <TabsHeader
                   activeTab={activeTab}
                   setActiveTab={setActiveTab}

@@ -44,65 +44,86 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: rgba(26, 31, 44, 0.9);
+  background-color: rgba(26, 31, 44, 0.97);
   backdrop-filter: blur(5px);
+  padding-bottom: 5px;
 }
 
-/* Новый стиль для контейнера ресурсов и вкладок */
-.mobile-sidebar-container {
+/* Контейнер с ресурсами и вкладками */
+.mobile-header-container {
   display: flex;
   flex-direction: row;
   width: 100%;
   background-color: #1A1F2C;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  align-items: stretch;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Стиль для раздела с ресурсами */
+/* Ресурсы занимают левую часть */
 .mobile-resources-area {
-  width: 70%;
-  padding: 8px 6px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  width: 75%;
+  padding: 10px;
+  text-align: left;
 }
 
-/* Стиль для вкладок в сайдбаре */
-.mobile-tabs-sidebar {
-  width: 30%;
+/* Вкладки занимают правую часть */
+.mobile-tabs-area {
+  width: 25%;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  padding: 4px 2px;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  background-color: rgba(0, 0, 0, 0.1);
-  align-items: stretch;
-  justify-content: flex-start;
+  gap: 3px;
 }
 
-/* Стили для вкладок */
-.mobile-tab-button {
+/* Стили для строк с ресурсами */
+.resource-row {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-  padding: 4px;
-  font-size: 10px;
-  height: 24px;
-  margin-bottom: 2px;
-  border-radius: 4px;
-  text-align: left;
-  transition: all 0.2s;
+  margin-bottom: 5px;
 }
 
-.mobile-tab-button.active {
+.resource-label {
+  color: #8E9196;
+  font-size: 14px;
+  margin-right: 5px;
+  min-width: 80px;
+}
+
+.resource-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Стиль для кнопок вкладок */
+.tab-button {
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  padding: 5px;
+  border-radius: 4px;
+  background: transparent;
+  color: white;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 3px;
+  height: 24px;
+}
+
+.tab-button.active {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.mobile-tab-button:hover:not(.active) {
+.tab-button:hover:not(.active) {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Стиль для контейнера содержимого вкладки */
+.tab-icon {
+  margin-right: 4px;
+  font-size: 14px;
+}
+
 .tab-content-container {
   width: 100%;
   flex: 1;

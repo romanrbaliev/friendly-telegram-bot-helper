@@ -121,8 +121,33 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
     }
   ];
   
+  if (isMobile) {
+    return (
+      <div className="mobile-tabs-header">
+        <div className="mobile-tabs-row">
+          {tabs.filter(tab => tab.show).map(tab => (
+            <button
+              key={tab.id}
+              className={`mobile-tab-button ${activeTab === tab.id ? 'active-mobile-tab' : ''}`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <div className="mobile-tab-content">
+                <span className="mobile-tab-icon">
+                  {tab.icon}
+                  {tab.notification && <span className="mobile-notification-dot"></span>}
+                </span>
+                <span className="mobile-tab-text">{tab.text}</span>
+                {tab.badge}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  
   return (
-    <div className={`tabs-icons-container ${isMobile ? 'mobile-tabs' : ''}`}>
+    <div className="tabs-icons-container">
       {tabs.filter(tab => tab.show).map(tab => (
         <button
           key={tab.id}

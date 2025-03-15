@@ -40,56 +40,181 @@
   background-color: #1A1F2C;
 }
 
-/* Ресурсы и вкладки в мобильном режиме */
+/* Мобильный хедер */
 .mobile-header {
+  width: 100%;
+  background-color: rgba(26, 31, 44, 0.97);
+  display: flex;
+  flex-direction: column;
   position: sticky;
   top: 0;
   z-index: 10;
-  width: 100%;
-  background-color: rgba(26, 31, 44, 0.97);
-  backdrop-filter: blur(5px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
 }
 
 /* Секция с ресурсами */
 .resources-section {
-  padding: 8px 10px;
-  flex-grow: 1;
+  width: 100%;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.resources-header {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 8px;
   text-align: left;
+}
+
+.resources-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
 }
 
 /* Стили для строк с ресурсами */
 .resource-item {
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
-  font-size: 14px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.resource-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resource-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: white;
 }
 
 .resource-label {
-  color: #8E9196;
-  font-size: 14px;
-  margin-right: 5px;
+  color: white;
+  font-size: 16px;
 }
 
 .resource-value {
-  font-weight: 500;
+  font-weight: 600;
+  color: white;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Секция с вкладками */
-.tabs-section {
-  width: 48px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+.coin-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+}
+
+.usdt-icon {
+  background-color: #26A17B;
+}
+
+.btc-icon {
+  background-color: #F7931A;
+}
+
+.help-icon {
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.help-icon:hover {
+  color: white;
+}
+
+/* Мобильные табы */
+.mobile-tabs-header {
+  width: 100%;
+  overflow-x: auto;
+  padding: 8px 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-tabs-row {
+  display: flex;
+  flex-direction: row;
+  padding: 0 8px;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.mobile-tab-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-tab-button.active-mobile-tab {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.mobile-tab-button:hover:not(.active-mobile-tab) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-tab-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-tab-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-/* Контейнер иконок вкладок */
+.mobile-tab-text {
+  font-size: 14px;
+}
+
+.mobile-notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  height: 6px;
+  width: 6px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* Основной контейнер контента */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px;
+}
+
+/* Вертикальные табы (для десктопов) */
 .tabs-icons-container {
   display: flex;
   flex-direction: column;
@@ -98,12 +223,6 @@
   align-items: center;
 }
 
-/* Мобильные вкладки */
-.mobile-tabs {
-  padding: 8px 0;
-}
-
-/* Кнопка иконки вкладки */
 .tab-icon-button {
   display: flex;
   align-items: center;
@@ -132,7 +251,6 @@
   justify-content: center;
 }
 
-/* Точка уведомления */
 .notification-dot {
   position: absolute;
   top: 2px;
@@ -144,40 +262,7 @@
   animation: pulse 2s infinite;
 }
 
-/* Основной контейнер контента */
-.main-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 5px;
-}
-
-/* Для десктопа стили остаются прежними */
-.tab-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  font-size: 12px;
-  padding: 4px;
-  margin: 3px 0;
-  border-radius: 4px;
-  background: transparent;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.tab-button.active {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.tab-button:hover:not(.active) {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* Контейнер контента вкладок */
+/* Контент вкладок */
 .tab-content-container {
   width: 100%;
   flex: 1;
@@ -256,4 +341,19 @@
 
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
 }

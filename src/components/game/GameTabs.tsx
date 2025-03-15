@@ -29,10 +29,12 @@ const GameTabs: React.FC<GameTabsProps> = ({
   handleMarketChange,
   handlePrepareForEvent,
   showBuyCrypto,
+  showBuyUsdt,
   showStaking,
   role,
   handleLearnBasics,
-  clicks
+  clicks,
+  handleBuyUsdt
 }) => {
   const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
   const [miningAnimation, setMiningAnimation] = useState(false);
@@ -133,9 +135,11 @@ const GameTabs: React.FC<GameTabsProps> = ({
         marketMultiplier={marketMultiplier}
         showBuyCrypto={showBuyCrypto}
         showStaking={showStaking}
+        showBuyUsdt={showBuyUsdt}
         role={role}
         handleLearnBasics={handleLearnBasics}
         clicks={clicks}
+        handleBuyUsdt={handleBuyUsdt}
       />
     </Tabs>
   );

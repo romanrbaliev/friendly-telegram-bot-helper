@@ -34,9 +34,11 @@ interface TabsContentComponentProps {
   marketMultiplier: number;
   showBuyCrypto: boolean;
   showStaking: boolean;
+  showBuyUsdt: boolean;
   role: string | null;
   handleLearnBasics: () => void;
   clicks: number;
+  handleBuyUsdt?: (amount: number) => void;
 }
 
 const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
@@ -63,9 +65,11 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
   marketMultiplier,
   showBuyCrypto,
   showStaking,
+  showBuyUsdt,
   role,
   handleLearnBasics,
-  clicks
+  clicks,
+  handleBuyUsdt
 }) => {
   return (
     <>
@@ -80,8 +84,9 @@ const TabsContentComponent: React.FC<TabsContentComponentProps> = ({
           showBuyCrypto={showBuyCrypto}
           showStaking={showStaking}
           showEducation={showEducation}
-          showBuyUsdt={false} // Добавляем недостающий пропс
+          showBuyUsdt={showBuyUsdt}
           knowledge={knowledge}
+          handleBuyUsdt={handleBuyUsdt}
         />
       </TabsContent>
       

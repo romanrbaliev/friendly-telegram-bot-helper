@@ -23,8 +23,10 @@ export interface GameTabsProps {
   handleMarketChange: (multiplier: number) => void;
   handlePrepareForEvent: (cost: number) => void;
   showBuyCrypto: boolean;
+  showBuyUsdt: boolean;
   showStaking: boolean;
   role: string | null;
   handleLearnBasics: () => void;
   clicks: number;
+  handleBuyUsdt?: (amount: number) => void;
 }

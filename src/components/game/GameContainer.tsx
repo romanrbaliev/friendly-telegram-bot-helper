@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -10,6 +11,8 @@ import { useGameState } from '@/hooks/useGameState';
 import { useSaveGame } from '@/hooks/useSaveGame';
 import { useGameEffects } from '@/hooks/useGameEffects';
 import { toast } from '@/components/ui/use-toast';
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const GameContainer: React.FC = () => {
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
@@ -298,17 +301,35 @@ const GameContainer: React.FC = () => {
   // Проверяем, нужно ли показывать табы
   const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents || showStaking;
 
+  // Функция для возврата из стейкинга в основной интерфейс
+  const handleBackFromStaking = () => {
+    setActiveTab('main');
+  };
+
   // Определяем контент вкладки
   const renderTabContent = () => {
     if (activeTab === 'staking') {
       return (
-        <StakingTab 
-          usdt={usdt}
-          stakedUsdt={stakedUsdt}
-          onStake={handleStake}
-          onWithdraw={handleWithdraw}
-          role={role}
-        />
+        <div>
+          <div className="mb-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleBackFromStaking}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft size={16} />
+              Назад
+            </Button>
+          </div>
+          <StakingTab 
+            usdt={usdt}
+            stakedUsdt={stakedUsdt}
+            onStake={handleStake}
+            onWithdraw={handleWithdraw}
+            role={role}
+          />
+        </div>
       );
     }
     
@@ -337,10 +358,12 @@ const GameContainer: React.FC = () => {
         handleMarketChange={handleMarketChange}
         handlePrepareForEvent={handlePrepareForEvent}
         showBuyCrypto={showBuyCrypto}
+        showBuyUsdt={showBuyUsdt}
         showStaking={showStaking}
         role={role}
         handleLearnBasics={handleLearnBasics}
         clicks={clicks}
+        handleBuyUsdt={handleBuyUsdt}
       />
     );
   };

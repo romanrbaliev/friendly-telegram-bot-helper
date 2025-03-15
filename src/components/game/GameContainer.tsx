@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -10,8 +11,6 @@ import { useGameState } from '@/hooks/useGameState';
 import { useSaveGame } from '@/hooks/useSaveGame';
 import { useGameEffects } from '@/hooks/useGameEffects';
 import { toast } from '@/components/ui/use-toast';
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 
 const GameContainer: React.FC = () => {
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
@@ -298,17 +297,16 @@ const GameContainer: React.FC = () => {
   };
   
   // Новый обработчик для покупки USDT на фиксированную сумму
-  const handleBuyUsdtFixed = () => {
+  const handleBuyUsdtFixed = (amount: number = 10) => {
     console.log("handleBuyUsdtFixed вызван, текущий баланс: $", dollars);
-    const fixedAmount = 10; // Покупаем на 10$
     
-    if (dollars >= fixedAmount) {
-      handleBuyUsdt(fixedAmount);
+    if (dollars >= amount) {
+      handleBuyUsdt(amount);
     } else {
       console.log("Недостаточно средств для покупки USDT");
       toast({
         title: "Недостаточно средств",
-        description: `Нужно $${fixedAmount} для покупки USDT`,
+        description: `Нужно $${amount} для покупки USDT`,
         duration: 3000
       });
     }
@@ -316,60 +314,6 @@ const GameContainer: React.FC = () => {
 
   // Проверяем, нужно ли показывать табы
   const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents || showStaking;
-
-  // Функция для возврата из стейкинга в основной интерфейс
-  const handleBackFromStaking = () => {
-    setActiveTab('main');
-  };
-
-  // Определяем контент вкладки
-  const renderTabContent = () => {
-    if (activeTab === 'staking') {
-      return (
-        <StakingTab 
-          usdt={usdt}
-          stakedUsdt={stakedUsdt}
-          onStake={handleStake}
-          onWithdraw={handleWithdraw}
-          role={role}
-        />
-      );
-    }
-    
-    return (
-      <GameTabs 
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        showTrading={showTrading}
-        showEducation={showEducation}
-        showMining={showMining}
-        showCareer={showCareer}
-        showMarketEvents={showMarketEvents}
-        dollars={dollars}
-        usdt={usdt}
-        btc={btc}
-        knowledge={knowledge}
-        marketMultiplier={marketMultiplier}
-        miningPower={miningPower}
-        handleSaveDollar={handleSaveDollar}
-        handleBuyCrypto={handleBuyCrypto}
-        handleStaking={handleStakingActivation}
-        handleTrade={handleTrade}
-        handleLearn={handleLearnMarket}
-        handlePurchaseRig={handlePurchaseRig}
-        handleSelectRole={handleSelectRole}
-        handleMarketChange={handleMarketChange}
-        handlePrepareForEvent={handlePrepareForEvent}
-        showBuyCrypto={showBuyCrypto}
-        showBuyUsdt={showBuyUsdt}
-        showStaking={showStaking}
-        role={role}
-        handleLearnBasics={handleLearnBasics}
-        clicks={clicks}
-        handleBuyUsdt={handleBuyUsdt}
-      />
-    );
-  };
 
   return (
     <div className="min-h-screen bg-[#1A1F2C] text-white p-4 flex flex-col">

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ActionButton from './ActionButton';
-import { DollarSign, GraduationCap, ArrowUpRight, Shield, DollarSignIcon } from 'lucide-react';
+import { DollarSign, GraduationCap, ArrowUpRight } from 'lucide-react';
 import BuyUSDT from './BuyUSDT';
 import HintPopup from './HintPopup';
 
@@ -100,21 +100,6 @@ const MainActions: React.FC<MainActionsProps> = ({
                 <div className="flex items-center justify-center gap-2">
                   <span className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center text-[10px] font-bold text-white">₮</span>
                   <span>Купить USDT</span>
-                </div>
-              </ActionButton>
-            </div>
-          )}
-
-          {showStaking && (
-            <div>
-              <ActionButton 
-                onClick={handleStaking}
-                disabled={dollars < 100}
-                tooltip={dollars < 100 ? "Недостаточно средств" : "Активировать фоновый стейкинг за $100"}
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <Shield size={18} className="text-purple-400" />
-                  <span>Фоновый стейкинг</span>
                 </div>
               </ActionButton>
             </div>

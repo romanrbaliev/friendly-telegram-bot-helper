@@ -83,14 +83,14 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
   };
 
   return (
-    <div className="glass-morphism p-4 rounded-lg mb-6 animate-fade-in">
-      <h2 className="text-lg font-semibold mb-3 text-white border-b border-white/10 pb-2">
+    <div className="glass-morphism p-2 rounded-lg animate-fade-in sticky top-0 z-10 text-xs">
+      <h2 className="text-sm font-semibold mb-1 text-white border-b border-white/10 pb-1">
         Ресурсы
       </h2>
-      <div className="space-y-2">
+      <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <DollarSign size={18} className="text-green-400" />
+          <div className="flex items-center gap-1">
+            <DollarSign size={14} className="text-green-400" />
             <span className="text-gray-200">Наличные:</span>
           </div>
           <span className="font-mono text-white">${displayDollars.toFixed(2)}</span>
@@ -98,8 +98,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         
         {showUsdt && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center text-[10px] font-bold text-white">₮</div>
+            <div className="flex items-center gap-1">
+              <div className="w-4 h-4 rounded-full bg-[#26A17B] flex items-center justify-center text-[8px] font-bold text-white">₮</div>
               <span className="text-gray-200">USDT:</span>
             </div>
             <span className="font-mono text-white">{displayUsdt.toFixed(2)}</span>
@@ -108,8 +108,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         
         {showBtc && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full bg-[#F7931A] flex items-center justify-center text-[10px] font-bold text-white">₿</div>
+            <div className="flex items-center gap-1">
+              <div className="w-4 h-4 rounded-full bg-[#F7931A] flex items-center justify-center text-[8px] font-bold text-white">₿</div>
               <span className="text-gray-200">Bitcoin:</span>
             </div>
             <span className="font-mono text-white">{displayBtc.toFixed(8)}</span>
@@ -118,8 +118,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         
         {showStaking && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center text-[10px] font-bold text-white">₮</div>
+            <div className="flex items-center gap-1">
+              <div className="w-4 h-4 rounded-full bg-[#26A17B] flex items-center justify-center text-[8px] font-bold text-white">₮</div>
               <span className="text-gray-200">Стейкинг:</span>
             </div>
             <span className="font-mono text-white">{displayStakedUsdt.toFixed(2)}</span>
@@ -128,8 +128,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
 
         {showKnowledge && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-2">
-              <GraduationCap size={18} className="text-blue-400" />
+            <div className="flex items-center gap-1">
+              <GraduationCap size={14} className="text-blue-400" />
               <span className="text-gray-200">Знания:</span>
             </div>
             <span className="font-mono text-white">{knowledge}%</span>
@@ -137,9 +137,9 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         )}
 
         {role && (
-          <div className="flex items-center justify-between animate-fade-up mt-2 pt-2 border-t border-white/10">
-            <div className="flex items-center gap-2">
-              <Briefcase size={18} className="text-purple-400" />
+          <div className="flex items-center justify-between animate-fade-up mt-1 pt-1 border-t border-white/10">
+            <div className="flex items-center gap-1">
+              <Briefcase size={14} className="text-purple-400" />
               <span className="text-gray-200">Карьера:</span>
             </div>
             <span className="font-mono text-white">{getRoleName(role)}</span>

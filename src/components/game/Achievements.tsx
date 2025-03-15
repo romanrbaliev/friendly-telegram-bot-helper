@@ -1,21 +1,9 @@
 
 import React from 'react';
-import { Medal, Star, Trophy, Award, Zap } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { Trophy, Lightbulb, Bitcoin, DollarSign, MousePointer } from 'lucide-react';
 
-interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  currentValue: number;
-  targetValue: number;
-  icon: React.ReactNode;
-  category: 'клики' | 'финансы' | 'обучение' | 'майнинг';
-  completed: boolean;
-}
-
-interface AchievementsProps {
+interface AchievementProps {
   clickCount: number;
   dollars: number;
   knowledge: number;
@@ -23,199 +11,183 @@ interface AchievementsProps {
   btc: number;
 }
 
-const Achievements: React.FC<AchievementsProps> = ({
-  clickCount,
-  dollars,
-  knowledge,
+interface AchievementItemProps {
+  title: string;
+  description: string;
+  current: number;
+  target: number;
+  icon: React.ReactNode;
+  completed: boolean;
+}
+
+const AchievementItem: React.FC<AchievementItemProps> = ({ 
+  title, 
+  description, 
+  current, 
+  target, 
+  icon,
+  completed
+}) => {
+  const progress = Math.min(100, (current / target) * 100);
+  
+  return (
+    <div className={`border rounded-lg p-4 ${completed ? 'bg-green-900/20 border-green-500/40' : 'bg-gray-900/40 border-gray-700'}`}>
+      <div className="flex items-center mb-2">
+        <div className={`p-2 rounded-md ${completed ? 'bg-green-900/30 text-green-500' : 'bg-gray-800 text-gray-400'}`}>
+          {icon}
+        </div>
+        <div className="ml-3">
+          <h3 className={`font-medium ${completed ? 'text-green-400' : 'text-gray-200'}`}>{title}</h3>
+          <p className="text-sm text-gray-400">{description}</p>
+        </div>
+        {completed && (
+          <div className="ml-auto">
+            <span className="bg-green-600/20 text-green-400 text-xs px-2 py-1 rounded-full">Выполнено!</span>
+          </div>
+        )}
+      </div>
+      
+      <div className="mt-3">
+        <div className="flex justify-between text-xs mb-1">
+          <span>{current} / {target}</span>
+          <span>{progress.toFixed(0)}%</span>
+        </div>
+        <Progress value={progress} className={`h-1.5 ${completed ? 'bg-green-950' : 'bg-gray-800'}`} />
+      </div>
+    </div>
+  );
+};
+
+const Achievements: React.FC<AchievementProps> = ({ 
+  clickCount, 
+  dollars, 
+  knowledge, 
   miningPower,
   btc
 }) => {
-  // Определяем достижения на основе текущего прогресса
-  const achievements: Achievement[] = [
+  const achievements = [
+    // Кликер
     {
-      id: 'clicks_10',
-      title: 'Начинающий кликер',
-      description: 'Сделайте 10 кликов',
-      currentValue: Math.min(clickCount, 10),
-      targetValue: 10,
-      icon: <Medal className="text-amber-400" size={18} />,
-      category: 'клики',
+      title: "Начинающий кликер",
+      description: "Сделайте 10 кликов",
+      current: clickCount,
+      target: 10,
+      icon: <MousePointer size={16} />,
       completed: clickCount >= 10
     },
     {
-      id: 'clicks_50',
-      title: 'Опытный кликер',
-      description: 'Сделайте 50 кликов',
-      currentValue: Math.min(clickCount, 50),
-      targetValue: 50,
-      icon: <Medal className="text-amber-400" size={18} />,
-      category: 'клики',
-      completed: clickCount >= 50
-    },
-    {
-      id: 'clicks_100',
-      title: 'Мастер кликер',
-      description: 'Сделайте 100 кликов',
-      currentValue: Math.min(clickCount, 100),
-      targetValue: 100,
-      icon: <Medal className="text-amber-400" size={18} />,
-      category: 'клики',
+      title: "Опытный кликер",
+      description: "Сделайте 100 кликов",
+      current: clickCount,
+      target: 100,
+      icon: <MousePointer size={16} />,
       completed: clickCount >= 100
     },
     {
-      id: 'dollars_50',
-      title: 'Первый капитал',
-      description: 'Накопите $50',
-      currentValue: Math.min(dollars, 50),
-      targetValue: 50,
-      icon: <Star className="text-green-400" size={18} />,
-      category: 'финансы',
-      completed: dollars >= 50
+      title: "Кликер-профессионал",
+      description: "Сделайте 1000 кликов",
+      current: clickCount,
+      target: 1000,
+      icon: <MousePointer size={16} />,
+      completed: clickCount >= 1000
     },
+    
+    // Финансы
     {
-      id: 'dollars_100',
-      title: 'Растущий капитал',
-      description: 'Накопите $100',
-      currentValue: Math.min(dollars, 100),
-      targetValue: 100,
-      icon: <Star className="text-green-400" size={18} />,
-      category: 'финансы',
+      title: "Первый капитал",
+      description: "Заработайте $100",
+      current: dollars,
+      target: 100,
+      icon: <DollarSign size={16} />,
       completed: dollars >= 100
     },
     {
-      id: 'dollars_500',
-      title: 'Серьёзный инвестор',
-      description: 'Накопите $500',
-      currentValue: Math.min(dollars, 500),
-      targetValue: 500,
-      icon: <Trophy className="text-green-400" size={18} />,
-      category: 'финансы',
-      completed: dollars >= 500
+      title: "Инвестор",
+      description: "Заработайте $1000",
+      current: dollars,
+      target: 1000,
+      icon: <DollarSign size={16} />,
+      completed: dollars >= 1000
     },
     {
-      id: 'knowledge_10',
-      title: 'Криптоэнтузиаст',
-      description: 'Достигните 10 знаний о криптовалютах',
-      currentValue: Math.min(knowledge, 10),
-      targetValue: 10,
-      icon: <Award className="text-blue-400" size={18} />,
-      category: 'обучение',
-      completed: knowledge >= 10
+      title: "Бизнесмен",
+      description: "Заработайте $10000",
+      current: dollars,
+      target: 10000,
+      icon: <DollarSign size={16} />,
+      completed: dollars >= 10000
+    },
+    
+    // Знания
+    {
+      title: "Новичок в крипте",
+      description: "Получите 5 знаний",
+      current: knowledge,
+      target: 5,
+      icon: <Lightbulb size={16} />,
+      completed: knowledge >= 5
     },
     {
-      id: 'knowledge_30',
-      title: 'Криптоэксперт',
-      description: 'Достигните 30 знаний о криптовалютах',
-      currentValue: Math.min(knowledge, 30),
-      targetValue: 30,
-      icon: <Award className="text-blue-400" size={18} />,
-      category: 'обучение',
-      completed: knowledge >= 30
+      title: "Криптоэнтузиаст",
+      description: "Получите 20 знаний",
+      current: knowledge,
+      target: 20,
+      icon: <Lightbulb size={16} />,
+      completed: knowledge >= 20
     },
     {
-      id: 'knowledge_50',
-      title: 'Криптогуру',
-      description: 'Достигните 50 знаний о криптовалютах',
-      currentValue: Math.min(knowledge, 50),
-      targetValue: 50,
-      icon: <Award className="text-blue-400" size={18} />,
-      category: 'обучение',
+      title: "Криптоэксперт",
+      description: "Получите 50 знаний",
+      current: knowledge,
+      target: 50,
+      icon: <Lightbulb size={16} />,
       completed: knowledge >= 50
     },
+    
+    // Майнинг
     {
-      id: 'mining_1',
-      title: 'Начинающий майнер',
-      description: 'Получите первую мощность майнинга',
-      currentValue: Math.min(miningPower, 1),
-      targetValue: 1,
-      icon: <Zap className="text-purple-400" size={18} />,
-      category: 'майнинг',
-      completed: miningPower >= 1
-    },
-    {
-      id: 'mining_5',
-      title: 'Продвинутый майнер',
-      description: 'Достигните 5 мощности майнинга',
-      currentValue: Math.min(miningPower, 5),
-      targetValue: 5,
-      icon: <Zap className="text-purple-400" size={18} />,
-      category: 'майнинг',
-      completed: miningPower >= 5
-    },
-    {
-      id: 'mining_10',
-      title: 'Майнинг-ферма',
-      description: 'Достигните 10 мощности майнинга',
-      currentValue: Math.min(miningPower, 10),
-      targetValue: 10,
-      icon: <Zap className="text-purple-400" size={18} />,
-      category: 'майнинг',
+      title: "Домашний майнер",
+      description: "Достигните мощности майнинга 10",
+      current: miningPower,
+      target: 10,
+      icon: <Trophy size={16} />,
       completed: miningPower >= 10
     },
+    {
+      title: "Фермер",
+      description: "Достигните мощности майнинга 50",
+      current: miningPower,
+      target: 50,
+      icon: <Trophy size={16} />,
+      completed: miningPower >= 50
+    },
+    {
+      title: "Крипто-магнат",
+      description: "Накопите 0.1 BTC",
+      current: btc,
+      target: 0.1,
+      icon: <Bitcoin size={16} />,
+      completed: btc >= 0.1
+    }
   ];
-
-  // Группируем достижения по категориям
-  const categories = {
-    'клики': achievements.filter(a => a.category === 'клики'),
-    'финансы': achievements.filter(a => a.category === 'финансы'),
-    'обучение': achievements.filter(a => a.category === 'обучение'),
-    'майнинг': achievements.filter(a => a.category === 'майнинг'),
-  };
-
-  // Считаем общий прогресс достижений
-  const completedAchievements = achievements.filter(a => a.completed).length;
+  
+  const completedCount = achievements.filter(a => a.completed).length;
   const totalAchievements = achievements.length;
-  const achievementProgress = (completedAchievements / totalAchievements) * 100;
-
+  const achievementProgress = (completedCount / totalAchievements) * 100;
+  
   return (
-    <div className="glass-morphism p-4 rounded-lg space-y-4">
-      <div className="mb-4">
+    <div className="space-y-4">
+      <div className="bg-gray-800/60 rounded-lg p-4 mb-6">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold text-white">Достижения</h2>
-          <Badge variant="outline" className="text-xs font-medium">
-            {completedAchievements}/{totalAchievements}
-          </Badge>
+          <h2 className="text-xl font-bold text-gradient">Достижения</h2>
+          <span className="text-sm text-gray-400">{completedCount} из {totalAchievements}</span>
         </div>
-        <Progress value={achievementProgress} className="h-2" />
+        <Progress value={achievementProgress} className="h-2 bg-gray-700" />
       </div>
-
-      <div className="space-y-5">
-        {Object.entries(categories).map(([category, categoryAchievements]) => (
-          <div key={category} className="space-y-2">
-            <h3 className="text-md font-medium text-white/90 border-b border-white/10 pb-1">
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </h3>
-            <div className="space-y-3">
-              {categoryAchievements.map((achievement) => (
-                <div 
-                  key={achievement.id} 
-                  className={`p-2 rounded-lg ${achievement.completed 
-                    ? 'bg-white/10' 
-                    : 'bg-white/5'}`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-2">
-                      {achievement.icon}
-                      <span className="font-medium text-sm">
-                        {achievement.title}
-                      </span>
-                    </div>
-                    <Badge 
-                      variant={achievement.completed ? "success" : "outline"} 
-                      className="text-xs"
-                    >
-                      {achievement.currentValue}/{achievement.targetValue}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-gray-400 mb-1">{achievement.description}</p>
-                  <Progress 
-                    value={(achievement.currentValue / achievement.targetValue) * 100} 
-                    className="h-1" 
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {achievements.map((achievement, index) => (
+          <AchievementItem key={index} {...achievement} />
         ))}
       </div>
     </div>

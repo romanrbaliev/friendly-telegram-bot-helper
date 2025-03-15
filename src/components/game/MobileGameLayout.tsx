@@ -91,8 +91,8 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
   return (
     <div className="game-layout bg-[#1A1F2C]">
       {showResources && (
-        <div className="tabs-resources-container">
-          <div className="resources-section bg-[#1A1F2C] p-2">
+        <div className="sidebar-container">
+          <div className="resources-area">
             <ResourceDisplay 
               dollars={dollars} 
               usdt={usdt} 
@@ -108,7 +108,7 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
           </div>
           
           {showTabs && showResources && (
-            <div className="tabs-section">
+            <div className="tabs-sidebar">
               <TabsHeader 
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}

@@ -48,18 +48,40 @@
   backdrop-filter: blur(5px);
 }
 
-/* Новый стиль для контейнера вкладок и ресурсов */
+/* Стиль для контейнера вкладок и ресурсов */
 .tabs-resources-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
-  margin-bottom: 10px;
 }
 
-/* Новый стиль для контейнера содержимого вкладки */
+/* Стиль для контейнера сайдбара с вкладками */
+.sidebar-container {
+  display: flex;
+  width: 100%;
+  background-color: #1A1F2C;
+}
+
+/* Стиль для раздела с ресурсами */
+.resources-area {
+  width: 100%;
+  padding: 10px;
+}
+
+/* Стиль для вкладок в сайдбаре */
+.tabs-sidebar {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+/* Стиль для контейнера содержимого вкладки */
 .tab-content-container {
   width: 100%;
   flex: 1;
+  padding: 0 5px;
 }
 
 .main-container {
@@ -76,13 +98,11 @@
 }
 
 .tabs-section {
-  width: 110px;
-  min-width: 110px;
+  width: 100%;
   padding: 0.5rem 0.25rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-left: 5px;
+  align-items: flex-start;
 }
 
 .glass-morphism {

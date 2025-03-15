@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
@@ -93,25 +92,23 @@ const GameTabs: React.FC<GameTabsProps> = ({
   
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <div className="flex flex-row space-x-4">
-        <div className="w-40">
-          <TabsHeader 
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            showTrading={showTrading}
-            showEducation={showEducation}
-            showMining={showMining}
-            showCareer={showCareer}
-            showMarketEvents={showMarketEvents}
-            miningPower={miningPower}
-            hasNewMarketEvent={hasNewMarketEvent}
-            miningAnimation={miningAnimation}
-            marketMultiplier={marketMultiplier}
-          />
-        </div>
+      <div className="flex flex-col h-full">
+        <TabsHeader 
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          showTrading={showTrading}
+          showEducation={showEducation}
+          showMining={showMining}
+          showCareer={showCareer}
+          showMarketEvents={showMarketEvents}
+          miningPower={miningPower}
+          hasNewMarketEvent={hasNewMarketEvent}
+          miningAnimation={miningAnimation}
+          marketMultiplier={marketMultiplier}
+        />
       </div>
       
-      <div className="w-full mt-4">
+      <div className="absolute left-0 w-full mt-4">
         <TabsContentComponent 
           activeTab={activeTab}
           dollars={dollars}

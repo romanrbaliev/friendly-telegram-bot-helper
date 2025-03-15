@@ -4,7 +4,6 @@ import ResourceDisplay from './ResourceDisplay';
 import GameTabs from './GameTabs';
 import MainActions from './MainActions';
 import StakingTab from './StakingTab';
-import TabsContentComponent from './TabsContent';
 
 interface MobileGameLayoutProps {
   showResources: boolean;
@@ -111,7 +110,7 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
       <div className="flex flex-col md:flex-row flex-1 gap-2 p-2">
         {/* Основной контент слева/снизу */}
         <div className="flex-1 order-2 md:order-1">
-          {!showTabs ? (
+          {(!showTabs || !showResources) && (
             <MainActions 
               dollars={dollars}
               usdt={usdt}
@@ -130,44 +129,15 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
               onCloseHint={handleCloseHint}
               currentFeature={currentFeature}
             />
-          ) : activeTab === 'staking' ? (
+          )}
+          
+          {activeTab === 'staking' && showTabs && (
             <StakingTab 
               usdt={usdt}
               stakedUsdt={stakedUsdt}
               onStake={handleStake}
               onWithdraw={handleWithdraw}
               role={role}
-            />
-          ) : (
-            <TabsContentComponent 
-              activeTab={activeTab}
-              dollars={dollars}
-              usdt={usdt}
-              btc={btc}
-              knowledge={knowledge}
-              miningPower={miningPower}
-              showTrading={showTrading}
-              showEducation={showEducation}
-              showMining={showMining}
-              showCareer={showCareer}
-              showMarketEvents={showMarketEvents}
-              handleSaveDollar={handleSaveDollar}
-              handleBuyCrypto={handleBuyCrypto}
-              handleStaking={handleStakingWrapper}
-              handleTrade={handleTrade}
-              handleLearn={handleLearnMarket}
-              handlePurchaseRig={handlePurchaseRig}
-              handleSelectRole={handleSelectRole}
-              handleMarketChange={handleMarketChange}
-              handlePrepareForEvent={handlePrepareForEvent}
-              marketMultiplier={marketMultiplier}
-              showBuyCrypto={showBuyCrypto}
-              showStaking={showStaking}
-              showBuyUsdt={showBuyUsdt}
-              role={role}
-              handleLearnBasics={handleLearnBasics}
-              clicks={clicks}
-              handleBuyUsdt={handleBuyUsdtWrapper}
             />
           )}
         </div>

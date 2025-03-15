@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, Medal, TrendingUp, Shield } from 'lucide-react';
@@ -32,78 +33,125 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
 }) => {
   const isBullMarket = marketMultiplier > 1;
   
+  // Разделяем вкладки на два ряда
+  const firstRowTabs = [
+    { 
+      id: 'main', 
+      show: true, 
+      icon: <DollarSign size={12} />, 
+      text: 'Основное',
+      badge: null,
+      animation: false,
+      notification: false
+    },
+    { 
+      id: 'trading', 
+      show: showTrading, 
+      icon: <ArrowUpDown size={12} />, 
+      text: 'Трейдинг',
+      badge: null,
+      animation: false,
+      notification: false
+    },
+    { 
+      id: 'education', 
+      show: showEducation, 
+      icon: <GraduationCap size={12} />, 
+      text: 'Обучение',
+      badge: null,
+      animation: false,
+      notification: false
+    },
+    { 
+      id: 'mining', 
+      show: showMining, 
+      icon: <HardDrive size={12} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
+      text: 'Майнинг',
+      badge: miningPower > 0 ? (
+        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-auto text-xs py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
+          {miningPower}
+        </Badge>
+      ) : null,
+      animation: miningAnimation,
+      notification: false
+    }
+  ];
+  
+  const secondRowTabs = [
+    { 
+      id: 'career', 
+      show: showCareer, 
+      icon: <Briefcase size={12} />, 
+      text: 'Карьера',
+      badge: null,
+      animation: false,
+      notification: false
+    },
+    { 
+      id: 'market', 
+      show: showMarketEvents, 
+      icon: isBullMarket ? (
+        <TrendingUp size={12} className="text-green-500" />
+      ) : (
+        <BarChart4 size={12} />
+      ), 
+      text: isBullMarket ? "Бычий рынок!" : "Рынок",
+      badge: isBullMarket ? (
+        <Badge variant="success" className="ml-auto text-xs py-0 px-1 animate-pulse">
+          +{((marketMultiplier - 1) * 100).toFixed(0)}%
+        </Badge>
+      ) : null,
+      animation: isBullMarket,
+      notification: hasNewMarketEvent && !isBullMarket
+    },
+    { 
+      id: 'staking', 
+      show: true, 
+      icon: <Shield size={12} />, 
+      text: 'Стейкинг',
+      badge: null,
+      animation: false,
+      notification: false
+    },
+    { 
+      id: 'achievements', 
+      show: true, 
+      icon: <Medal size={12} />, 
+      text: 'Ачивки',
+      badge: null,
+      animation: false,
+      notification: false
+    }
+  ];
+  
+  const renderTabRow = (tabs: any[]) => {
+    return tabs.filter(tab => tab.show).map(tab => (
+      <TabsTrigger 
+        key={tab.id}
+        value={tab.id} 
+        className={`flex items-center justify-start gap-1 p-1 text-xs h-8 ${tab.animation ? 'animate-pulse' : ''} relative`}
+      >
+        {tab.icon}
+        <span className="text-xs">{tab.text}</span>
+        {tab.badge}
+        {tab.notification && (
+          <span className="absolute top-1 left-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
+        )}
+      </TabsTrigger>
+    ));
+  };
+  
   return (
     <div className="flex-grow animate-fade-in w-full">
-      <TabsList className="grid grid-cols-2 gap-1 w-full">
-        <TabsTrigger value="main" className="flex items-center justify-start gap-1 p-1 text-xs h-8">
-          <DollarSign size={12} />
-          <span className="text-xs">Основное</span>
-        </TabsTrigger>
+      <div className="flex flex-col gap-1">
+        <TabsList className="grid grid-cols-2 gap-1 w-full">
+          {renderTabRow(firstRowTabs)}
+        </TabsList>
         
-        {showTrading && (
-          <TabsTrigger value="trading" className="flex items-center justify-start gap-1 p-1 text-xs h-8">
-            <ArrowUpDown size={12} />
-            <span className="text-xs">Трейдинг</span>
-          </TabsTrigger>
-        )}
-        
-        {showEducation && (
-          <TabsTrigger value="education" className="flex items-center justify-start gap-1 p-1 text-xs h-8">
-            <GraduationCap size={12} />
-            <span className="text-xs">Обучение</span>
-          </TabsTrigger>
-        )}
-        
-        {showMining && (
-          <TabsTrigger value="mining" className={`flex items-center justify-start gap-1 p-1 text-xs h-8 ${miningAnimation ? 'animate-pulse' : ''}`}>
-            <HardDrive size={12} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />
-            <span className="text-xs">Майнинг</span>
-            {miningPower > 0 && (
-              <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-auto text-xs py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
-                {miningPower}
-              </Badge>
-            )}
-          </TabsTrigger>
-        )}
-        
-        {showCareer && (
-          <TabsTrigger value="career" className="flex items-center justify-start gap-1 p-1 text-xs h-8">
-            <Briefcase size={12} />
-            <span className="text-xs">Карьера</span>
-          </TabsTrigger>
-        )}
-        
-        {showMarketEvents && (
-          <TabsTrigger value="market" className={`flex items-center justify-start gap-1 p-1 text-xs h-8 relative ${isBullMarket ? 'animate-pulse' : ''}`}>
-            {isBullMarket ? (
-              <TrendingUp size={12} className="text-green-500" />
-            ) : (
-              <BarChart4 size={12} />
-            )}
-            <span className="text-xs">
-              {isBullMarket ? "Бычий рынок!" : "Рынок"}
-            </span>
-            {hasNewMarketEvent && !isBullMarket && (
-              <span className="absolute top-1 left-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
-            )}
-            {isBullMarket && (
-              <Badge variant="success" className="ml-auto text-xs py-0 px-1 animate-pulse">
-                +{((marketMultiplier - 1) * 100).toFixed(0)}%
-              </Badge>
-            )}
-          </TabsTrigger>
-        )}
-        
-        <TabsTrigger value="staking" className="flex items-center justify-start gap-1 p-1 text-xs h-8">
-          <Shield size={12} />
-          <span className="text-xs">Стейкинг</span>
-        </TabsTrigger>
-        
-        <TabsTrigger value="achievements" className="flex items-center justify-start gap-1 p-1 text-xs h-8">
-          <Medal size={12} />
-          <span className="text-xs">Ачивки</span>
-        </TabsTrigger>
-      </TabsList>
+        <TabsList className="grid grid-cols-2 gap-1 w-full">
+          {renderTabRow(secondRowTabs)}
+        </TabsList>
+      </div>
     </div>
   );
 };

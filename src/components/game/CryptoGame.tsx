@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -379,5 +380,23 @@ const CryptoGame: React.FC = () => {
               role={role}
               handleLearnBasics={handleLearnBasics}
               miningPower={miningPower}
+            />
+          ) : (
+            <MainActions 
+              dollars={dollars}
+              knowledge={knowledge}
+              showBuyCrypto={showBuyCrypto}
+              showStaking={showStaking}
+              handleSaveDollar={handleSaveDollar}
+              handleBuyCrypto={handleBuyCrypto}
+              handleStaking={handleStaking}
+              handleLearnBasics={handleLearnBasics}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-
+export default CryptoGame;

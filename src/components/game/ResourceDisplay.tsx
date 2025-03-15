@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { DollarSign, GraduationCap, Briefcase, HelpCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -56,10 +55,6 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         if (stakedUsdt > 0) {
           const usdtIncrement = stakedUsdt * totalApy / (365 * 24 * 36000); // APY yearly return per 100ms
           setDisplayUsdt(prev => prev + usdtIncrement);
-          
-          // Also animate the staked USDT with a minimal visual increment
-          const stakedIncrement = stakedUsdt * 0.001 / (365 * 24 * 36000); // Visual increment
-          setDisplayStakedUsdt(prev => prev + stakedIncrement);
         }
         
         // If we have btc, update that too (assuming mining updates)

@@ -2,11 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import CryptoGame from '@/components/game/CryptoGame';
 import { Toaster } from "@/components/ui/toaster";
-import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const isMobile = useIsMobile();
   
   useEffect(() => {
     // Имитация загрузки данных
@@ -18,7 +16,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen bg-[#1A1F2C] ${isMobile ? 'p-0' : ''}`}>
+    <div className="min-h-screen bg-[#1A1F2C]">
       {isLoading ? (
         <div className="h-screen flex items-center justify-center">
           <div className="text-center">

@@ -1,8 +1,8 @@
 
 import React from 'react';
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, Medal, TrendingUp, Shield } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TabsHeaderProps {
   activeTab: string;
@@ -31,130 +31,85 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   miningAnimation = false,
   marketMultiplier = 1
 }) => {
+  // Вместо единого ряда вкладок, разделим их на два ряда
   const isBullMarket = marketMultiplier > 1;
-  const isMobile = useIsMobile();
-  
-  const tabs = [
-    { 
-      id: 'main', 
-      show: true, 
-      icon: <DollarSign size={18} />, 
-      text: 'Основное',
-      badge: null,
-      animation: false,
-      notification: false
-    },
-    { 
-      id: 'trading', 
-      show: showTrading, 
-      icon: <ArrowUpDown size={18} />, 
-      text: 'Трейдинг',
-      badge: null,
-      animation: false,
-      notification: false
-    },
-    { 
-      id: 'education', 
-      show: showEducation, 
-      icon: <GraduationCap size={18} />, 
-      text: 'Образование',
-      badge: null,
-      animation: false,
-      notification: false
-    },
-    { 
-      id: 'mining', 
-      show: showMining, 
-      icon: <HardDrive size={18} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
-      text: 'Майнинг',
-      badge: miningPower > 0 ? (
-        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-[7px] py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
-          {miningPower}
-        </Badge>
-      ) : null,
-      animation: miningAnimation,
-      notification: false
-    },
-    { 
-      id: 'career', 
-      show: showCareer, 
-      icon: <Briefcase size={18} />, 
-      text: 'Карьера',
-      badge: null,
-      animation: false,
-      notification: false
-    },
-    { 
-      id: 'market', 
-      show: showMarketEvents, 
-      icon: isBullMarket ? (
-        <TrendingUp size={18} className="text-green-500" />
-      ) : (
-        <BarChart4 size={18} />
-      ), 
-      text: isBullMarket ? "Бычий рынок" : "События рынка",
-      badge: isBullMarket ? (
-        <Badge variant="success" className="ml-1 text-[7px] py-0 px-1 animate-pulse">
-          +{((marketMultiplier - 1) * 100).toFixed(0)}%
-        </Badge>
-      ) : null,
-      animation: isBullMarket,
-      notification: hasNewMarketEvent && !isBullMarket
-    },
-    { 
-      id: 'staking', 
-      show: true, 
-      icon: <Shield size={18} />, 
-      text: 'Стейкинг',
-      badge: null,
-      animation: false,
-      notification: false
-    },
-    { 
-      id: 'achievements', 
-      show: true, 
-      icon: <Medal size={18} />, 
-      text: 'Достижения',
-      badge: null,
-      animation: false,
-      notification: false
-    }
-  ];
-  
-  if (isMobile) {
-    return (
-      <div className="mobile-tabs-header">
-        <div className="mobile-tabs-grid">
-          {tabs.filter(tab => tab.show).map(tab => (
-            <button
-              key={tab.id}
-              className={`mobile-tab-text-button ${activeTab === tab.id ? 'active-mobile-tab-text' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.text}
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  }
   
   return (
-    <div className="tabs-icons-container">
-      {tabs.filter(tab => tab.show).map(tab => (
-        <button
-          key={tab.id}
-          className={`tab-icon-button ${activeTab === tab.id ? 'active-tab-icon' : ''} ${tab.animation ? 'animate-pulse' : ''} relative`}
-          onClick={() => setActiveTab(tab.id)}
-          aria-label={tab.text}
-        >
-          <span className="tab-icon">{tab.icon}</span>
-          {tab.notification && (
-            <span className="notification-dot"></span>
-          )}
-          {tab.badge}
-        </button>
-      ))}
+    <div className="w-full animate-fade-in">
+      {/* Первый ряд вкладок */}
+      <TabsList className="w-full mb-1 grid grid-cols-4">
+        <TabsTrigger value="main" className="flex items-center gap-1">
+          <DollarSign size={14} className="sm:size-16" />
+          <span className="hidden sm:inline">Основное</span>
+        </TabsTrigger>
+        
+        {showTrading && (
+          <TabsTrigger value="trading" className="flex items-center gap-1">
+            <ArrowUpDown size={14} className="sm:size-16" />
+            <span className="hidden sm:inline">Трейдинг</span>
+          </TabsTrigger>
+        )}
+        
+        {showEducation && (
+          <TabsTrigger value="education" className="flex items-center gap-1">
+            <GraduationCap size={14} className="sm:size-16" />
+            <span className="hidden sm:inline">Обучение</span>
+          </TabsTrigger>
+        )}
+        
+        {showMining && (
+          <TabsTrigger value="mining" className={`flex items-center gap-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
+            <HardDrive size={14} className={`sm:size-16 ${miningAnimation ? 'text-yellow-400' : ''}`} />
+            <span className="hidden sm:inline">Майнинг</span>
+            {miningPower > 0 && (
+              <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-xs py-0 ${miningAnimation ? 'animate-pulse' : ''}`}>
+                {miningPower}
+              </Badge>
+            )}
+          </TabsTrigger>
+        )}
+      </TabsList>
+      
+      {/* Второй ряд вкладок */}
+      <TabsList className="w-full grid grid-cols-4">
+        {showCareer && (
+          <TabsTrigger value="career" className="flex items-center gap-1">
+            <Briefcase size={14} className="sm:size-16" />
+            <span className="hidden sm:inline">Карьера</span>
+          </TabsTrigger>
+        )}
+        
+        {showMarketEvents && (
+          <TabsTrigger value="market" className={`flex items-center gap-1 relative ${isBullMarket ? 'animate-pulse' : ''}`}>
+            {isBullMarket ? (
+              <TrendingUp size={14} className="sm:size-16 text-green-500" />
+            ) : (
+              <BarChart4 size={14} className="sm:size-16" />
+            )}
+            <span className="hidden sm:inline">
+              {isBullMarket ? "Бычий рынок!" : "Рынок"}
+            </span>
+            {hasNewMarketEvent && !isBullMarket && (
+              <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
+            )}
+            {isBullMarket && (
+              <Badge variant="success" className="ml-1 text-xs py-0 animate-pulse">
+                +{((marketMultiplier - 1) * 100).toFixed(0)}%
+              </Badge>
+            )}
+          </TabsTrigger>
+        )}
+        
+        <TabsTrigger value="staking" className="flex items-center gap-1">
+          <Shield size={14} className="sm:size-16" />
+          <span className="hidden sm:inline">Стейкинг</span>
+        </TabsTrigger>
+        
+        <TabsTrigger value="achievements" className="flex items-center gap-1">
+          <Medal size={14} className="sm:size-16" />
+          <span className="hidden sm:inline">Ачивки</span>
+        </TabsTrigger>
+      </TabsList>
     </div>
   );
 };

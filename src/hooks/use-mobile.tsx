@@ -1,40 +1,19 @@
-
 import * as React from "react"
 
-// Для Telegram mini app оптимальная точка перехода - около 600px
-const MOBILE_BREAKPOINT = 600 
+const MOBILE_BREAKPOINT = 768
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState(true) // По умолчанию считаем мобильным
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
 
   React.useEffect(() => {
-    // Проверка для среды Telegram WebApp
-    if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-      setIsMobile(true)
-      return
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
     }
-    
-    const checkIsMobile = () => window.innerWidth < MOBILE_BREAKPOINT
-    
-    const handleResize = () => {
-      setIsMobile(checkIsMobile())
-    }
-    
-    // Инициализация
-    handleResize()
-    
-    // Подписка на изменение размера
-    window.addEventListener('resize', handleResize)
-    
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
+    mql.addEventListener("change", onChange)
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    return () => mql.removeEventListener("change", onChange)
   }, [])
 
-  // Для Telegram mini app всегда возвращаем true
-  if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-    return true
-  }
-  
-  return isMobile
+  return !!isMobile
 }

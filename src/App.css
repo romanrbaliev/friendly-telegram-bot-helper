@@ -48,22 +48,25 @@
   width: 100%;
   background-color: rgba(26, 31, 44, 0.97);
   backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: row;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 /* Секция с ресурсами */
 .resources-section {
-  flex: 1;
   padding: 8px 10px;
+  flex-grow: 1;
+  text-align: left;
 }
 
 /* Стили для строк с ресурсами */
 .resource-item {
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   font-size: 14px;
 }
 
@@ -79,7 +82,7 @@
 
 /* Секция с вкладками */
 .tabs-section {
-  width: 50px;
+  width: 48px;
   background-color: rgba(0, 0, 0, 0.2);
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
@@ -91,8 +94,13 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px 0;
+  padding: 8px 0;
   align-items: center;
+}
+
+/* Мобильные вкладки */
+.mobile-tabs {
+  padding: 8px 0;
 }
 
 /* Кнопка иконки вкладки */

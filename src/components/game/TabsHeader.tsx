@@ -122,7 +122,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   ];
   
   return (
-    <div className="tabs-icons-container">
+    <div className={`tabs-icons-container ${isMobile ? 'mobile-tabs' : ''}`}>
       {tabs.filter(tab => tab.show).map(tab => (
         <button
           key={tab.id}

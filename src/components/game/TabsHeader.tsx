@@ -2,6 +2,7 @@
 import React from 'react';
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4, Medal, TrendingUp, Shield } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TabsHeaderProps {
   activeTab: string;
@@ -31,13 +32,14 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   marketMultiplier = 1
 }) => {
   const isBullMarket = marketMultiplier > 1;
+  const isMobile = useIsMobile();
   
   const tabs = [
     { 
       id: 'main', 
       show: true, 
       icon: <DollarSign size={12} />, 
-      text: 'Осн',
+      text: isMobile ? 'О' : 'Осн',
       badge: null,
       animation: false,
       notification: false

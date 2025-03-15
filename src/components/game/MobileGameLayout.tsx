@@ -91,24 +91,44 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
   return (
     <div className="game-layout bg-[#1A1F2C]">
       {showResources && (
-        <div className="resources-section bg-[#1A1F2C] p-2">
-          <ResourceDisplay 
-            dollars={dollars} 
-            usdt={usdt} 
-            showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
-            stakedUsdt={stakedUsdt}
-            showStaking={showStaking || stakedUsdt > 0}
-            knowledge={knowledge}
-            showKnowledge={showEducation || knowledge > 0}
-            btc={btc}
-            showBtc={btc > 0 || showBuyCrypto}
-            role={role}
-          />
+        <div className="tabs-resources-container">
+          <div className="resources-section bg-[#1A1F2C] p-2">
+            <ResourceDisplay 
+              dollars={dollars} 
+              usdt={usdt} 
+              showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
+              stakedUsdt={stakedUsdt}
+              showStaking={showStaking || stakedUsdt > 0}
+              knowledge={knowledge}
+              showKnowledge={showEducation || knowledge > 0}
+              btc={btc}
+              showBtc={btc > 0 || showBuyCrypto}
+              role={role}
+            />
+          </div>
+          
+          {showTabs && showResources && (
+            <div className="tabs-section">
+              <TabsHeader 
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                showTrading={showTrading}
+                showEducation={showEducation}
+                showMining={showMining}
+                showCareer={showCareer}
+                showMarketEvents={showMarketEvents}
+                miningPower={miningPower}
+                hasNewMarketEvent={false}
+                miningAnimation={false}
+                marketMultiplier={marketMultiplier}
+              />
+            </div>
+          )}
         </div>
       )}
       
       <div className="main-container">
-        <div className="content-section">
+        <div className="tab-content-container">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {(!showTabs || !showResources) && (
               <TabsContent value="main">
@@ -179,24 +199,6 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
             )}
           </Tabs>
         </div>
-        
-        {showTabs && showResources && (
-          <div className="tabs-section">
-            <TabsHeader 
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              showTrading={showTrading}
-              showEducation={showEducation}
-              showMining={showMining}
-              showCareer={showCareer}
-              showMarketEvents={showMarketEvents}
-              miningPower={miningPower}
-              hasNewMarketEvent={false}
-              miningAnimation={false}
-              marketMultiplier={marketMultiplier}
-            />
-          </div>
-        )}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ export function useIsMobile() {
   React.useEffect(() => {
     const checkIsMobile = () => {
       // Проверка для среды Telegram WebApp
-      if (window.Telegram?.WebApp) {
+      if (window.Telegram && window.Telegram.WebApp) {
         return true; // В Telegram WebApp всегда считаем, что это мобильное устройство
       }
       

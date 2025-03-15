@@ -122,12 +122,13 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   
   return (
     <div className="animate-fade-in w-full">
-      <TabsList className="flex flex-col gap-1 w-full h-auto bg-transparent">
+      <div className="flex flex-col gap-1 w-full h-auto bg-transparent">
         {tabs.filter(tab => tab.show).map(tab => (
-          <TabsTrigger 
+          <button
             key={tab.id}
-            value={tab.id} 
-            className={`flex items-center justify-start gap-1 p-2 text-xs h-10 ${tab.animation ? 'animate-pulse' : ''} relative w-full`}
+            className={`flex items-center justify-start gap-1 p-2 text-xs h-10 ${tab.animation ? 'animate-pulse' : ''} relative w-full 
+            ${activeTab === tab.id ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:bg-muted/80'} 
+            rounded-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.icon}
@@ -136,9 +137,9 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
             {tab.notification && (
               <span className="absolute top-1 left-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
             )}
-          </TabsTrigger>
+          </button>
         ))}
-      </TabsList>
+      </div>
     </div>
   );
 };

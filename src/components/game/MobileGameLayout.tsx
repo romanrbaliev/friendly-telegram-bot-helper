@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import ResourceDisplay from './ResourceDisplay';
 import MainActions from './MainActions';
 import StakingTab from './StakingTab';
@@ -107,28 +107,30 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
         </div>
       )}
       
-      <div className="flex flex-row w-full">
+      <div className="main-container">
         <div className="content-section">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {(!showTabs || !showResources) && (
-              <MainActions 
-                dollars={dollars}
-                usdt={usdt}
-                showBuyCrypto={showBuyCrypto}
-                showBuyUsdt={showBuyUsdt}
-                showStaking={showStaking}
-                showEducation={showEducation}
-                handleSaveDollar={handleSaveDollar}
-                handleBuyCrypto={handleBuyCrypto}
-                handleStaking={handleStakingWrapper}
-                handleLearnBasics={handleLearnBasics}
-                handleBuyUsdt={handleBuyUsdtWrapper}
-                knowledge={knowledge}
-                showHint={showHint}
-                hintInfo={hintInfo}
-                onCloseHint={handleCloseHint}
-                currentFeature={currentFeature}
-              />
+              <TabsContent value="main">
+                <MainActions 
+                  dollars={dollars}
+                  usdt={usdt}
+                  showBuyCrypto={showBuyCrypto}
+                  showBuyUsdt={showBuyUsdt}
+                  showStaking={showStaking}
+                  showEducation={showEducation}
+                  handleSaveDollar={handleSaveDollar}
+                  handleBuyCrypto={handleBuyCrypto}
+                  handleStaking={handleStakingWrapper}
+                  handleLearnBasics={handleLearnBasics}
+                  handleBuyUsdt={handleBuyUsdtWrapper}
+                  knowledge={knowledge}
+                  showHint={showHint}
+                  hintInfo={hintInfo}
+                  onCloseHint={handleCloseHint}
+                  currentFeature={currentFeature}
+                />
+              </TabsContent>
             )}
             
             {showTabs && showResources && (

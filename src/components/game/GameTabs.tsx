@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
@@ -82,7 +81,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
   }, [marketMultiplier]);
   
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <TabsHeader 
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -97,39 +96,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
         marketMultiplier={marketMultiplier}
       />
       
-      {/* Добавляем контент вкладок внутри компонента Tabs */}
-      <div className="mt-4">
-        <TabsContentComponent 
-          activeTab={activeTab}
-          dollars={dollars}
-          usdt={usdt}
-          btc={btc}
-          knowledge={knowledge}
-          miningPower={miningPower}
-          showTrading={showTrading}
-          showEducation={showEducation}
-          showMining={showMining}
-          showCareer={showCareer}
-          showMarketEvents={showMarketEvents}
-          handleSaveDollar={handleSaveDollar}
-          handleBuyCrypto={handleBuyCrypto}
-          handleStaking={handleStaking}
-          handleTrade={handleTrade}
-          handleLearn={handleLearn}
-          handlePurchaseRig={handlePurchaseRig}
-          handleSelectRole={handleSelectRole}
-          handleMarketChange={handleMarketChange}
-          handlePrepareForEvent={handlePrepareForEvent}
-          marketMultiplier={marketMultiplier}
-          showBuyCrypto={showBuyCrypto}
-          showStaking={showStaking}
-          showBuyUsdt={showBuyUsdt}
-          role={role}
-          handleLearnBasics={handleLearnBasics}
-          clicks={clicks}
-          handleBuyUsdt={handleBuyUsdt}
-        />
-      </div>
+      {/* Content будет отображаться в MobileGameLayout */}
     </Tabs>
   );
 };

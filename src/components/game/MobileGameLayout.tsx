@@ -106,10 +106,10 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
         </div>
       )}
       
-      {/* Контент и вкладки */}
-      <div className="flex flex-col md:flex-row flex-1 gap-2 p-2">
-        {/* Основной контент слева/снизу */}
-        <div className="flex-1 order-2 md:order-1">
+      {/* Основной контент и вкладки */}
+      <div className="flex flex-row flex-1 gap-2 p-2">
+        {/* Основной контент слева */}
+        <div className="flex-1 order-1">
           {(!showTabs || !showResources) && (
             <MainActions 
               dollars={dollars}
@@ -144,7 +144,7 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
         
         {/* Вкладки справа */}
         {showTabs && (
-          <div className="w-full md:w-48 order-1 md:order-2">
+          <div className="w-48 order-2">
             <GameTabs 
               activeTab={activeTab}
               setActiveTab={setActiveTab}

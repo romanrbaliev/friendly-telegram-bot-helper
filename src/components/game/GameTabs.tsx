@@ -35,6 +35,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
   clicks
 }) => {
   const [hasNewMarketEvent, setHasNewMarketEvent] = useState(false);
+  const [miningAnimation, setMiningAnimation] = useState(false);
   
   useEffect(() => {
     if (showMarketEvents && !hasNewMarketEvent) {
@@ -50,6 +51,18 @@ const GameTabs: React.FC<GameTabsProps> = ({
       setHasNewMarketEvent(false);
     }
   }, [activeTab]);
+  
+  // Mining power notification effect
+  useEffect(() => {
+    if (miningPower > 0) {
+      const interval = setInterval(() => {
+        setMiningAnimation(true);
+        setTimeout(() => setMiningAnimation(false), 1000);
+      }, 30000); // Show animation every 30 seconds to indicate mining is active
+      
+      return () => clearInterval(interval);
+    }
+  }, [miningPower]);
   
   console.log("GameTabs rendering with:", {
     showTrading,
@@ -75,6 +88,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
         showMarketEvents={showMarketEvents}
         miningPower={miningPower}
         hasNewMarketEvent={hasNewMarketEvent}
+        miningAnimation={miningAnimation}
       />
       
       <TabsContentComponent 

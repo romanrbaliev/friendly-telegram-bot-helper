@@ -14,6 +14,7 @@ interface TabsHeaderProps {
   showMarketEvents: boolean;
   miningPower: number;
   hasNewMarketEvent: boolean;
+  miningAnimation?: boolean;
 }
 
 const TabsHeader: React.FC<TabsHeaderProps> = ({
@@ -25,7 +26,8 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   showCareer,
   showMarketEvents,
   miningPower,
-  hasNewMarketEvent
+  hasNewMarketEvent,
+  miningAnimation = false
 }) => {
   const visibleTabsCount = 1 + 
     (showTrading ? 1 : 0) + 
@@ -57,11 +59,11 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
         </TabsTrigger>
       )}
       {showMining && (
-        <TabsTrigger value="mining" className="flex items-center gap-1">
-          <HardDrive size={14} className="sm:size-16" />
+        <TabsTrigger value="mining" className={`flex items-center gap-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
+          <HardDrive size={14} className={`sm:size-16 ${miningAnimation ? 'text-yellow-400' : ''}`} />
           <span className="sm:inline">Майнинг</span>
           {miningPower > 0 && (
-            <Badge variant="outline" className="ml-1 text-xs py-0">
+            <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-xs py-0 ${miningAnimation ? 'animate-pulse' : ''}`}>
               {miningPower}
             </Badge>
           )}

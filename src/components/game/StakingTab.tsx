@@ -1,12 +1,10 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Shield, TrendingUp, Lock, UnlockKeyhole } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
 import { toast } from '@/components/ui/use-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 interface StakingTabProps {
   usdt: number;
@@ -195,14 +193,6 @@ const StakingTab: React.FC<StakingTabProps> = ({
                 100%
               </Button>
             </div>
-            
-            <Button 
-              onClick={() => handleStakePercentage(100)} 
-              className="w-full bg-[#26A17B] hover:bg-[#1f8e6b] text-sm"
-              disabled={usdt <= 0}
-            >
-              Внести весь баланс в стейкинг
-            </Button>
           </div>
           
           {/* Вывод средств из стейкинга */}
@@ -251,14 +241,6 @@ const StakingTab: React.FC<StakingTabProps> = ({
                   100%
                 </Button>
               </div>
-              
-              <Button 
-                onClick={() => handleWithdrawPercentage(100)} 
-                className="w-full bg-gray-700 hover:bg-gray-600 text-sm"
-                disabled={stakedUsdt <= 0}
-              >
-                Вывести все из стейкинга
-              </Button>
             </div>
           )}
         </div>
@@ -268,12 +250,3 @@ const StakingTab: React.FC<StakingTabProps> = ({
 };
 
 export default StakingTab;
-
-// Добавим компонент Badge, который используется в компоненте
-const Badge = ({ children, variant, className }: { children: React.ReactNode, variant: string, className: string }) => {
-  return (
-    <span className={`px-2 py-0.5 rounded-full text-xs ${variant === 'outline' ? 'border border-gray-600' : 'bg-green-500 text-white'} ${className}`}>
-      {children}
-    </span>
-  );
-};

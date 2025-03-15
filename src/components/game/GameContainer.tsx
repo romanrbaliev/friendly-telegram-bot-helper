@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -176,31 +175,6 @@ const GameContainer: React.FC = () => {
     }
   };
   
-  const handleStakingActivation = () => {
-    console.log("handleStaking вызван, текущий баланс: $", dollars);
-    if (dollars >= 100) {
-      setDollars(prev => {
-        console.log(`Баланс до активации стейкинга: $${prev}`);
-        return prev - 100;
-      });
-      setStakedUsdt(prev => prev + 10);
-      
-      toast({
-        title: "Фоновый стейкинг активирован",
-        description: "Вы будете получать пассивный доход даже когда не играете!",
-        duration: 3000
-      });
-      console.log("Стейкинг успешно активирован");
-    } else {
-      console.log("Недостаточно средств для активации стейкинга");
-      toast({
-        title: "Недостаточно средств",
-        description: "Нужно $100 для активации стейкинга",
-        duration: 3000
-      });
-    }
-  };
-  
   const handleLearnBasics = () => {
     console.log("handleLearnBasics вызван, текущий баланс: $", dollars);
     if (dollars >= 10) {
@@ -360,9 +334,9 @@ const GameContainer: React.FC = () => {
               showEducation={showEducation}
               handleSaveDollar={handleSaveDollar}
               handleBuyCrypto={handleBuyCrypto}
-              handleStaking={handleStakingActivation}
+              handleStaking={null}
               handleLearnBasics={handleLearnBasics}
-              handleBuyUsdt={handleBuyUsdtFixed} // Используем новый обработчик
+              handleBuyUsdt={handleBuyUsdtFixed}
               knowledge={knowledge}
               showHint={showHint}
               hintInfo={hintInfo}
@@ -387,7 +361,7 @@ const GameContainer: React.FC = () => {
                 miningPower={miningPower}
                 handleSaveDollar={handleSaveDollar}
                 handleBuyCrypto={handleBuyCrypto}
-                handleStaking={handleStakingActivation}
+                handleStaking={null}
                 handleTrade={handleTrade}
                 handleLearn={handleLearnMarket}
                 handlePurchaseRig={handlePurchaseRig}

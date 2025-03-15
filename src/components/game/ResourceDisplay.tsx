@@ -44,10 +44,15 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
     // Only set up interval if we have staked USDT or mining power
     if (stakedUsdt > 0 || btc > 0) {
       const interval = setInterval(() => {
-        // Calculate incremental values based on 10% APY on staked USDT
-        // This assumes a 10% yearly return, calculated for 100ms
+        // Рассчитываем годовую доходность
+        const baseApy = 10; // 10% годовых
+        const roleBonus = role === 'investor' ? 10 : 0; // +10% для инвесторов
+        const totalApy = baseApy + roleBonus;
+        
+        // Calculate incremental values based on APY on staked USDT
+        // This assumes the defined yearly return, calculated for 100ms
         if (stakedUsdt > 0) {
-          const usdtIncrement = stakedUsdt * 0.1 / (365 * 24 * 36000); // 10% yearly return per 100ms
+          const usdtIncrement = stakedUsdt * totalApy / (365 * 24 * 36000); // APY yearly return per 100ms
           setDisplayUsdt(prev => prev + usdtIncrement);
           
           // Also animate the staked USDT with a minimal visual increment
@@ -64,7 +69,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
       
       return () => clearInterval(interval);
     }
-  }, [dollars, usdt, btc, stakedUsdt]);
+  }, [dollars, usdt, btc, stakedUsdt, role]);
 
   const getRoleName = (roleId: string | null): string => {
     if (!roleId) return "";
@@ -83,14 +88,14 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
   };
 
   return (
-    <div className="glass-morphism p-2 rounded-lg animate-fade-in sticky top-0 z-10 text-xs">
-      <h2 className="text-sm font-semibold mb-1 text-white border-b border-white/10 pb-1">
+    <div className="glass-morphism p-1.5 rounded-lg animate-fade-in sticky top-0 z-10 text-[10px]">
+      <h2 className="text-xs font-semibold mb-0.5 text-white border-b border-white/10 pb-0.5">
         Ресурсы
       </h2>
-      <div className="space-y-1">
+      <div className="space-y-0.5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <DollarSign size={14} className="text-green-400" />
+          <div className="flex items-center gap-0.5">
+            <DollarSign size={10} className="text-green-400" />
             <span className="text-gray-200">Наличные:</span>
           </div>
           <span className="font-mono text-white">${displayDollars.toFixed(2)}</span>
@@ -98,8 +103,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         
         {showUsdt && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded-full bg-[#26A17B] flex items-center justify-center text-[8px] font-bold text-white">₮</div>
+            <div className="flex items-center gap-0.5">
+              <div className="w-3 h-3 rounded-full bg-[#26A17B] flex items-center justify-center text-[6px] font-bold text-white">₮</div>
               <span className="text-gray-200">USDT:</span>
             </div>
             <span className="font-mono text-white">{displayUsdt.toFixed(2)}</span>
@@ -108,8 +113,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         
         {showBtc && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded-full bg-[#F7931A] flex items-center justify-center text-[8px] font-bold text-white">₿</div>
+            <div className="flex items-center gap-0.5">
+              <div className="w-3 h-3 rounded-full bg-[#F7931A] flex items-center justify-center text-[6px] font-bold text-white">₿</div>
               <span className="text-gray-200">Bitcoin:</span>
             </div>
             <span className="font-mono text-white">{displayBtc.toFixed(8)}</span>
@@ -118,8 +123,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         
         {showStaking && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded-full bg-[#26A17B] flex items-center justify-center text-[8px] font-bold text-white">₮</div>
+            <div className="flex items-center gap-0.5">
+              <div className="w-3 h-3 rounded-full bg-[#26A17B] flex items-center justify-center text-[6px] font-bold text-white">₮</div>
               <span className="text-gray-200">Стейкинг:</span>
             </div>
             <span className="font-mono text-white">{displayStakedUsdt.toFixed(2)}</span>
@@ -128,8 +133,8 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
 
         {showKnowledge && (
           <div className="flex items-center justify-between animate-fade-up">
-            <div className="flex items-center gap-1">
-              <GraduationCap size={14} className="text-blue-400" />
+            <div className="flex items-center gap-0.5">
+              <GraduationCap size={10} className="text-blue-400" />
               <span className="text-gray-200">Знания:</span>
             </div>
             <span className="font-mono text-white">{knowledge}%</span>
@@ -137,9 +142,9 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
         )}
 
         {role && (
-          <div className="flex items-center justify-between animate-fade-up mt-1 pt-1 border-t border-white/10">
-            <div className="flex items-center gap-1">
-              <Briefcase size={14} className="text-purple-400" />
+          <div className="flex items-center justify-between animate-fade-up mt-0.5 pt-0.5 border-t border-white/10">
+            <div className="flex items-center gap-0.5">
+              <Briefcase size={10} className="text-purple-400" />
               <span className="text-gray-200">Карьера:</span>
             </div>
             <span className="font-mono text-white">{getRoleName(role)}</span>

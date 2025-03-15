@@ -111,7 +111,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
         marketMultiplier={marketMultiplier}
       />
       
-      {/* Контент вкладок теперь перенесен в GameContainer для правильного расположения */}
+      {/* Контент вкладок теперь отображается в GameContainer */}
       <div className="hidden">
         <TabsContentComponent 
           activeTab={activeTab}

@@ -297,7 +297,7 @@ const GameContainer: React.FC = () => {
       <GameHeader bullMarketActive={bullMarketActive} />
       
       <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2 mb-4">
-        <div className="flex flex-row gap-4 flex-wrap">
+        <div className="flex flex-row items-start">
           {showResources && (
             <div className="shrink-0">
               <ResourceDisplay 
@@ -315,8 +315,8 @@ const GameContainer: React.FC = () => {
             </div>
           )}
           
-          <div className="flex-grow">
-            {showTabs && (
+          {showTabs && (
+            <div className="flex-grow">
               <GameTabs 
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -348,8 +348,8 @@ const GameContainer: React.FC = () => {
                 clicks={clicks}
                 handleBuyUsdt={handleBuyUsdt}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
       

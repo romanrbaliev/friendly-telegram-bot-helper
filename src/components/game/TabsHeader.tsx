@@ -34,8 +34,8 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   const isBullMarket = marketMultiplier > 1;
   
   return (
-    <div className="w-full animate-fade-in">
-      <div className="flex flex-wrap gap-1">
+    <div className="flex-grow animate-fade-in">
+      <div className="flex flex-wrap justify-start gap-1">
         <TabsList className="flex flex-wrap">
           <TabsTrigger value="main" className="flex items-center justify-center gap-1 px-3 py-1.5">
             <DollarSign size={16} />
@@ -77,7 +77,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
         </TabsList>
       </div>
       
-      <div className="flex flex-wrap gap-1 mt-1">
+      <div className="flex flex-wrap justify-start gap-1 mt-1">
         <TabsList className="flex flex-wrap">
           {showMarketEvents && (
             <TabsTrigger value="market" className={`flex items-center justify-center gap-1 px-3 py-1.5 relative ${isBullMarket ? 'animate-pulse' : ''}`}>

@@ -107,7 +107,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <div className="w-3 h-3 rounded-full bg-[#26A17B] flex items-center justify-center text-[6px] font-bold text-white">₮</div>
               <span className="text-gray-200">USDT:</span>
             </div>
-            <span className="font-mono text-white">{displayUsdt.toFixed(2)}</span>
+            <span className="font-mono text-white">{displayUsdt.toFixed(8)}</span>
           </div>
         )}
         
@@ -127,7 +127,7 @@ const ResourceDisplay: React.FC<ResourceDisplayProps> = ({
               <div className="w-3 h-3 rounded-full bg-[#26A17B] flex items-center justify-center text-[6px] font-bold text-white">₮</div>
               <span className="text-gray-200">Стейкинг:</span>
             </div>
-            <span className="font-mono text-white">{displayStakedUsdt.toFixed(2)}</span>
+            <span className="font-mono text-white">{displayStakedUsdt.toFixed(8)}</span>
           </div>
         )}
 

@@ -94,7 +94,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
   });
   
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
       <div className="flex flex-col h-full">
         <TabsHeader 
           activeTab={activeTab}
@@ -111,7 +111,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
         />
       </div>
       
-      <div className="w-full mt-4">
+      <div className="w-full mt-2">
         <TabsContentComponent 
           activeTab={activeTab}
           dollars={dollars}

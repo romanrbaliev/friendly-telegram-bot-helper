@@ -283,7 +283,7 @@ const GameContainer: React.FC = () => {
   const showTabs = showTrading || showEducation || showMining || showCareer || showMarketEvents || showStaking;
 
   return (
-    <div className="min-h-screen bg-[#1A1F2C] text-white p-4 flex flex-col">
+    <div className="min-h-screen bg-[#1A1F2C] text-white p-2 flex flex-col">
       <WelcomePopup 
         open={showWelcomePopup} 
         onClose={() => setShowWelcomePopup(false)} 
@@ -300,11 +300,11 @@ const GameContainer: React.FC = () => {
       
       <GameHeader bullMarketActive={bullMarketActive} />
       
-      <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2 mb-4">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-full flex flex-row justify-between">
+      <div className="sticky top-0 z-10 bg-[#1A1F2C] pb-2">
+        <div className="flex flex-col items-start w-full">
+          <div className="w-full flex flex-row justify-between space-x-2">
             {showResources && (
-              <div className="w-3/5">
+              <div className="w-3/5 min-w-0">
                 <ResourceDisplay 
                   dollars={dollars} 
                   usdt={usdt} 
@@ -321,7 +321,7 @@ const GameContainer: React.FC = () => {
             )}
             
             {showTabs && (
-              <div className="w-2/5">
+              <div className="w-2/5 min-w-0">
                 <GameTabs 
                   activeTab={activeTab}
                   setActiveTab={setActiveTab}
@@ -359,7 +359,7 @@ const GameContainer: React.FC = () => {
         </div>
       </div>
       
-      <div className="flex-1 w-full flex justify-center">
+      <div className="flex-1 w-full flex justify-center mt-2">
         {!showTabs ? (
           <MainActions 
             dollars={dollars}

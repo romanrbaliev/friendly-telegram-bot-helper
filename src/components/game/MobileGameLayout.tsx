@@ -91,39 +91,41 @@ const MobileGameLayout: React.FC<MobileGameLayoutProps> = ({
   return (
     <div className="game-layout bg-[#1A1F2C]">
       {showResources && (
-        <div className="sidebar-container">
-          <div className="resources-area">
-            <ResourceDisplay 
-              dollars={dollars} 
-              usdt={usdt} 
-              showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
-              stakedUsdt={stakedUsdt}
-              showStaking={showStaking || stakedUsdt > 0}
-              knowledge={knowledge}
-              showKnowledge={showEducation || knowledge > 0}
-              btc={btc}
-              showBtc={btc > 0 || showBuyCrypto}
-              role={role}
-            />
-          </div>
-          
-          {showTabs && showResources && (
-            <div className="tabs-sidebar">
-              <TabsHeader 
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                showTrading={showTrading}
-                showEducation={showEducation}
-                showMining={showMining}
-                showCareer={showCareer}
-                showMarketEvents={showMarketEvents}
-                miningPower={miningPower}
-                hasNewMarketEvent={false}
-                miningAnimation={false}
-                marketMultiplier={marketMultiplier}
+        <div className="resources-section">
+          <div className="sidebar-container">
+            <div className="resources-area">
+              <ResourceDisplay 
+                dollars={dollars} 
+                usdt={usdt} 
+                showUsdt={usdt > 0 || showBuyCrypto || showBuyUsdt}
+                stakedUsdt={stakedUsdt}
+                showStaking={showStaking || stakedUsdt > 0}
+                knowledge={knowledge}
+                showKnowledge={showEducation || knowledge > 0}
+                btc={btc}
+                showBtc={btc > 0 || showBuyCrypto}
+                role={role}
               />
             </div>
-          )}
+            
+            {showTabs && (
+              <div className="tabs-sidebar">
+                <TabsHeader 
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  showTrading={showTrading}
+                  showEducation={showEducation}
+                  showMining={showMining}
+                  showCareer={showCareer}
+                  showMarketEvents={showMarketEvents}
+                  miningPower={miningPower}
+                  hasNewMarketEvent={false}
+                  miningAnimation={false}
+                  marketMultiplier={marketMultiplier}
+                />
+              </div>
+            )}
+          </div>
         </div>
       )}
       

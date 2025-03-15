@@ -66,7 +66,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       icon: <HardDrive size={14} className={`${miningAnimation ? 'text-yellow-400' : ''}`} />, 
       text: 'Майн',
       badge: miningPower > 0 ? (
-        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-auto text-xs py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
+        <Badge variant={miningAnimation ? "success" : "outline"} className={`ml-1 text-xs py-0 px-1 ${miningAnimation ? 'animate-pulse' : ''}`}>
           {miningPower}
         </Badge>
       ) : null,
@@ -90,9 +90,9 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
       ) : (
         <BarChart4 size={14} />
       ), 
-      text: isBullMarket ? "Рынок+" : "Рынок",
+      text: isBullMarket ? "+" : "Рынок",
       badge: isBullMarket ? (
-        <Badge variant="success" className="ml-auto text-xs py-0 px-1 animate-pulse">
+        <Badge variant="success" className="ml-1 text-xs py-0 px-1 animate-pulse">
           +{((marketMultiplier - 1) * 100).toFixed(0)}%
         </Badge>
       ) : null,
@@ -125,14 +125,14 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
         {tabs.filter(tab => tab.show).map(tab => (
           <button
             key={tab.id}
-            className={`flex items-center justify-between gap-1 p-1.5 text-xs h-8 ${tab.animation ? 'animate-pulse' : ''} relative w-full 
+            className={`flex items-center justify-start gap-1 p-1 text-xs h-7 ${tab.animation ? 'animate-pulse' : ''} relative w-full 
             ${activeTab === tab.id ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:bg-muted/80'} 
             rounded-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
             onClick={() => setActiveTab(tab.id)}
           >
             <div className="flex items-center gap-1">
               {tab.icon}
-              <span className="text-xs whitespace-nowrap">{tab.text}</span>
+              <span className="text-[10px] whitespace-nowrap">{tab.text}</span>
             </div>
             {tab.badge}
             {tab.notification && (

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Tabs } from "@/components/ui/tabs";
 import TabsHeader from './TabsHeader';
@@ -93,7 +94,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
   });
   
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className={`${isMobile ? 'w-full' : 'w-full'}`}>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <div className="flex flex-col h-full">
         <TabsHeader 
           activeTab={activeTab}

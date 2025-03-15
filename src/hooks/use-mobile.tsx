@@ -30,5 +30,9 @@ export function useIsMobile() {
   }, [])
 
   // Для Telegram mini app всегда возвращаем true
+  if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+    return true;
+  }
+  
   return isMobile !== undefined ? isMobile : true;
 }

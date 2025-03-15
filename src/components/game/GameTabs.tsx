@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, GraduationCap, ArrowUpDown, HardDrive, Briefcase, BarChart4 } from 'lucide-react';
@@ -22,12 +21,13 @@ interface GameTabsProps {
   btc: number;
   knowledge: number;
   marketMultiplier: number;
+  miningPower: number;
   handleSaveDollar: () => void;
   handleBuyCrypto: () => void;
   handleStaking: () => void;
   handleTrade: (fromUSDT: boolean, amount: number) => void;
   handleLearn: (cost: number, knowledgeGain: number) => boolean;
-  handlePurchaseRig: (cost: number) => void;
+  handlePurchaseRig: (cost: number, powerIncrease?: number) => void;
   handleSelectRole: (selectedRole: string) => void;
   handleMarketChange: (multiplier: number) => void;
   handlePrepareForEvent: (cost: number) => void;
@@ -50,6 +50,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
   btc,
   knowledge,
   marketMultiplier,
+  miningPower,
   handleSaveDollar,
   handleBuyCrypto,
   handleStaking,
@@ -166,6 +167,7 @@ const GameTabs: React.FC<GameTabsProps> = ({
           <Mining
             dollars={dollars}
             btc={btc}
+            miningPower={miningPower}
             onPurchaseRig={handlePurchaseRig}
             knowledge={knowledge}
             marketMultiplier={marketMultiplier}

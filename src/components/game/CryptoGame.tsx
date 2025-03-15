@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WelcomePopup from './WelcomePopup';
 import ResourceDisplay from './ResourceDisplay';
@@ -105,7 +104,7 @@ const CryptoGame: React.FC = () => {
         
         toast({
           title: "Прогресс загружен!",
-          description: "Ваш предыдущий прогресс успешно восстановл��н.",
+          description: "Ваш предыдущий прогресс успешно восстановлен.",
           duration: 3000
         });
       } catch (error) {
@@ -366,6 +365,7 @@ const CryptoGame: React.FC = () => {
               btc={btc}
               knowledge={knowledge}
               marketMultiplier={marketMultiplier}
+              miningPower={miningPower}
               handleSaveDollar={handleSaveDollar}
               handleBuyCrypto={handleBuyCrypto}
               handleStaking={handleStaking}
@@ -379,18 +379,19 @@ const CryptoGame: React.FC = () => {
               showStaking={showStaking}
               role={role}
               handleLearnBasics={handleLearnBasics}
-              miningPower={miningPower}
             />
           ) : (
             <MainActions 
               dollars={dollars}
-              knowledge={knowledge}
+              usdt={usdt}
               showBuyCrypto={showBuyCrypto}
               showStaking={showStaking}
+              showEducation={showEducation}
               handleSaveDollar={handleSaveDollar}
               handleBuyCrypto={handleBuyCrypto}
               handleStaking={handleStaking}
               handleLearnBasics={handleLearnBasics}
+              knowledge={knowledge}
             />
           )}
         </div>

@@ -6,27 +6,27 @@ import { toast } from '@/components/ui/use-toast';
 
 interface MainActionsProps {
   dollars: number;
-  usdt: number;
+  usdt?: number; // Делаем необязательным
   handleSaveDollar: () => void;
   handleBuyCrypto: () => void;
   handleStaking: () => void;
   handleLearnBasics: () => void;
   showBuyCrypto: boolean;
   showStaking: boolean;
-  showEducation: boolean;
+  showEducation?: boolean; // Делаем необязательным
   knowledge: number;
 }
 
 const MainActions: React.FC<MainActionsProps> = ({
   dollars,
-  usdt,
+  usdt = 0, // Значение по умолчанию
   handleSaveDollar,
   handleBuyCrypto,
   handleStaking,
   handleLearnBasics,
   showBuyCrypto,
   showStaking,
-  showEducation,
+  showEducation = false, // Значение по умолчанию
   knowledge
 }) => {
   // Обработчик без toast уведомления
